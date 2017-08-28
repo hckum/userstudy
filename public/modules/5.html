@@ -154,7 +154,7 @@
         var instructionDisplayed =false;
         var count =0;//when count=2, mode 5 instruction will display
         function render_content(){
-            if(step==experimentr.data()["mat"].length){
+            if(step==experimentr.data()["mat"].length-1){
                 experimentr.endTimer('main_section');
                 console.log("In main_section",step);
                 grading();
