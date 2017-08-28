@@ -52,17 +52,18 @@
 
     var sequence = [
         'modules/consent.html',                      //0
-        'modules/pre_study_questionnaire.html',      //1
+//        'modules/pre_study_questionnaire.html',      //1
         'modules/website_introduction.html',         //2
         'modules/0.html',                            //3
-        'modules/practice.html',                     //4
-        'modules/data_mapping.html',                 //5
-        'modules/practice2.html',                    //6
+        'modules/half.html',                            //3.5
+       // 'modules/practice.html',                     //4
+        //'modules/data_mapping.html',                 //5
+        //'modules/practice2.html',                    //6
         'modules/main_section_start.html',           //7
         'modules/5.html',                            //8
-        'modules/section2.html',                     //9
-        'modules/post_study_questionnaire.html',     //10
-        'modules/thanks.html',                       //11
+//        'modules/section2.html',                     //9
+//        'modules/post_study_questionnaire.html',     //10
+        'modules/thanks.html'                       //11
 //        'modules/end.html'
     ];
 
@@ -116,11 +117,96 @@
         }
     }
 
+    var id;
+    //    console.log(QueryString.id);
+    if(typeof(QueryString.id) === "undefined"){
+        console.log("hi");
+        id = experimentr.data()["postId"].split('').map(function (char) {
+            return char.charCodeAt(0) + 1;
+        }).join('');
+        console.log(id);
+    } else{
+        id = QueryString.id;
+    }
+
+    //    console.log("id=",id.slice(id.length-1,id.length));
+    var seq = parseInt(QueryString.seq);
+    var pnum = parseInt(id.slice(id.length-1,id.length)) + 1;
+    var mode_order = [1,2,3,4,5];
+    //    var iteration = mode_order.indexOf(parseInt(mode)) + 1;
+    var iteration = seq;
+    var sample;
+
+
+    if(pnum <= 5) {
+        sample = pnum + iteration - 1;
+        if(sample > 5){
+            sample = sample - 5;
+        }
+
+    } else {
+        sample = 11 - pnum - iteration + 1;
+
+        if(sample <= 0){
+            sample = 5 - (-sample);
+        }
+    }
+
+    //    console.log(parseFloat(QueryString.id));
+    console.log("pnum",pnum,"iteration",iteration,"sample",sample);
+
+    experimentr.data()["sample_number"] = sample;
+    //    console.log(experimentr.data()["postId"]);
+    //    console.log(pnum,sample);
+    //    console.log(window.location.href.toString().split("/")[2]);
+    var server = window.location.href.toString().split("/")[2];
+    var next_url;
+    console.log("seq",seq);
+    var seq_mode_order = [2,2,5,4,5];
+    switch(seq){
+        case 1:
+            next_url = "http://".concat(server,"/","?","id=",id,"&mode=",seq_mode_order[seq],"&section=7","&seq=",seq+1);
+            break;
+        case 2:
+            next_url = "http://".concat(server,"/","?","id=",id,"&mode=",seq_mode_order[seq],"&section=4","&seq=",seq+1);
+            break;
+        case 3:
+            next_url = "http://".concat(server,"/","?","id=",id,"&mode=",seq_mode_order[seq],"&section=7","&seq=",seq+1);
+            break;
+        case 4:
+            next_url = "http://".concat(server,"/","?","id=",id,"&mode=",seq_mode_order[seq],"&section=7","&seq=",seq+1);
+            break;
+        default:
+            next_url = "";
+            break;
+    }
+
+    //    var next_url = "http://".concat(server,"/","?","id=",QueryString.id,"&mode=",mode_order[iteration],"&section=7");
+    experimentr.data()["next_url"] = next_url;
+
+    if(seq===5){
+        sequence = [
+            'modules/consent.html',                      //0
+//        'modules/pre_study_questionnaire.html',      //1
+            'modules/website_introduction.html',         //2
+            'modules/0.html',                            //3
+            'modules/half.html',                            //3.5
+          //  'modules/practice.html',                     //4
+          //  'modules/data_mapping.html',                 //5
+            // 'modules/practice2.html',                    //6
+            'modules/main_section_start.html',           //7
+            'modules/5.html',
+//        'modules/section2.html',                     //9
+            'modules/post_study_questionnaire.html',     //10
+            'modules/thanks.html'                       //11
+        ];
+    }
+
 
     console.log("The mode is "+find_mode(mode));
     experimentr.data()['mode'] = find_mode(mode);
     experimentr.data()['mode_number'] = mode;
-    experimentr.data()['id'] = QueryString.id;
+    experimentr.data()['id'] = id;
     console.log("Skipping to section ",+QueryString.section);
     if(!isNaN(QueryString.section)){
         sequence = sequence.slice(QueryString.section);
@@ -129,9 +215,8 @@
         console.log(sequence);
     }
 
-    if(QueryString.disclosure_test == "true"){
-        sequence = ['modules/consent.html', "modules/disclosure_test.html",'modules/thanks.html'];
-    }
+
+
 
     experimentr.sequence(sequence).start();
 </script>

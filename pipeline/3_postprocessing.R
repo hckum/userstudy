@@ -4,6 +4,9 @@ library(magrittr)
 library(stringr)
 # library(forcats)
 
+
+question_types <- c(2,6,17,23,34,19)
+
 is_not_empty <- function(string) {
   if(is.na(string) | string == "" | string == ".") {
     return(FALSE)
@@ -66,80 +69,68 @@ starred_data %>%
   unique() %>% count(type,`Record ID`)
 
 attention_test = c(1,7,13,19,25,31)
+# choose 6 questions
+starred_data_2 <-
+  starred_data%>%
+   filter(as.numeric(`Record ID`)  %in% question_types)
 
-set.seed(1)
-for(i in 1:10) {
-  #group by page and question number and get 1 group id from each
-  # group. The id can then be used to extract the pairs
-  (gids <- 
-    starred_data %>%
-      group_by(type,`Record ID`) %>%
-        sample_n(1) %$%
-          `Group ID`)
+page_numbers = c(1,2,3,4,5)
 
-  #extarct those ids
-  (sample_i <- 
-    starred_data %>% filter(`Group ID` %in% gids))
-    
-  #for sample we need the questions to be in random order. Also after random ordering they
-  #have to be numbered sequentially.
-  #So we group by page(type) sample all rows(for randomizing) and then get the unique gids
-  (gids_ordered <- 
-    sample_i %>%
-      arrange(type) %>%
-        group_by(type) %>%
-          do(sample_n(.,size = nrow(.))) %$%
-            `Group ID` %>%
-            unique())
-  
-  #we create a lookup for those gids
-  (lookup <- tibble(`Group ID` = gids_ordered) %>%
-    mutate(qnum = 1:n()))
-  
-  #number and arrange by lookup
-  sample_i <- 
-    sample_i %>%
-      left_join(lookup, by = "Group ID") %>%
-        mutate(`Group ID` = qnum) %>%
-          select(-qnum) %>%
-            arrange(type,`Group ID`)
-  
-  #extract everything but those ids for section 2
-  section2  <- 
-    starred_data %>%
-    filter(!(`Group ID` %in% gids)) %>%
-      filter(!(`Group ID` %in% attention_test))
-  
-  (gids_ordered2 <- 
-      section2 %>%
-      sample_n(.,size = nrow(.)) %$%
-      `Group ID` %>%
-      unique())
-  
-  #we create a lookup for those gids
-  (lookup2 <- tibble(`Group ID` = gids_ordered2) %>%
-      mutate(qnum = 1:n()))
-  
-  section2 <- 
-    section2 %>%
-    left_join(lookup2, by = "Group ID") %>%
-    mutate(`Group ID` = qnum) %>%
-    select(-qnum) %>%
-    arrange(`Group ID`)
+starred_data_2 <-
+starred_data_2 %>%
+  group_by(`Record ID`) %>% 
+  mutate(n = sort(rep(1:(n()/2),2))) %>% select(n, everything()) %>% 
+  ungroup() %>% arrange(n , `Group ID`)  %>%
+  filter(!(n>5))
+ # filter(`n` %in% page_numbers )
 
-  #make the names standard
-  names(sample_i) <- col_names
-  names(section2) <- col_names
+
+
+randomize_table <- function(ord_tbl, sampling = T){
+  if(sampling){
+    gid <- ord_tbl %>% pull(`Group ID`) %>% unique() %>% base::sample(size = length(.), replace = F)
+  } else {
+    gid <- ord_tbl %>% pull(`Group ID`) %>% unique()
+  }
+  lookup <- tibble(`Group ID` = gid, n_ord = 1:length(gid))
+  if(sampling){
+    ord_tbl %>% left_join(lookup) %>% arrange(n_ord) %>% select(-n_ord)
+  } else {
+    ord_tbl %>% left_join(lookup) %>% mutate(`Group ID` = n_ord) %>% select(-n_ord)
+  }
   
-  sample_i %>%
-    write_csv(paste0(sprintf("./data_output/samples/sample_%02d",i),".csv"))
-  section2 %>%
-    write_csv(paste0(sprintf("./data_output/samples/section2_%02d",i),".csv"))
 }
 
-names(starred_data) <- col_names
-write_csv(starred_data,"./data_output/allg_starred.csv")
+set.seed(1)
 
-starred_data %>%
-  sample_n(nrow(.)) %>%
-  write_csv("./data_output/section2.csv")
+starred_data_2 <- 
+starred_data_2 %>% 
+  group_by(n) %>% 
+  do(randomize_table(.)) %>%
+  ungroup() %>% 
+  select(-n) 
+
+
+starred_data_2 <- randomize_table(starred_data_2, F)
+
+# %>% %T>% View()
+#sample_n(1) %$%
+#  Group ID
+
+
+# mutate(n = sort(rep(1:(n()/2),2))) %>% select(n, everything()) %>% 
+
+#(unordered_questions <- 
+#    starred_data_2 %>%
+#    sample_n(.,size = nrow(.)) %$%
+#    
+#%>%
+#    unique())
+
+
+#make the names standard
+
+names(starred_data_2) <- col_names
+starred_data_2%>%
+  write_csv(paste0(sprintf("./data_output/samples/sample_%02d",1),".csv"))
+

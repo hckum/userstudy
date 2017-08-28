@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+    #submitComments {
+        position: relative;
+        left: 50%;
+        transform: translate(-50%, 0%);
+    }
+    body{
+        color:#000;
+    }
+    div.tooltip {
+        position: absolute;
+        text-align: center;
+        width: 60px;
+        height: 28px;
+        padding: 2px;
+        font: 12px sans-serif;
+        background: lightsteelblue;
+        border: 0px;
+        border-radius: 8px;
+        pointer-events: none;
+    }
+    #container{
+        /*Styling for any element with the id="container" */
+        width:1800px; /* The width is fixed by pixels */
+        height:800px; /* The height is fixed by pixels*/
+        color:black;
+    }
+</style>
+<body>
+
+<div id="container">
+    <div id="instruction" style="text-align:center;">
+        <!--<h1 id="heading">Main Study</h1>-->
+        <div id="notation" style="text-align:left;">
+            <!--<label id="page"></label>-->
+        </div>
+        <br> <br>
+        <div id="table"></div>
+    </div>
+
+    <br>
+    <button id="submitComments" class="next-button" type="button">Ready to Answer Questions?</button><label id="answer_all" style="position: absolute; left: 150px; color: red;"></label><br>
+</div>
+<!--style="position: absolute; top: 10px"-->
+<br>
+<!--<div id="welcome">-->
+<!--<iframe id="iframe_instruction" src = "resources/ViewerJS/#/resources/disclosure_mode_5.pdf" border="40px"  width='1200' height='750' allowfullscreen webkitallowfullscreen></iframe>-->
+
+<!--</div>-->
+</body>
+</html>
+<script>//display 6 record in page
+(function(){
+    $.getScript("javascript/misc/util.js");
+    console.log(experimentr.data()["mat"]);
+    experimentr.startTimer('main_section');
+    experimentr.data()['section'] = 'mat';
+    experimentr.hideNext();
+    // pages
+
+    var step = 3,
+        sec_switch = 0;
+
+    function delay_next(time){
+        d3.select("#submitComments").attr("disabled","true");
+        d3.select("#submitComments").style("color","#b3b3b3");
+        setTimeout(function(){
+            d3.select("#submitComments").attr("disabled",null);
+            d3.select("#submitComments").style("color","black");
+        },time);
+    }
+
+    delay_next(250);
+
+    function add_mod_intros(img_address){
+        var height = "550px",
+            width = "1000px",
+            x = "400px",
+            y = "20px";
+
+        d3.select("#notation").select(".image").remove();
+        var svg = d3.select("#notation")
+            .append("svg")
+            .attr("class", "image")
+            .attr("width", 1800)
+            .attr("height", 600);
+        svg.append("svg:image")
+            .attr("xlink:href","/resources/module_intros/"+img_address)
+            .attr("x",x)
+            .attr("y",y)
+            .attr("width",width)
+            .attr("height",height);
+        svg.append("rect")
+            .attr("x", x)
+            .attr("y", y)
+            .attr("height", height)
+            .attr("width", width)
+            .style("stroke", "black")
+            .style("fill", "none");
+    }
+
+    console.log(experimentr.data());
+    add_mod_intros("recap_1.PNG");
+
+
+    var mod_pages = [1,2,3,4,5];//key for which pages display recap slides
+
+
+    function goToNext() {
+        //delete experimentr.data()["mat"];
+        experimentr.next();
+    }
+    var start = Date.now();
+    var restore = {};
+    function all_answered(){
+        var prev = start;
+        var answer = Object.keys(restore).length>0? restore:{};
+        var text = [];
+        d3.selectAll(".result").remove();
+        start = Date.now();
+        for(i in experimentr.data()["clicks"]){
+            if(+experimentr.data()["clicks"][i][0]>+prev){
+                answer[+experimentr.data()["clicks"][i][1]-1] = Math.floor(+experimentr.data()["clicks"][i][2]/3);
+            }
+        }
+        if(Object.keys(answer).length < d3.selectAll(".blocks")[0].length){
+            restore = answer;
+            return(false);
+//                disable_submit();
+        } else {
+            restore = {};
+            return(true);
+//                enable_submit();
+        }
+    };
+//
+//        function disable_submit(){
+//            d3.select("#submitAnswers").attr("disabled","true");
+//            d3.select("#submitAnswers").style("color","#b3b3b3");
+//        }
+//
+//        function enable_submit(){
+//            d3.select("#submitAnswers").attr("disabled",null);
+//            d3.select("#submitAnswers").style("color","black");
+//        }
+    d3.select("#iframe_instruction").style("opacity", 0);
+    var mode_order = ["Vanilla", "Full","Partial","Partial","Partial_Cell","Opti1"];
+    var instructionDisplayed =false;
+    var count =0;//when count=3, mode 5 instruction will display
+    function render_content(){
+        if(step==experimentr.data()["mat"].length-1){
+            experimentr.endTimer('main_section');
+            console.log("In main_section",step);
+            grading();
+            goToNext();
+        }else {
+
+            if (sec_switch == 1 && (mod_pages.indexOf(step) > -1)) {
+                console.log("Step is",step);
+                d3.select('#submitComments').style("left", "50%").property("innerHTML","Ready to Answer Questions?").style("test-align","center");
+                d3.selectAll(".blocks").remove();
+                d3.select("#notation").html("");
+                add_mod_intros("recap_" + (step + 1) + ".PNG");
+                if(step==3){
+                    count=count+1;
+                    d3.select("#iframe_instruction").style("opacity", 0);
+                }
+                delay_next(250);
+                sec_switch = 0
+            } else {
+//                    d3.select("#notation").text("Page " + (step + 1).toString() + "/" + (experimentr.data()['mat'].length - 1).toString());
+                d3.select("#notation").text("");
+                //console.log("Hi there is a notation");
+                d3.select('#submitComments').style("left", "35px").property("innerHTML","Submit");
+                ;
+                setTimeout(function () {
+                    d3.selectAll(".blocks").remove();
+                    experimentr.data()["mode"] = mode_order[step - 1];
+                    console.log(mode_order[step-1])
+                    pairs(experimentr.data()["mat"][step - 1], step - 1, experimentr.data()["mat"][step - 1].length, experimentr.data()["mode"]);
+                    if (experimentr.data()["mode"] == "Vanilla") {
+
+                        d3.selectAll(".icon").remove();
+                        d3.selectAll(".freq").remove();
+                        d3.selectAll(".tip").remove();
+                    }
+                    if (experimentr.data()["mode"] == "Partial") {
+                        count=count+1;
+                        if(instructionDisplayed ==false) {
+                            console.log("displaying instruction");
+                            d3.selectAll(".blocks").remove();
+                            d3.select("#iframe_instruction").style("opacity", 1)
+                                .style("position","absolute").style("top","10px");
+                            d3.select("#submitComments").style("position","absolute").style("top","800px");
+                            //    d3.select("#welcome").show();
+                            //   d3.select("#iframe_instruction").attr("src","resources/ViewerJS/#/resources/disclosure_mode_5.pdf");
+                            instructionDisplayed = true;
+                            console.log("on 5 step is:",step);
+                        }
+                        if(instructionDisplayed ==true&&count==2) {
+                            console.log("displaying questions");
+                            d3.select("#iframe_instruction").remove();
+                            d3.select('#submitComments').style("left", "50%").property("innerHTML","OK is here?").style("line-height","8px");
+                        }
+
+                    }
+                }, 100);
+
+                delay_next(350);
+
+                step += 1;
+                sec_switch = 1;
+
+            }
+        }
+    }
+
+    d3.select('#submitComments')
+        .on('click', function () {
+            //console.log(experimentr.data());
+            d3.select("#answer_all").text("");
+            d3.select("#heading").remove();
+            d3.select('#submitComments').style("left","2.5%");
+            //console.log((Date.now()-experimentr.data()["time_of_website_start"])/(1000*60));
+            if(parse_url().testing === 'true'){
+                render_content();
+            } else {
+                if(d3.selectAll(".blocks")[0].length > 0){//blocks in number of questions in a page
+                    if(all_answered()){
+                        render_content();
+                    } else {
+                        d3.select("#answer_all").text("Please answer all questions to proceed")
+                    }
+                } else {
+                    render_content();
+                }
+            }
+
+            // time elapse
+            experimentr.data()['switch'].push(Date.now());
+            experimentr.save();
+        });
+
+
+}());
+</script>
