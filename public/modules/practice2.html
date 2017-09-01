@@ -96,7 +96,7 @@
             pairs(experimentr.data()["practice2"][0], 0, experimentr.data()["practice2"][0].length, experimentr.data()["mode"]),
             200
         );
-        var start = Date.now();
+
         console.log(start);
         if (experimentr.data()["mode"] == "Vanilla") {
             d3.selectAll(".icon").remove();
@@ -117,6 +117,7 @@
             }
         }
 
+        var start = Date.now();
         var restore = {};
         d3.select('#submitAnswers')
             .on('click', function(){

@@ -132,16 +132,96 @@
 //                enable_submit();
         }
     };
+
+    var start = Date.now();
+    var restore = {};
+
+    function formatted_join(string_array){
+        if(string_array.length === 1){
+            return(string_array);
+        }else if(string_array.length === 2){
+            return(string_array.join(" and "));
+        } else{
+            let res = string_array.slice(0,string_array.length-1).join(", ");
+            return(res+" and "+string_array[string_array.length-1]);
+        }
+    };
+
+    function feedback(){
+            var questions = [];
+            var data_pairs = experimentr.data()["mat"][step-1];
+            for(var i =0; i<data_pairs.length; i++){
+                questions.push(data_pairs[i][0][0])
+            }
+            var prev = start;
+            var answer = Object.keys(restore).length>0 ? restore:{};
+            var text = [];
+            d3.selectAll(".result").remove();
+            start = Date.now();
+            for(i in experimentr.data()["clicks"]){
+                if(experimentr.data()['clicks'][i][0] > prev){
+                    answer[experimentr.data()["clicks"][i][1]-1] = Math.floor(experimentr.data()["clicks"][i][2]);
+                }
+                console.log(+experimentr.data()['clicks'][i][0]>+prev);
+            }
+            console.log(+experimentr.data()['clicks'][i][0], prev);
+            console.log(+experimentr.data()['clicks'][i][0]);
+            console.log(experimentr.data()['clicks'][i][0]);
+            console.log(experimentr.data()['mat_answer']);
+            console.log(answer);
+            console.log(experimentr.data()["clicks"]);
+            //console.log(Object.keys(answer).length, d3.selectAll(".blocks")[0].length);
+            //console.log(experimentr.data()['practice_answer']);
+
+            var score = 0;
+            var wrong_ans = [];
+            for(i in answer){
+                if(experimentr.data()['mat_answer'][+i]==answer[i]){
+                    score+=1;
+                }else{
+                    wrong_ans.push((+i+1).toString());
+                }
+            }
+
+            console.log(wrong_ans);
+
+            var ans_ques = Object.keys(answer);
+            var unaswered_ques = [];
+            //console.log("wrong_ans",wrong_ans);
+            //console.log("ans_ques",ans_ques);
+            for(var i=0; i < questions.length;i++){
+                if(ans_ques.indexOf((parseInt(questions[i])-1).toString())<0){
+                    //console.log("q not answered");
+                    unaswered_ques.push((questions[i]).toString());
+                    wrong_ans.push((questions[i]).toString());
+                }
+            }
+
 //
-//        function disable_submit(){
-//            d3.select("#submitAnswers").attr("disabled","true");
-//            d3.select("#submitAnswers").style("color","#b3b3b3");
-//        }
-//
-//        function enable_submit(){
-//            d3.select("#submitAnswers").attr("disabled",null);
-//            d3.select("#submitAnswers").style("color","black");
-//        }
+//                if(Object.keys(answer).length < d3.selectAll(".blocks")[0].length){
+//                    text = ['You have to answer all the questions to proceed.'];
+//                }
+
+            if(wrong_ans.length > 0){
+                text.push("Please review question(s) "+formatted_join(wrong_ans));
+            }
+
+            restore = answer;
+            if(text.length==0){
+                text = ['Good job! Please click "Next" button to proceed.'];
+                d3.select("#submitComments").style("display","inline");
+                d3.select("#submitAnswers").style("display","none");
+//                    d3.select("#submitComments").attr("disabled",null);
+//                    d3.select("#submitComments").style("color","black");
+                restore = {};
+            }
+            d3.selectAll(".result").remove();
+            d3.select("#notation")
+                .append("h4")
+                .attr("class","result")
+                .text(text.join());
+        };
+
 
     var mode_order = ["Vanilla","Full"];
     function render_content(){
@@ -202,7 +282,8 @@
             } else {
                 if(d3.selectAll(".blocks")[0].length > 0){//blocks in number of questions in a page
                     if(all_answered()){
-                        render_content();
+                        feedback();
+//                        render_content();
                     } else {
                         d3.select("#answer_all").text("Please answer all questions to proceed")
                     }
