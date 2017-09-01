@@ -159,12 +159,13 @@
             d3.selectAll(".result").remove();
             start = Date.now();
             for(i in experimentr.data()["clicks"]){
-                if(experimentr.data()['clicks'][i][0] > prev){
-                    answer[experimentr.data()["clicks"][i][1]-1] = Math.floor(experimentr.data()["clicks"][i][2]);
+                console.log(experimentr.data()['clicks'][i][0], prev);
+                if(experimentr.data()['clicks'][i][0] < prev){
+                    answer[experimentr.data()["clicks"][i][1]-1] = Math.floor(experimentr.data()["clicks"][i][2]/3);
                 }
                 console.log(+experimentr.data()['clicks'][i][0]>+prev);
             }
-            console.log(+experimentr.data()['clicks'][i][0], prev);
+
             console.log(+experimentr.data()['clicks'][i][0]);
             console.log(experimentr.data()['clicks'][i][0]);
             console.log(experimentr.data()['mat_answer']);
@@ -220,6 +221,13 @@
                 .append("h4")
                 .attr("class","result")
                 .text(text.join());
+
+
+            if(text[0] === 'Good job! Please click "Next" button to proceed.'){
+                return true;
+            } else {
+                return false;
+            }
         };
 
 
@@ -282,8 +290,9 @@
             } else {
                 if(d3.selectAll(".blocks")[0].length > 0){//blocks in number of questions in a page
                     if(all_answered()){
-                        feedback();
-//                        render_content();
+                        if(feedback()){
+                            render_content();
+                        }
                     } else {
                         d3.select("#answer_all").text("Please answer all questions to proceed")
                     }
