@@ -55,6 +55,9 @@
     experimentr.startTimer('main_section');
     experimentr.data()['section'] = 'mat';
     experimentr.hideNext();
+
+
+
     // pages
 
     var step = 0,
@@ -109,8 +112,8 @@
         //delete experimentr.data()["mat"];
         experimentr.next();
     }
+
     var start = Date.now();
-    var restore = {};
     function all_answered(){
         var prev = start;
         var answer = Object.keys(restore).length>0? restore:{};
@@ -133,7 +136,7 @@
         }
     };
 
-    var start = Date.now();
+    var start2 = Date.now();
     var restore = {};
 
     function formatted_join(string_array){
@@ -153,17 +156,18 @@
             for(var i =0; i<data_pairs.length; i++){
                 questions.push(data_pairs[i][0][0])
             }
-            var prev = start;
+            var prev2 = start2;
             var answer = Object.keys(restore).length>0 ? restore:{};
             var text = [];
             d3.selectAll(".result").remove();
-            start = Date.now();
+            start2 = Date.now();
             for(i in experimentr.data()["clicks"]){
-                console.log(experimentr.data()['clicks'][i][0], prev);
-                if(experimentr.data()['clicks'][i][0] < prev){
+                console.log(experimentr.data()['clicks'][i][0], prev2);
+                console.log(+experimentr.data()['clicks'][i][0], +prev2);
+                if(experimentr.data()['clicks'][i][0] > prev2){
                     answer[experimentr.data()["clicks"][i][1]-1] = Math.floor(experimentr.data()["clicks"][i][2]/3);
                 }
-                console.log(+experimentr.data()['clicks'][i][0]>+prev);
+                console.log(+experimentr.data()['clicks'][i][0]>+prev2);
             }
 
             console.log(+experimentr.data()['clicks'][i][0]);
