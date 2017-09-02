@@ -150,6 +150,7 @@
         }
     };
 
+    var submit_click = 0;
     function feedback(){
             var questions = [];
             var data_pairs = experimentr.data()["mat"][step-1];
@@ -162,21 +163,10 @@
             d3.selectAll(".result").remove();
             start2 = Date.now();
             for(i in experimentr.data()["clicks"]){
-                console.log(experimentr.data()['clicks'][i][0], prev2);
-                console.log(+experimentr.data()['clicks'][i][0], +prev2);
                 if(experimentr.data()['clicks'][i][0] > prev2){
                     answer[experimentr.data()["clicks"][i][1]-1] = Math.floor(experimentr.data()["clicks"][i][2]/3);
                 }
-                console.log(+experimentr.data()['clicks'][i][0]>+prev2);
             }
-
-            console.log(+experimentr.data()['clicks'][i][0]);
-            console.log(experimentr.data()['clicks'][i][0]);
-            console.log(experimentr.data()['mat_answer']);
-            console.log(answer);
-            console.log(experimentr.data()["clicks"]);
-            //console.log(Object.keys(answer).length, d3.selectAll(".blocks")[0].length);
-            //console.log(experimentr.data()['practice_answer']);
 
             var score = 0;
             var wrong_ans = [];
@@ -187,9 +177,6 @@
                     wrong_ans.push((+i+1).toString());
                 }
             }
-
-            console.log(wrong_ans);
-
             var ans_ques = Object.keys(answer);
             var unaswered_ques = [];
             //console.log("wrong_ans",wrong_ans);
@@ -202,11 +189,6 @@
                 }
             }
 
-//
-//                if(Object.keys(answer).length < d3.selectAll(".blocks")[0].length){
-//                    text = ['You have to answer all the questions to proceed.'];
-//                }
-
             if(wrong_ans.length > 0){
                 text.push("Please review question(s) "+formatted_join(wrong_ans));
             }
@@ -216,8 +198,7 @@
                 text = ['Good job! Please click "Next" button to proceed.'];
                 d3.select("#submitComments").style("display","inline");
                 d3.select("#submitAnswers").style("display","none");
-//                    d3.select("#submitComments").attr("disabled",null);
-//                    d3.select("#submitComments").style("color","black");
+
                 restore = {};
             }
             d3.selectAll(".result").remove();
@@ -227,7 +208,9 @@
                 .text(text.join());
 
 
-            if(text[0] === 'Good job! Please click "Next" button to proceed.'){
+            submit_click += 1;
+
+            if(submit_click === 2) {
                 return true;
             } else {
                 return false;
