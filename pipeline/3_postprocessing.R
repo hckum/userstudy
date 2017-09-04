@@ -5,7 +5,7 @@ library(stringr)
 # library(forcats)
 
 
-question_types <- c(2,6,17,23,34,19)
+question_types <- c(36,8,11,21,27)
 
 is_not_empty <- function(string) {
   if(is.na(string) | string == "" | string == ".") {

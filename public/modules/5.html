@@ -6,7 +6,7 @@
 </head>
 <style>
     #submitComments {
-        position: relative;
+        position: absolute;
         left: 50%;
         transform: translate(-50%, 0%);
     }
@@ -36,13 +36,14 @@
 <div id="container">
     <div id="instruction" style="text-align:center;">
         <!--<h1 id="heading">Main Study</h1>-->
-        <div id="notation" style="text-align:left;">
-            <!--<label id="page"></label>-->
-        </div>
+
         <br> <br>
         <div id="table"></div>
     </div>
     <br>
+    <div id="notation" style="text-align:left;padding:5px;width:1400px;">
+        <!--<label id="page"></label>-->
+    </div>
     <button id="submitComments" class="next-button" type="button">Ready to Answer Questions?</button><label id="answer_all" style="position: absolute; left: 150px; color: red;"></label><br>
 </div>
 <br>
@@ -146,8 +147,9 @@
             return(res+" and "+string_array[string_array.length-1]);
         }
     };
-
+    var submit_click = 0;
     function feedback(){
+
             var questions = [];
             var data_pairs = experimentr.data()["mat"][step-1];
             for(var i =0; i<data_pairs.length; i++){
@@ -184,7 +186,7 @@
                 }
             }
 
-            console.log(wrong_ans);
+            console.log("1.Wrong answers are:"+wrong_ans);
 
             var ans_ques = Object.keys(answer);
             var unaswered_ques = [];
@@ -204,8 +206,53 @@
 //                }
 
             if(wrong_ans.length > 0){
-                text.push("Please review question(s) "+formatted_join(wrong_ans));
-            }
+                text.push("Please review the following question(s) ");
+               if (experimentr.data()["mode"] == "Vanilla"){
+                    for(var i=0;i<wrong_ans.length;i++) {
+                    if (wrong_ans[i]==1||wrong_ans[i]==7||wrong_ans[i]==13||wrong_ans[i]==19||wrong_ans[i]==25){
+                        text.push(" for QUESTION "+wrong_ans[i]+",notice this is a female. It is very likely that a woman is married and changed her last name");
+                    }
+                    else if(wrong_ans[i]==2||wrong_ans[i]==8||wrong_ans[i]==14||wrong_ans[i]==20||wrong_ans[i]==26){
+                        text.push("  for  QUESTION "+wrong_ans[i]+",notice there is a date swap given other information, it is very likely that a human mistake happened and the pair refers to the same person");
+                    }
+                    else if(wrong_ans[i]==3||wrong_ans[i]==9||wrong_ans[i]==15||wrong_ans[i]==21||wrong_ans[i]==27){
+                        text.push(" for  QUESTION "+wrong_ans[i]+",notice it is very likely that a nickname is written in record");
+                    }
+                    else if(wrong_ans[i]==4||wrong_ans[i]==10||wrong_ans[i]==16||wrong_ans[i]==22||wrong_ans[i]==28){
+                        text.push(" for  QUESTION "+wrong_ans[i]+"，notice the uniqueness of the name");
+                    }
+                    else if(wrong_ans[i]==5||wrong_ans[i]==11||wrong_ans[i]==17||wrong_ans[i]==23||wrong_ans[i]==29){
+                        text.push(" for  QUESTION "+wrong_ans[i]+"，notice it is very likely that the pair are twin");
+                    }
+                    else if(wrong_ans[i]==6||wrong_ans[i]==12||wrong_ans[i]==18||wrong_ans[i]==24||wrong_ans[i]==30){
+                        text.push(" for  QUESTION "+wrong_ans[i]+"，notice the uniqueness of the name. The \"III\" might be a change of name");
+                    }
+                }
+}
+            else {
+                   for(var i=0;i<wrong_ans.length;i++) {
+                       if (wrong_ans[i]==7||wrong_ans[i]==13||wrong_ans[i]==19||wrong_ans[i]==25){
+                           text.push(" for QUESTION "+wrong_ans[i]+",notice this is a female. It is very likely that a woman is married and changed her last name");
+                       }
+                       else if(wrong_ans[i]==8||wrong_ans[i]==14||wrong_ans[i]==20||wrong_ans[i]==26){
+                           text.push("  for  QUESTION "+wrong_ans[i]+",notice there is a date swap given other information, it is very likely that a human mistake happened and the pair refers to the same person");
+                       }
+                       else if(wrong_ans[i]==9||wrong_ans[i]==15||wrong_ans[i]==21||wrong_ans[i]==27){
+                           text.push(" for  QUESTION "+wrong_ans[i]+",notice it is very likely that a nickname is written in record");
+                       }
+                       else if(wrong_ans[i]==10||wrong_ans[i]==16||wrong_ans[i]==22||wrong_ans[i]==28){
+                           text.push(" for  QUESTION "+wrong_ans[i]+"，notice the uniqueness of the name");
+                       }
+                       else if(wrong_ans[i]==11||wrong_ans[i]==17||wrong_ans[i]==23||wrong_ans[i]==29){
+                           text.push(" for  QUESTION "+wrong_ans[i]+"，notice it is very likely that the pair are twin");
+                       }
+                       else if(wrong_ans[i]==12||wrong_ans[i]==18||wrong_ans[i]==24||wrong_ans[i]==30){
+                           text.push(" for  QUESTION "+wrong_ans[i]+"，notice the uniqueness of the name. The \"III\" might be a change of name");
+                       }
+                   }
+
+               }}
+
 
             restore = answer;
             if(text.length==0){
@@ -217,17 +264,27 @@
                 restore = {};
             }
             d3.selectAll(".result").remove();
-            d3.select("#notation")
-                .append("h4")
-                .attr("class","result")
-                .text(text.join());
-
-
-            if(text[0] === 'Good job! Please click "Next" button to proceed.'){
-                return true;
-            } else {
-                return false;
+            for(var i = 0; i < text.length; i++){
+                d3.select("#notation")
+                    .append("h4")
+                    .attr("class","result")
+                    .text(text[i]);
             }
+
+        submit_click += 1;
+        console.log("submit_click is ："+submit_click);
+        if(submit_click% 2===0) {
+            console.log("1.Wrong answers are:"+wrong_ans);
+            wrong_ans.length=0;
+            console.log("1.Wrong answers are:"+wrong_ans);
+            console.log("loop in true");
+            return true;
+        } else {
+            return false;
+        }
+
+
+
         };
 
 
