@@ -8,9 +8,10 @@
 <div id="notation" style="text-align:left;">
 
 </div>
-<h1><button style="background:none; border:none; margin:0; padding:0;" id="summon_dumpdata"></button></h1><br>
+<h1>Thank you<button style="background:none; border:none; margin:0; padding:0;" id="summon_dumpdata">!</button></h1><br>
 <div id="thanks" style="font-size: 25px">
-    <strong>
+    <strong>Please do not log off or close this page. <br><br>
+    Thank you very much for participating in the study. Have a great rest of the day!
 </div><br><br>
 <div id="scoring_info" style="visibility: hidden;">
     <p id="score"></p>
@@ -56,35 +57,6 @@
 //                experimentr.next();
 //            });
     }());
-    function add_mod_intros(img_address){
-        var height = "550px",
-            width = "1000px",
-            x = "400px",
-            y = "20px";
-
-        d3.select("#notation").select(".image").remove();
-        var svg = d3.select("#notation")
-            .append("svg")
-            .attr("class", "image")
-            .attr("width", 1800)
-            .attr("height", 600);
-        svg.append("svg:image")
-            .attr("xlink:href","/resources/module_intros/"+img_address)
-            .attr("x",x)
-            .attr("y",y)
-            .attr("width",width)
-            .attr("height",height);
-        svg.append("rect")
-            .attr("x", x)
-            .attr("y", y)
-            .attr("height", height)
-            .attr("width", width)
-            .style("stroke", "black")
-            .style("fill", "none");
-    }
-
-    console.log(experimentr.data());
-    add_mod_intros("conclusion.png");
 </script>
 
 </html>
