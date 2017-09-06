@@ -210,22 +210,22 @@
                if (experimentr.data()["mode"] == "Vanilla"){
                     for(var i=0;i<wrong_ans.length;i++) {
                     if (wrong_ans[i]==1||wrong_ans[i]==7||wrong_ans[i]==13||wrong_ans[i]==19||wrong_ans[i]==25){
-                        text.push(" for QUESTION "+wrong_ans[i]+",notice this is a female. It is very likely that a woman is married and changed her last name");
+                        text.push("QUESTION "+wrong_ans[i]+": notice this is a female. It is very likely that a woman is married and changed her last name");
                     }
                     else if(wrong_ans[i]==2||wrong_ans[i]==8||wrong_ans[i]==14||wrong_ans[i]==20||wrong_ans[i]==26){
-                        text.push("  for  QUESTION "+wrong_ans[i]+",notice there is a date swap given other information, it is very likely that a human mistake happened and the pair refers to the same person");
+                        text.push("QUESTION "+wrong_ans[i]+": notice there is a date swap given other information, it is very likely that a human mistake happened and the pair refers to the same person");
                     }
                     else if(wrong_ans[i]==3||wrong_ans[i]==9||wrong_ans[i]==15||wrong_ans[i]==21||wrong_ans[i]==27){
-                        text.push(" for  QUESTION "+wrong_ans[i]+",notice it is very likely that a nickname is written in record");
+                        text.push("QUESTION "+wrong_ans[i]+": notice it is very likely that a nickname is written in record");
                     }
                     else if(wrong_ans[i]==4||wrong_ans[i]==10||wrong_ans[i]==16||wrong_ans[i]==22||wrong_ans[i]==28){
-                        text.push(" for  QUESTION "+wrong_ans[i]+"，notice the uniqueness of the name");
+                        text.push("QUESTION "+wrong_ans[i]+": notice the uniqueness of the name");
                     }
                     else if(wrong_ans[i]==5||wrong_ans[i]==11||wrong_ans[i]==17||wrong_ans[i]==23||wrong_ans[i]==29){
-                        text.push(" for  QUESTION "+wrong_ans[i]+"，notice it is very likely that the pair are twin");
+                        text.push("QUESTION "+wrong_ans[i]+": notice it is very likely that the pair are twin");
                     }
                     else if(wrong_ans[i]==6||wrong_ans[i]==12||wrong_ans[i]==18||wrong_ans[i]==24||wrong_ans[i]==30){
-                        text.push(" for  QUESTION "+wrong_ans[i]+"，notice the uniqueness of the name. The \"III\" might be a change of name");
+                        text.push("QUESTION "+wrong_ans[i]+": notice the uniqueness of the name. The \"III\" might have been omitted initially.");
                     }
                 }
 }
