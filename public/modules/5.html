@@ -257,7 +257,7 @@
             restore = answer;
             if(text.length==0){
                 text = ['Good job! Please click "Next" button to proceed.'];
-                d3.select("#submitComments").style("display","inline");
+//                d3.select("#submitComments").style("display","inline");
                 d3.select("#submitAnswers").style("display","none");
 //                    d3.select("#submitComments").attr("disabled",null);
 //                    d3.select("#submitComments").style("color","black");
@@ -311,12 +311,13 @@
 //                    d3.select("#notation").text("Page " + (step + 1).toString() + "/" + (experimentr.data()['mat'].length - 1).toString());
                 d3.select("#notation").text("");
                 //console.log("Hi there is a notation");
-                d3.select('#submitComments').style("left", "35px").property("innerHTML","Submit");
-                ;
+                d3.select('#submitComments').style("left", "5%")
+                    .property("innerHTML","Submit");
+
                 setTimeout(function () {
                     d3.selectAll(".blocks").remove();
                     experimentr.data()["mode"] = mode_order[step - 1];
-                    console.log(mode_order[step-1])
+//                    console.log(mode_order[step-1]);
                     pairs(experimentr.data()["mat"][step - 1], step - 1, experimentr.data()["mat"][step - 1].length, experimentr.data()["mode"]);
                     if (experimentr.data()["mode"] == "Vanilla") {
                         d3.selectAll(".icon").remove();
@@ -341,7 +342,7 @@
             //console.log(experimentr.data());
             d3.select("#answer_all").text("");
             d3.select("#heading").remove();
-            d3.select('#submitComments').style("left","2.5%");
+//            d3.select('#submitComments').style("left","2.5%");
             //console.log((Date.now()-experimentr.data()["time_of_website_start"])/(1000*60));
             if(parse_url().testing === 'true'){
                 render_content();
