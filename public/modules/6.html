@@ -243,65 +243,65 @@
                 if (experimentr.data()["mode"] == "Partial_Cell"){
                 for(var i=0;i<wrong_ans.length;i++) {
                     if (wrong_ans[i]==19||wrong_ans[i]==25){
-                        text.push("QUESTION "+wrong_ans[i]+": notice it is likely that a woman is married and changed her last name");
+                        text.push("QUESTION "+wrong_ans[i]+": The records are females. It is very likely that a woman is married and changed her last name.");
                     }
                     else if(wrong_ans[i]==20||wrong_ans[i]==26){
-                        text.push("QUESTION "+wrong_ans[i]+": notice there is a date swap given other information, it is very likely that a human mistake happened and the pair refers to the same person");
+                        text.push("QUESTION "+wrong_ans[i]+": It is likely that the pair are twin.");
                     }
                     else if(wrong_ans[i]==21||wrong_ans[i]==27){
-                        text.push("QUESTION "+wrong_ans[i]+": notice it is very likely that a nickname is written in record");
+                        text.push("QUESTION "+wrong_ans[i]+": The race is different, the dob is missing, the IDs are different with the names being common names. Likely that the people are different");
                     }
                     else if(wrong_ans[i]==22||wrong_ans[i]==28){
-                        text.push("QUESTION "+wrong_ans[i]+": notice the uniqueness of the name");
+                        text.push("QUESTION "+wrong_ans[i]+": Notice the difference in age and the jr/sr post-fix. It's likely that they represent father and son.");
                     }
                     else if(wrong_ans[i]==23||wrong_ans[i]==29){
-                        text.push("QUESTION "+wrong_ans[i]+": notice it is very likely that the pair are twin");
+                        text.push("QUESTION "+wrong_ans[i]+": The ID is missing but the first name might be a nick name and pair probably represents the same person.");
                     }
                     else if(wrong_ans[i]==24||wrong_ans[i]==30){
-                        text.push("QUESTION "+wrong_ans[i]+": notice the uniqueness of the name. The \"III\" might have been omitted initially.");
+                        text.push("QUESTION "+wrong_ans[i]+": The first and last names have been swapped and the id is missing but they have the same birthdays. Likely represent the same person ");
                     }
                 }}
                 else if(experimentr.data()["mode"] == "Opti1") {
                     for(var i=0;i<wrong_ans.length;i++) {
                         if (wrong_ans[i]==25){
-                            text.push(" for QUESTION "+wrong_ans[i]+",notice it is likely that a woman is married and changed her last name");
+                            text.push("QUESTION "+wrong_ans[i]+": The records are females. It is very likely that a woman is married and changed her last name.");
                         }
                         else if(wrong_ans[i]==26){
-                            text.push("  for  QUESTION "+wrong_ans[i]+",notice there is a date swap given other information, it is very likely that a human mistake happened and the pair refers to the same person");
+                            text.push("QUESTION "+wrong_ans[i]+": It is likely that the pair are twin.");
                         }
                         else if(wrong_ans[i]==27){
-                            text.push(" for  QUESTION "+wrong_ans[i]+",notice it is very likely that a nickname is written in record");
+                            text.push("QUESTION "+wrong_ans[i]+": The race is different, the dob is missing, the IDs are different with the names being common names. Likely that the people are different");
                         }
                         else if(wrong_ans[i]==28){
-                            text.push(" for  QUESTION "+wrong_ans[i]+"，notice the uniqueness of the name");
+                            text.push("QUESTION "+wrong_ans[i]+": Notice the difference in age and the jr/sr post-fix. It's likely that they represent father and son.");
                         }
                         else if(wrong_ans[i]==29){
-                            text.push(" for  QUESTION "+wrong_ans[i]+"，notice it is very likely that the pair are twin");
+                            text.push("QUESTION "+wrong_ans[i]+": The ID is missing but the first name might be a nick name and pair probably represents the same person.");
                         }
                         else if(wrong_ans[i]==30){
-                            text.push(" for  QUESTION "+wrong_ans[i]+"，notice the uniqueness of the name. There might be a change of name");
+                            text.push("QUESTION "+wrong_ans[i]+": The first and last names have been swapped and the id is missing but they have the same birthdays. Likely represent the same person ");
                         }
                     }
                 }
                 else{
                     for(var i=0;i<wrong_ans.length;i++) {
                         if (wrong_ans[i]==13||wrong_ans[i]==19||wrong_ans[i]==25){
-                            text.push(" for QUESTION "+wrong_ans[i]+",notice this is a female. It is very likely that a woman is married and changed her last name");
+                            text.push("QUESTION "+wrong_ans[i]+": The records are females. It is very likely that a woman is married and changed her last name.");
                         }
                         else if(wrong_ans[i]==14||wrong_ans[i]==20||wrong_ans[i]==26){
-                            text.push("  for  QUESTION "+wrong_ans[i]+",notice there is a date swap given other information, it is very likely that a human mistake happened and the pair refers to the same person");
+                            text.push("QUESTION "+wrong_ans[i]+": It is likely that the pair are twin.");
                         }
                         else if(wrong_ans[i]==15||wrong_ans[i]==21||wrong_ans[i]==27){
-                            text.push(" for  QUESTION "+wrong_ans[i]+",notice it is very likely that a nickname is written in record");
+                            text.push("QUESTION "+wrong_ans[i]+": The race is different, the dob is missing, the IDs are different with the names being common names. Likely that the people are different");
                         }
                         else if(wrong_ans[i]==16||wrong_ans[i]==22||wrong_ans[i]==28){
-                            text.push(" for  QUESTION "+wrong_ans[i]+"，notice the uniqueness of the name");
+                            text.push("QUESTION "+wrong_ans[i]+": Notice the difference in age and the jr/sr post-fix. It's likely that they represent father and son.");
                         }
                         else if(wrong_ans[i]==17||wrong_ans[i]==23||wrong_ans[i]==29){
-                            text.push(" for  QUESTION "+wrong_ans[i]+"，notice it is very likely that the pair are twin");
+                            text.push("QUESTION "+wrong_ans[i]+": The ID is missing but the first name might be a nick name and pair probably represents the same person.");
                         }
                         else if(wrong_ans[i]==18||wrong_ans[i]==24||wrong_ans[i]==30){
-                            text.push(" for  QUESTION "+wrong_ans[i]+"，notice the uniqueness of the name. The \"III\" might be a change of name");
+                            text.push("QUESTION "+wrong_ans[i]+": The first and last names have been swapped and the id is missing but they have the same birthdays. Likely represent the same person ");
                         }
                     }}
 
