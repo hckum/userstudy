@@ -2,10 +2,16 @@ library(dplyr)
 library(readr)
 library(magrittr)
 library(stringr)
+library(tidyverse)
 # library(forcats)
 
 
-question_types <- c(36,8,11,21,27)
+question_types <- c(2,
+                    8,
+                    18,
+                    22,
+                    33,
+                    27)
 
 is_not_empty <- function(string) {
   if(is.na(string) | string == "" | string == ".") {
@@ -84,7 +90,8 @@ starred_data_2 %>%
   filter(!(n>5))
  # filter(`n` %in% page_numbers )
 
-
+starred_data_3 <- starred_data_2
+starred_data_2 <- starred_data_3
 
 randomize_table <- function(ord_tbl, sampling = T){
   if(sampling){
@@ -101,17 +108,18 @@ randomize_table <- function(ord_tbl, sampling = T){
   
 }
 
-set.seed(1)
+# set.seed(1)
+# 
+# starred_data_2 <- 
+# starred_data_2 %>% 
+#   group_by(n) %>% 
+#   do(randomize_table(.)) %>%
+#   ungroup() %>% 
+#   select(-n) 
 
-starred_data_2 <- 
-starred_data_2 %>% 
-  group_by(n) %>% 
-  do(randomize_table(.)) %>%
-  ungroup() %>% 
-  select(-n) 
 
-
-starred_data_2 <- randomize_table(starred_data_2, F)
+starred_data_2 <- randomize_table(starred_data_2, F) %>% 
+    select(-n)
 
 # %>% %T>% View()
 #sample_n(1) %$%
