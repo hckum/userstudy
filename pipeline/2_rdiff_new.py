@@ -1,4 +1,15 @@
 import csv
+from Crypto.Cipher import XOR
+import base64
+
+key = "hello"
+def encrypt(key, plaintext):
+  cipher = XOR.new(key)
+  return base64.b64encode(cipher.encrypt(plaintext))
+
+def decrypt(key, ciphertext):
+  cipher = XOR.new(key)
+  return cipher.decrypt(base64.b64decode(ciphertext))
 
 def substring_at_ends(s1, s2):
     len1 = len(s1)
@@ -315,17 +326,30 @@ def pair(s,star_indices):
     for i in range(len(tmp1)):
         if i in star_index_values:
             if i == star_indices["dob"]:
-                x, y = get_star_date(tmp1[i], tmp2[i])
+                if tmp1[i] == tmp2[i]:
+                    x, y = get_star_date(tmp1[i], tmp2[i])
+                else:
+                    x = encrypt(key, tmp1[i])
+                    y = encrypt(key, tmp2[i])
             elif i == star_indices["voter_reg_num"]:
-                x, y = get_star_vot_reg(tmp1[i], tmp2[i])
+                if tmp1[i] == tmp2[i]:
+                    x, y = get_star_vot_reg(tmp1[i], tmp2[i])
+                else:
+                    x = encrypt(key, tmp1[i])
+                    y = encrypt(key, tmp2[i])
             elif i == star_indices["last_name"] or i == star_indices["first_name"]:
                 if tmp1[star_indices["last_name"]] == tmp2[star_indices["first_name"]] and tmp2[star_indices["last_name"]] == tmp1[star_indices["first_name"]]:
                     x, y = tmp1[i], tmp2[i]
                     # name_swap = True
                 elif check_starring(tmp1[i], tmp2[i]):
-                    x, y = get_edit_distance(tmp1[i], tmp2[i])
+                    if tmp1[i] == tmp2[i]:
+                        x, y = get_edit_distance(tmp1[i], tmp2[i])
+                    else:
+                        x = encrypt(key, tmp1[i])
+                        y = encrypt(key, tmp2[i])
                 else:
-                    x, y = tmp1[i], tmp2[i]
+                    x = encrypt(key, tmp1[i])
+                    y = encrypt(key, tmp2[i])
             elif i == star_indices["race"] or i == star_indices["sex"]:
                 if tmp1[i] == tmp2[i]:
                     x, y = "*", "*"
