@@ -53,7 +53,7 @@ for i in k:
     fieldnames = fieldnames | set(data[i].keys())
 fieldnames.remove('practice')
 fieldnames.remove('practice2')
-fieldnames.remove('section2')
+#fieldnames.remove('section2')
 #fieldnames.remove('answer')
 fieldnames = sorted(list(fieldnames))
 
