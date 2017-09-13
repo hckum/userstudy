@@ -43,20 +43,6 @@ col_names <- c("Group ID", "ID",
       rename(fname = `First Name`,
              lname = `Last Name`))
 
-# (fname_freq <- read_csv("./frequencies/fname_freq.csv"))
-# (lname_freq <- read_csv("./frequencies/lname_freq.csv"))
-
-# starred_data <- 
-#   starred_data %>%
-#     left_join(fname_freq, by = c("fname","src")) %>%
-#       mutate(FF = ifelse(!is.na(n),n,1)) %>%
-#         select(-n)
-# 
-# starred_data <- 
-#   starred_data %>%
-#     left_join(lname_freq, by = c("lname","src")) %>%
-#     mutate(LF = ifelse(!is.na(n),n,1)) %>%
-#     select(-n)
 
 (starred_data <- 
   starred_data %>%
@@ -85,17 +71,27 @@ page_numbers = c(1,2,3,4,5)
 starred_data_2 <-
 starred_data_2 %>%
   group_by(`Record ID`) %>% 
-  mutate(n = sort(rep(1:(n()/2),2))) %>% select(n, everything()) %>% 
-  ungroup() %>% arrange(n , `Group ID`)  %>%
-  filter(!(n>5))
- # filter(`n` %in% page_numbers )
+  mutate(n = sort(rep(1:(n()/2),2))) %>% 
+  select(n, everything()) %>% 
+  ungroup() %>% 
+  arrange(n , `Group ID`)  %>%
+  filter(n<6)
 
 starred_data_3 <- starred_data_2
 starred_data_2 <- starred_data_3
 
 randomize_table <- function(ord_tbl, sampling = T){
   if(sampling){
-    gid <- ord_tbl %>% pull(`Group ID`) %>% unique() %>% base::sample(size = length(.), replace = F)
+    gid <- 
+      ord_tbl %>%
+        select(n, type,`Group ID`) %>% 
+        group_by(n, type) %>% 
+        slice(1) %>%
+        ungroup() %>% 
+        group_by(n) %>% 
+        sample_n(6) %>% 
+        pull(`Group ID`)
+    # gid <- ord_tbl %>% pull(`Group ID`) %>% unique() %>% base::sample(size = length(.), replace = F)
   } else {
     gid <- ord_tbl %>% pull(`Group ID`) %>% unique()
   }
@@ -108,34 +104,21 @@ randomize_table <- function(ord_tbl, sampling = T){
   
 }
 
-# set.seed(1)
-# 
-# starred_data_2 <- 
-# starred_data_2 %>% 
-#   group_by(n) %>% 
-#   do(randomize_table(.)) %>%
-#   ungroup() %>% 
-#   select(-n) 
 
 
-starred_data_2 <- randomize_table(starred_data_2, F) %>% 
-    select(-n)
+enc5 <- read_csv("./data_intermediate/enc_5.csv", col_types = cols(.default = "c", `Group ID` = "i")) %>%
+  mutate(n = 6) %>%
+    select(n, everything())
+enc5 <- 
+  enc5 %>%
+  mutate_all(funs(ifelse(is_not_empty(.),.,"")))
+names(enc5) <- names(starred_data_2)
+starred_data_2 <- 
+  starred_data_2 %>%
+  bind_rows(enc5)
 
-# %>% %T>% View()
-#sample_n(1) %$%
-#  Group ID
-
-
-# mutate(n = sort(rep(1:(n()/2),2))) %>% select(n, everything()) %>% 
-
-#(unordered_questions <- 
-#    starred_data_2 %>%
-#    sample_n(.,size = nrow(.)) %$%
-#    
-#%>%
-#    unique())
-
-
+starred_data_2 <- randomize_table(starred_data_2, T) 
+starred_data_2$n = NULL
 #make the names standard
 
 names(starred_data_2) <- col_names
