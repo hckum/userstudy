@@ -942,8 +942,14 @@ function pairs(t,s,n,m) {
             // var panel = g.append("g").attr("id","panel").attr("transform","translate(920,0)");
             var panel = g.append("g").attr("id","panel").attr("transform","translate(1350,0)");
 
-            // var re = panel.append("rect").attr("x",30).attr("height",24).attr("width",320).style("fill","add8e6");
-            var re = panel.append("rect").attr("x",-20).attr("height",24).attr("width",570).style("fill","add8e6");
+            // var re = panel.append("rect").attr("x",-20).attr("height",24).attr("width",100).style("fill","add8e6");
+            if ((cwidth.reduce((a, b) => a + b, 0)) > 1050){
+                // console.log("hahaha");
+                var re = panel.append("rect").attr("x",100).attr("height",24).attr("width",400).style("fill","add8e6");
+            } else {
+                var re = panel.append("rect").attr("x",-20).attr("height",24).attr("width",570).style("fill","add8e6");
+            }
+
 
             var te = panel.append("text")
                 .attr("x",170)

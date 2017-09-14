@@ -347,7 +347,7 @@
 
 //        console.log(experimentr.data()["mat"]);
 //        console.log("Hi");
-        var mode_order = ["Opti1","Partial","Partial","Partial_Cell","Opti1","Opti1","Opti1"];
+        var mode_order = ["Opti1","Partial","Partial","Partial_Cell","Opti1","Opti1","Partial"];
         step=2;
         function render_content(){
             if(step==experimentr.data()["mat"].length-1){
@@ -384,7 +384,12 @@
                         d3.selectAll(".blocks").remove();
                         experimentr.data()["mode"] = mode_order[step - 1];
                         console.log(experimentr.data()["mode"]);
-                        console.log(mode_order[step-1])
+                        console.log(mode_order[step-1]);
+                        if(step == 6) {
+                            experimentr.data()["mode"] = "Opti1";
+                            console.log(experimentr.data()["mode"]);
+                            cwidth =  [60,200,45,225,200,45,175,60,60,80];
+                        }
                         pairs(experimentr.data()["mat"][step - 1], step - 1, experimentr.data()["mat"][step - 1].length, experimentr.data()["mode"]);
                         if (experimentr.data()["mode"] == "Vanilla") {
                             d3.selectAll(".icon").remove();

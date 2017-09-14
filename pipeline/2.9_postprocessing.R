@@ -36,16 +36,16 @@ col_names <- c("Group ID", "ID",
 #DoB, Race, Record ID, type, Answer]
 
 
-(starred_data <- read_csv("./data_intermediate/all_starred_race.csv", 
+(starred_data <- read_csv("./data_intermediate/all_starred_race_enc.csv", 
                           col_types = cols(.default = "c", `Group ID` = "i")) %>%
-  mutate_all(funs(ifelse(is_not_empty(.),.,""))) %>%
+    mutate_all(funs(ifelse(is_not_empty(.),.,""))) %>%
     mutate(src = str_extract(`Record ID`, "[AB]")) %>%
-      rename(fname = `First Name`,
-             lname = `Last Name`))
+    rename(fname = `First Name`,
+           lname = `Last Name`))
 
 
 (starred_data <- 
-  starred_data %>%
+    starred_data %>%
     mutate(`Record ID` = str_extract(`Record ID`,"[0-9]+")))
 
 starred_data <- 
@@ -60,39 +60,30 @@ starred_data %>%
   group_by(type,`Record ID`) %>%
   unique() %>% count(type,`Record ID`)
 
-attention_test = c(1,7,13,19,25,31)
+
 # choose 6 questions
 starred_data_2 <-
   starred_data%>%
-   filter(as.numeric(`Record ID`)  %in% question_types)
+  filter(as.numeric(`Record ID`)  %in% question_types)
 
 page_numbers = c(1,2,3,4,5)
 
 starred_data_2 <-
-starred_data_2 %>%
+  starred_data_2 %>%
   group_by(`Record ID`) %>% 
   mutate(n = sort(rep(1:(n()/2),2))) %>% 
   select(n, everything()) %>% 
   ungroup() %>% 
   arrange(n , `Group ID`)  %>%
-  filter(n<6)
+  filter(n == 6)
 
 starred_data_3 <- starred_data_2
 starred_data_2 <- starred_data_3
 
 randomize_table <- function(ord_tbl, sampling = T){
   if(sampling){
-    set.seed(1)
-    gid <- 
-      ord_tbl %>%
-        select(n, type,`Group ID`) %>% 
-        group_by(n, type) %>% 
-        slice(1) %>%
-        ungroup() %>% 
-        group_by(n) %>% 
-        sample_n(6) %>% 
-        pull(`Group ID`)
-    # gid <- ord_tbl %>% pull(`Group ID`) %>% unique() %>% base::sample(size = length(.), replace = F)
+    set.seed(2)
+    gid <- ord_tbl %>% pull(`Group ID`) %>% unique() %>% base::sample(size = length(.), replace = F)
   } else {
     gid <- ord_tbl %>% pull(`Group ID`) %>% unique()
   }
@@ -106,26 +97,13 @@ randomize_table <- function(ord_tbl, sampling = T){
 }
 
 
+starred_data_2 <- randomize_table(starred_data_2, F) %>% 
+  select(-n)
 
-enc5 <- read_csv("./data_intermediate/enc_5.csv", col_types = cols(.default = "c", `Group ID` = "i")) %>%
-  mutate(n = 6) %>%
-    select(n, everything())
-enc5 <- 
-  enc5 %>%
-  mutate_all(funs(ifelse(is_not_empty(.),.,"")))
-names(enc5) <- names(starred_data_2)
-starred_data_2 <- 
-  starred_data_2 %>%
-  bind_rows(enc5)
 
-starred_data_2 <- randomize_table(starred_data_2, T) 
-starred_data_2$n = NULL
-starred_data_2 <- 
-  starred_data_2 %>%
-  mutate(`Group ID` = sort(rep(1:(n()/2),2)))
 #make the names standard
 
 names(starred_data_2) <- col_names
 starred_data_2%>%
-  write_csv(paste0(sprintf("./data_output/samples/sample_%02d",1),".csv"))
+  write_csv(paste0("./data_intermediate/enc_5",".csv"))
 
