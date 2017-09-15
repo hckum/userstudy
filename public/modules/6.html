@@ -285,22 +285,22 @@
                     }
                     else{
                             if (wrong_ans[i]==31){
-                                text.push("QUESTION "+wrong_ans[i]+": The records are females. It is very likely that a woman is married and changed her last name.");
+                                text.push("QUESTION "+wrong_ans[i]+": The race is different, the dob is missing, the IDs are different with the names being common names. Likely that the people are different");
                             }
-                            else if(wrong_ans[i]==32){
-                                text.push("QUESTION "+wrong_ans[i]+": It is likely that the pair are twin.");
-                            }
-//                            else if(wrong_ans[i]==34){
-//                                text.push("QUESTION "+wrong_ans[i]+": The race is different, the dob is missing, the IDs are different with the names being common names. Likely that the people are different");
-//                            }
-//                            else if(wrong_ans[i]==35){
-//                                text.push("QUESTION "+wrong_ans[i]+": Notice the difference in age and the jr/sr post-fix. It's likely that they represent father and son.");
-//                            }
-//                            else if(wrong_ans[i]==36){
-//                                text.push("QUESTION "+wrong_ans[i]+": The ID is missing but the first name might be a nick name and pair probably represents the same person.");
-//                            }
                             else if(wrong_ans[i]==32){
                                 text.push("QUESTION "+wrong_ans[i]+": The first and last names have been swapped and the id is missing but they have the same birthdays. Likely represent the same person ");
+                            }
+                            else if(wrong_ans[i]==34){
+                                text.push("QUESTION "+wrong_ans[i]+": The records are females. It is very likely that a woman is married and changed her last name.");
+                            }
+                            else if(wrong_ans[i]==35){
+                                text.push("QUESTION "+wrong_ans[i]+": Too many differences. It is very likely that the pair is not the same person");
+                            }
+                            else if(wrong_ans[i]==36){
+                                text.push("QUESTION "+wrong_ans[i]+": The ID is missing but the first name might be a nick name and pair probably represents the same person.");
+                            }
+                            else if(wrong_ans[i]==33){
+                                text.push("QUESTION "+wrong_ans[i]+": It is likely that the pair are twin.");
                             }
 
                         }
