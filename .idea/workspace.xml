@@ -2,16 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0e29c6df-9fc3-4c4c-ab4e-18561c52b86a" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dump.rdb" afterPath="$PROJECT_DIR$/dump.rdb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pipeline_practice/data_input/allg_id_ord.csv" afterPath="$PROJECT_DIR$/pipeline_practice/data_input/allg_id_ord.csv" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pipeline_practice/data_intermediate/all_no_stars.csv" afterPath="$PROJECT_DIR$/pipeline_practice/data_intermediate/all_no_stars.csv" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pipeline_practice/data_intermediate/all_starred_race.csv" afterPath="$PROJECT_DIR$/pipeline_practice/data_intermediate/all_starred_race.csv" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pipeline_practice/data_output/frequency_starred.csv" afterPath="$PROJECT_DIR$/pipeline_practice/data_output/frequency_starred.csv" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pipeline_practice/data_output/practice2.csv" afterPath="$PROJECT_DIR$/pipeline_practice/data_output/practice2.csv" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/index.html" afterPath="$PROJECT_DIR$/public/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/modules/6.html" afterPath="$PROJECT_DIR$/public/modules/6.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/modules/main_section_start.html" afterPath="$PROJECT_DIR$/public/modules/main_section_start.html" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -665,14 +656,7 @@
       <workItem from="1505329279599" duration="3144000" />
       <workItem from="1505416772892" duration="7043000" />
       <workItem from="1505436255822" duration="7000" />
-      <workItem from="1505481915130" duration="5237000" />
-    </task>
-    <task id="LOCAL-00089" summary="feedback &amp; bug fix">
-      <created>1499372213610</created>
-      <option name="number" value="00089" />
-      <option name="presentableId" value="LOCAL-00089" />
-      <option name="project" value="LOCAL" />
-      <updated>1499372213610</updated>
+      <workItem from="1505481915130" duration="5283000" />
     </task>
     <task id="LOCAL-00090" summary="feedback &amp; bug fix">
       <created>1499372586034</created>
@@ -1010,11 +994,18 @@
       <option name="project" value="LOCAL" />
       <updated>1505437377258</updated>
     </task>
-    <option name="localTasksCounter" value="138" />
+    <task id="LOCAL-00138" summary="feedback added">
+      <created>1505488019049</created>
+      <option name="number" value="00138" />
+      <option name="presentableId" value="LOCAL-00138" />
+      <option name="project" value="LOCAL" />
+      <updated>1505488019064</updated>
+    </task>
+    <option name="localTasksCounter" value="139" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="454413000" />
+    <option name="totallyTimeSpent" value="454459000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1552" height="850" extended-state="6" />
@@ -1082,7 +1073,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="clickable area expanded in panel" />
     <MESSAGE value="numerous bug fixes" />
     <MESSAGE value="practice 2 bug fix" />
     <MESSAGE value="New changes" />
@@ -1107,7 +1097,8 @@
     <MESSAGE value="encryption mode incorporated" />
     <MESSAGE value="encryption mode incorporated with scrambling" />
     <MESSAGE value="sex and race encrypted" />
-    <option name="LAST_COMMIT_MESSAGE" value="sex and race encrypted" />
+    <MESSAGE value="feedback added" />
+    <option name="LAST_COMMIT_MESSAGE" value="feedback added" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
