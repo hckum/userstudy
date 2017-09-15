@@ -1,5 +1,7 @@
-Group ID,Record ID,First Name,FF,Last Name,LF,Reg No.,DoB,Sex,Race,First Name,Last Name,Reg No.,DoB,Sex,Race,type,Same
-1,1-A,JOHN,2,SMITH,2,8000002767,09/09/1906,M,W,****,*****,******27**,**/**/****,*,*,1,1
-1,1-B,JOHN,2,SMITH,2,8000003567,09/09/1906,M,W,****,*****,******35**,**/**/****,*,*,1,1
-2,2-A,DEQUAN,2,WAMBOLDT,2,0000006847,05/02/1962,F,W,******,********,*******8**,**/**/****,*,*,1,1
-2,2-B,DEQUAN,2,WAMBOLDT,2,0000006947,05/02/1962,F,W,******,********,*******9**,**/**/****,*,*,1,1
+Group ID,Record ID,Reg No.,First Name,Last Name,DoB,Sex,Race,Reg No.,First Name,Last Name,DoB,Sex,Race,FF,LF,type,Same
+1,1-A,8000002767,WILLIAM,JUDE,09/09/1906,~,%,8Nzz7WWOePQFJ7ycYtcflg==,H0Mwdz8KpFKaTfPE+qr8Xw==,*,/KSKzJ2U5C/fpHmkMqZPqw==,*,%,1,1
+1,1-B,8000003567,WILLIAM JR,JUDE,09/09/1960,~,^,18qwUpZC38BZmEF2JvlmHQ==,o1fSci26GzxKx41n1lkRuQ==,*,bJupClSkjj/bmw9DRq07vw==,*,^,1,1
+3,3-A,9000018540,BYRD,SALLY,07/04/1960,>,%,2OHl4iAgLTPosARbnPXX3g==,*,Pgi+8vEbeh4nP757N9zGdg==,JPHm/tFJf/Sa38z+PthPYQ==,>,%,1,1
+3,3-B,6000008928,BYRD,JOHN,04/07/1960,~,,vx3+RRh1vO+0xnmyqmaa2A==,*,9SGxq1uytTwBKSC8SpQx8A==,AgsX5d/vZ1tRukT6GTxCZw==,~,,1,1
+2,2-A,0000006947,MADELINE,BRYANT,05/02/1962,>,%,*,MADELINE,BRYANT,*,*,*,1,1
+2,2-B,0000006947,BRYANT,MADELINE,05/02/1962,>,%,*,BRYANT,MADELINE,*,*,*,1,1

@@ -291,16 +291,16 @@
                                 text.push("QUESTION "+wrong_ans[i]+": The first and last names have been swapped and the id is missing but they have the same birthdays. Likely represent the same person ");
                             }
                             else if(wrong_ans[i]==34){
-                                text.push("QUESTION "+wrong_ans[i]+": It is very likely that a woman is married and changed her last name.");
+                                text.push("QUESTION "+wrong_ans[i]+": The person is a female but that information is encrypted. Last name changes for women due to marriage are common");
                             }
                             else if(wrong_ans[i]==35){
                                 text.push("QUESTION "+wrong_ans[i]+": Too many differences. It is very likely that the pair is not the same person");
                             }
                             else if(wrong_ans[i]==36){
-                                text.push("QUESTION "+wrong_ans[i]+": The ID is missing but the first name might be a nick name and pair probably represents the same person.");
+                                text.push("QUESTION "+wrong_ans[i]+": The first names shown to be different are Judith and Judy (a nickname) but after encryption, we cannot find this out. So a person who would otherwise be thought of as same will be selected as different");
                             }
                             else if(wrong_ans[i]==33){
-                                text.push("QUESTION "+wrong_ans[i]+": It is likely that the pair are twin.");
+                                text.push("QUESTION "+wrong_ans[i]+": The IDs here are different by just 1 character and the first names are ERIC and ERICA. Very likely they are twins but this information is lost if data is encrypted.");
                             }
 
                         }
