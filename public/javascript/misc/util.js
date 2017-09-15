@@ -850,8 +850,8 @@ function pair(t,g,m){
                 if(title[j] != "FFreq" && title[j] != "LFreq" && title[j] != "Pair" && title[j] != "ID."){
                     if(row1[j] == row2[j] && row1[j]!=""){
                         if(['ID', 'Last name', 'First name', 'DoB(M/D/Y)', 'Race'].indexOf(title[j%cwidth.length])>-1){
-                            experimentr.data()["no_display"]+=row1[mapping[j%cwidth.length]].match(/[A-Z0-9]|\040|\'|\-\./g).length;
-                            experimentr.data()["no_display"]+=row2[mapping[j%cwidth.length]].match(/[A-Z0-9]|\040|\'|\-\./g).length;
+                            // experimentr.data()["no_display"]+=row1[mapping[j%cwidth.length]].match(/[A-Z0-9]|\040|\'|\-\./g).length;
+                            // experimentr.data()["no_display"]+=row2[mapping[j%cwidth.length]].match(/[A-Z0-9]|\040|\'|\-\./g).length;
                         }
                         row1[j] = " ";
                         row2[j] = " ";

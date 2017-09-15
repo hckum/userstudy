@@ -14,9 +14,19 @@ def encrypt(key, plaintext):
   return base64.b64encode(cipher.encrypt(plaintext))
 
 
-def encrypt2(key, encoded_string):
-  # cipher = XOR.new(key)
-  return base64.b64encode(encoded_string)
+def encrypt2(key, string):
+  if string == "M":
+      return "~"
+  elif string == "F":
+      return ">"
+  elif string == "W":
+      return "%"
+  elif string == "B":
+      return "^"
+  elif string == "U":
+      return "$"
+  else:
+      return string
 
 # def decrypt(key, ciphertext):
 #   cipher = XOR.new(key)
@@ -322,7 +332,7 @@ def get_star_vot_reg(n1, n2):
         return final_1,final_2
 
 def test_and_encrypt(a,b):
-    if a == b and len(a) > 0 and len(a) > 0:
+    if a == b and len(a) > 0 and len(b) > 0:
         x, y = ["*","*"]
     else:
         if len(a) > 0 and len(b) > 0:
@@ -331,7 +341,7 @@ def test_and_encrypt(a,b):
         elif len(b) == 0 and len(a) > 0:
             x = encrypt(key, a)
             y = b
-        elif len(a) == 0 and len(a) > 0:
+        elif len(a) == 0 and len(b) > 0:
             x = a
             y = encrypt(key, b)
         else:
