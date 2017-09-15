@@ -285,22 +285,22 @@
                     }
                     else{
                             if (wrong_ans[i]==31){
-                                text.push("QUESTION "+wrong_ans[i]+": The race is different, the dob is missing, the IDs are different with the names being common names. Likely that the people are different");
+                                text.push("QUESTION "+wrong_ans[i]+": Here are the values before encryption. ID is 1001030318 and 1999839173, DOB is 12/14/1990 for the non-missing. Sex is female for both records, and Race is W and B. Note that both the first and last names are common names (Erin Carroll). Do you still think the two records refer to the same person?");
                             }
                             else if(wrong_ans[i]==32){
-                                text.push("QUESTION "+wrong_ans[i]+": The first and last names have been swapped and the id is missing but they have the same birthdays. Likely represent the same person ");
+                                text.push("QUESTION "+wrong_ans[i]+": Here are the values before encryption. ID is 1000279225 for the non-missing, first name and last name are swapped between the two records (MAMIE-CLARA and BAKER) and sex is female. Note that the name frequencies indicate rare names except a common last name, when used as first name is rare. Do you still think the two records refer to two different people?");
                             }
                             else if(wrong_ans[i]==34){
-                                text.push("QUESTION "+wrong_ans[i]+": The person is a female but that information is encrypted. Last name changes for women due to marriage are common");
+                                text.push("QUESTION "+wrong_ans[i]+": Here are the values before encryption. The two last names were MCELMORE and HOYLE, and both were Females. Note that the name frequencies indicate rare first name (ALMERTH) and that last name changes for women due to marriage are common. Do you still think the two records refer to two different people?");
                             }
                             else if(wrong_ans[i]==35){
-                                text.push("QUESTION "+wrong_ans[i]+": Too many differences. It is very likely that the pair is not the same person");
+                                text.push("QUESTION "+wrong_ans[i]+": Here are the values before encryption. ID is 1000336293 and 1000063393, last name LESTER and LESTER JR, DOB 07/23/1956 and 05/25/1917, and both their sexes is Male. Note that the only common values are a common first name (JOHN), race (B), and sex. Do you still think the two records refer to the same person?");
                             }
                             else if(wrong_ans[i]==36){
-                                text.push("QUESTION "+wrong_ans[i]+": The first names shown to be different are Judith and Judy (a nickname) but after encryption, we cannot find this out. So a person who would otherwise be thought of as same will be selected as different");
+                                text.push("QUESTION "+wrong_ans[i]+": The first names shown to be different are Judith and Judy but after encryption the attributes are very different. Knowing their first names, do you still think the two records refer to two different people?");
                             }
                             else if(wrong_ans[i]==33){
-                                text.push("QUESTION "+wrong_ans[i]+": The IDs here are different by just 1 character and the first names are ERIC and ERICA. Very likely they are twins but this information is lost if data is encrypted.");
+                                text.push("QUESTION "+wrong_ans[i]+": Here are the values before encryption. ID is X and Y (note that it is different only by 1 character), first names are ERIC and ERICA, with Eric being Male and Erica being Female. Do you think they might be twins? Do you still think the two records refer to the same person?");
                             }
 
                         }
