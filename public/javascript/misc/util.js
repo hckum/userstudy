@@ -18,6 +18,9 @@ var data = {}; // experimentr data
 var n_pair = 0;
 var s2_n_pair = 0;
 var swap_switch=0;
+var mode_list = ["Partial", "Partial_Cell", "Opti1", "Full"];
+
+
 
 /**
  * draw a cell
@@ -39,18 +42,105 @@ var swap_switch=0;
  *      9:hidden data
  *      }
  */
-function cell(t,g,j,k){
+function cell(t,g,j,k, mode){
+
+
+    // if(title[j%cwidth.length]=="ID"){
+    //     console.log("ID");
+    //     console.log("t",t);
+    //     console.log("g",g);
+    //     console.log("j",j);
+    //     console.log("j",k);
+    // }
+    //
+    // if(title[j%cwidth.length]=="ID."){
+    //     console.log("IDdot");
+    //     console.log("t",t);
+    //     console.log("g",g);
+    //     console.log("j",j);
+    //     console.log("k",k);
+    // }
+
     // erase title columns
     var index_r = g.attr("id").slice(1)%6;
     var x = 40*(j%cwidth.length)+cwidth.slice(0,j%cwidth.length).reduce((a, b) => a + b, 0),
         y = index_r==0&&j>=cwidth.length ? ys[Math.floor(j/cwidth.length)]+20 : ys[Math.floor(j/cwidth.length)],
         cx = cwidth[j%cwidth.length],
         cy = height;
-    var cel = g.append("g").attr("id","c"+j.toString()).attr("class","cell")
-        .attr("transform","translate("+x+","+y+")");
+    var cel = g.append("g").attr("id","c"+j.toString()).attr("class","cell").attr("data-mode",mode)
+        .attr("transform","translate("+x+","+y+")").on('click',function(){
+
+            var current_mode = cel.attr("data-mode");
+
+            if(((current_mode=="Partial") || (current_mode=="Partial_Cell")) && (["ID", "First name", "Last name", "DoB(M/D/Y)", "Sex", "Race"].indexOf(title[j%cwidth.length]) >= 0)) {
+
+                if(j > 20) {
+                    var row_num = 1;
+                    var j2 = j-10;
+                    var otcell = "#c"+(j-10);
+                } else {
+                    var row_num = 0
+                    var j2 = j+10;
+                    var otcell = "#c"+(j+10);
+                }
+
+                d3.select(this.parentNode)
+                    .select(otcell).remove();
+                d3.select(this).remove();
+
+                var prev_text = dat[g.attr("id").slice(1) % 6][row_num][mapping[j % cwidth.length]];
+
+
+                if(mode_list[mode_list.indexOf(current_mode) + 1] == "Opti1" && title[j%cwidth.length]=="ID") {
+                    var next_mode = "Full";
+                } else {
+                    var next_mode = mode_list[mode_list.indexOf(current_mode) + 1];
+                }
+
+                if (next_mode == "Full") {
+                    mapping = [0, 9, 2, 10, 11, 5, 12, 7, 14, 1, 3, 4, 6, 7, 8, 15];
+                }
+
+
+
+
+                if(next_mode == "Full" && title[j%cwidth.length]=="ID"){
+                    console.log(dat[g.attr("id").slice(1) % 6][row_num][1]);
+                    console.log(j);
+                    console.log(dat[g.attr("id").slice(1) % 6][row_num][9]);
+                    console.log(j+8);
+                    console.log(dat[g.attr("id").slice(1) % 6][Math.abs(row_num-1)][1]);
+                    console.log(j2);
+                    console.log(dat[g.attr("id").slice(1) % 6][Math.abs(row_num-1)][9]);
+                    console.log(j2+8);
+                    cell(dat[g.attr("id").slice(1) % 6][row_num][1], g, j, 3, next_mode);
+                    cell(dat[g.attr("id").slice(1) % 6][Math.abs(row_num-1)][1], g, j2, 3, next_mode);
+                    cell(dat[g.attr("id").slice(1) % 6][Math.abs(row_num-1)][9], g, j2+8, 3, next_mode);
+                    cell(dat[g.attr("id").slice(1) % 6][row_num][9], g, j+8, 3, next_mode);
+                } else {
+                    var next_text_1 = dat[g.attr("id").slice(1) % 6][row_num][mapping[j % cwidth.length]];
+                    var next_text_2 = dat[g.attr("id").slice(1) % 6][Math.abs(row_num-1)][mapping[j % cwidth.length]];
+
+                    cell(next_text_1, g, j, k, next_mode);
+                    cell(next_text_2, g, j2, k, next_mode);
+                }
+            }
+
+        });
+
+    if((cel.attr("data-mode") == "Partial")||(cel.attr("data-mode") == "Partial_Cell")){
+        cel.on({"mouseover": function(d) {
+            d3.select(this).style("cursor", "pointer");
+        }});
+    } else {
+        cel.on({"mouseover": function(d) {
+            d3.select(this).style("cursor", "default");
+        }});
+    }
+
     var raw_t = t;
 
-    //console.log(title[j%cwidth.length],t);
+
     var rectangle = cel.append("rect").attr("id",j);
     //only show rect on clickable cells
     //if(k==6 && j<2*cwidth.length){
@@ -72,7 +162,7 @@ function cell(t,g,j,k){
         if(t=="ID"){return 18;}
         if(t=="Race"){return 20;}
         if(t=="Sex"){return 20;}
-        if(title[j%cwidth.length]=="Sex" && experimentr.data()["mode"]=="Vanilla"){return "2em";}
+        if(title[j%cwidth.length]=="Sex" && mode=="Vanilla"){return "2em";}
         if(j>cwidth.length && title[j%cwidth.length]=="Race"){return "2em";}
         if(k==2){return cx/2;}
         return 0;})
@@ -147,7 +237,7 @@ function cell(t,g,j,k){
                     }
                 }
             }
-            if(experimentr.data()['mode']!='Vanilla'){
+            if(mode!='Vanilla'){
                 cel.on("mouseover",function(d){
                     div.style("opacity",1);
                 });
@@ -155,12 +245,12 @@ function cell(t,g,j,k){
                     div.style("opacity",0);
                 });
             }
-            if(experimentr.data()['mode']!='Vanilla'){
-                if(experimentr.data()['mode']!='Vanilla'){experimentr.data()['freq']+=1;}
+            if(mode!='Vanilla'){
+                if(mode!='Vanilla'){experimentr.data()['freq']+=1;}
             }
         }
         // check if it's a name swap
-        if(experimentr.data()['mode']!='Vanilla' && title[j%cwidth.length]=="First name"||title[j%cwidth.length]=="Last name"){
+        if(mode!='Vanilla' && title[j%cwidth.length]=="First name"||title[j%cwidth.length]=="Last name"){
             var m = j+cwidth.length,
                 p = g.attr("id").slice(1),
                 dat = experimentr.data()[experimentr.data()['section']][Math.floor(p/6)],
@@ -188,10 +278,10 @@ function cell(t,g,j,k){
                     cel.append("svg:image").attr("xlink:href","/resources/name_swap.svg").attr("class","icon")
                         .attr("x",cwidth[j%cwidth.length]-45).attr("y",cy/2-8).attr("width",60).attr("height",60);
                 }
-                if(["Vanilla","Full"].indexOf(experimentr.data()["mode"])<0){
+                if(["Vanilla","Full"].indexOf(mode)<0){
                     t = t.replace(/[A-Z0-9]/g, function(){if(j%14>9){return "&";}return "@";});
                 }
-                if(experimentr.data()['mode']!='Vanilla'){experimentr.data()['nswap']+=0.25};
+                if(mode!='Vanilla'){experimentr.data()['nswap']+=0.25};
             }
             //console.log(j, fnj, fnm, lnj, lnm);
         }
@@ -205,7 +295,7 @@ function cell(t,g,j,k){
                         else if(title[j%cwidth.length]!="DoB(M/D/Y)"){return cwidth[j%cwidth.length]/3;}
                         return 40;})
                     .attr("y",cy/2-9).attr("width",18).attr("height",18);
-                if(experimentr.data()['mode']!='Vanilla'){experimentr.data()['missing']+=1;}
+                if(mode!='Vanilla'){experimentr.data()['missing']+=1;}
             }
         }
         //else if(textbox.text()==" " && j<cwidth.length*2){
@@ -221,7 +311,7 @@ function cell(t,g,j,k){
                 else if(title[j%cwidth.length]!="DoB(M/D/Y)"){return cwidth[j%cwidth.length]/3;}
                     return 40;})
                 .attr("y",cy/2-5).attr("width",18).attr("height",18);
-            if(experimentr.data()['mode']!='Vanilla'){experimentr.data()['checks']+=0.5;}
+            if(mode!='Vanilla'){experimentr.data()['checks']+=0.5;}
         }else {
             var num = 0;
             if (swap == 0 && title[j % cwidth.length] != "ID." && title[j % cwidth.length] != "FFreq" && title[j % cwidth.length] != "LFreq") {
@@ -232,7 +322,7 @@ function cell(t,g,j,k){
                     t_m = dat[p % 6][1][mapping[m % cwidth.length]],
                     bin = [];
 
-                if(experimentr.data()["mode"]=="Full" && title[j % cwidth.length] == "Sex"){
+                if(mode=="Full" && title[j % cwidth.length] == "Sex"){
 
                     if(t_j != t_m && !(t_j=="" || t_m=="")){
                         if (j < 2 * cwidth.length) {
@@ -265,7 +355,7 @@ function cell(t,g,j,k){
                                     return 20;
                                 })
                                 .attr("y", cy / 2 + 5).attr("width", 35).attr("height", 35);
-                            if(experimentr.data()['mode']!='Vanilla'){experimentr.data()['diff']+=1;}
+                            if(mode!='Vanilla'){experimentr.data()['diff']+=1;}
                         }
                     } else {
                         if (t_j != "" && t_m != "") {
@@ -280,7 +370,7 @@ function cell(t,g,j,k){
                                             .attr("class", "icon").attr("x", 9 * i + 12)
                                             .attr("y", cy / 2 + 13).attr("width", 23).attr("height", 23);
                                     }
-                                    if(experimentr.data()['mode']!='Vanilla'){experimentr.data()['dswap']+=0.5;}
+                                    if(mode!='Vanilla'){experimentr.data()['dswap']+=0.5;}
                                     date_swap = 1;
                                     num += 1
                                 }
@@ -293,7 +383,7 @@ function cell(t,g,j,k){
                                     if ((t_j[i] != "_" && t_m[i] == "_") || i > t_m.length) {
                                         indel.push(i);
                                     }
-                                    if(experimentr.data()['mode']!='Vanilla'){experimentr.data()['indel']+=1;}
+                                    if(mode!='Vanilla'){experimentr.data()['indel']+=1;}
                                     //g.select("#c"+j.toString()).append("svg:image").attr("xlink:href","/resources/indel.png")
                                     //    .attr("class","icon").attr("x",9*i)
                                     //    .attr("y",cy/2+15).attr("width",16).attr("height",16);
@@ -308,7 +398,7 @@ function cell(t,g,j,k){
                                             .attr("class", "icon").attr("x", 9 * i + 4)
                                             .attr("y", cy / 2 + 13).attr("width", 18).attr("height", 18);
                                     }
-                                    if(experimentr.data()['mode']!='Vanilla'){experimentr.data()['transpose']+=1;}
+                                    if(mode!='Vanilla'){experimentr.data()['transpose']+=1;}
                                     transpose.push(i, i + 1);
                                     transpose_.push(i, i + 1);
                                     num += 1;
@@ -321,7 +411,7 @@ function cell(t,g,j,k){
                                         bin.push(i);
                                         replace.push(i);
                                         replace_.push(i);
-                                        if(experimentr.data()['mode']!='Vanilla'){experimentr.data()['replace']+=1;}
+                                        if(mode!='Vanilla'){experimentr.data()['replace']+=1;}
                                     } else {
                                         if (t_m[i] == "?" || t_j[i] == "?") {
                                             bin.push(i);
@@ -399,7 +489,7 @@ function cell(t,g,j,k){
     }
 
     //date swap with special charecters
-    if(date_swap==1 && experimentr.data()['mode']=="Partial"){
+    if(date_swap==1 && mode=="Partial"){
         if(j<2*cwidth.length){
             t = t.slice(0,3)+'&&'+t.slice(5);
         }else{
@@ -414,52 +504,7 @@ function cell(t,g,j,k){
         //        .attr("x",cwidth[j%cwidth.length]/5).attr("y",cy/2).attr("width",48).attr("height",48);
     }
 
-    // click event
-    // if(k==6){
-    //
-    //     rectangle.on("mouseover",function(){d3.select(this).style("cursor", "pointer");});
-    //     textbox.on("mouseover",function(){d3.select(this).style("cursor", "pointer");});
-    //     rectangle.on("mouseout",function(){d3.select(this).style("cursor", "default");});
-    //     textbox.on("mouseout",function(){d3.select(this).style("cursor", "default");});
-    //
-    //     var m = j>=2*cwidth.length ? j-cwidth.length : j+cwidth.length;
-    //
-    //     rectangle.on("click",function(){
-    //         var p = this.parentNode.parentNode.id.slice(1); //pair id
-    //         var dat = experimentr.data()['mat'][Math.floor(p/5)];
-    //         if(experimentr.data()['mode']=="Partial_Cell"){
-    //             var t_j = j<2*cwidth.length ? dat[p%5][0][j%cwidth.length] : dat[p%5][1][j%cwidth.length];
-    //             var t_m = m<2*cwidth.length ? dat[p%5][0][m%cwidth.length] : dat[p%5][1][m%cwidth.length];
-    //             d3.select(this.parentNode).remove();
-    //             d3.select(this.parentNode.parentNode).select("#c"+j.toString()).remove();
-    //             cell(t_j,g,j,3);
-    //             cell(t_m,g,m,3);
-    //         }
-    //         if(experimentr.data()['mode']=="Partial_Row"){
-    //             d3.select(this.parentNode.parentNode).selectAll(".cell").remove();
-    //             pair(title.concat(dat[p%5][0]).concat(dat[p%5][1]),g,"Full_Partial");
-    //         }
-    //     });
-    //     textbox.on("click",function(){
-    //         var p = this.parentNode.parentNode.id.slice(1); //pair id
-    //         var dat = experimentr.data()['mat'][Math.floor(p/5)];
-    //         if(experimentr.data()['mode']=="Partial_Cell"){
-    //             var t_j = j<2*cwidth.length ? dat[p%5][0][j%cwidth.length] : dat[p%5][1][j%cwidth.length];
-    //             var t_m = m<2*cwidth.length ? dat[p%5][0][m%cwidth.length] : dat[p%5][1][m%cwidth.length];
-    //             d3.select(this.parentNode).remove();
-    //             d3.select(this.parentNode.parentNode).select("#c"+j.toString()).remove();
-    //             cell(t_j,g,j,3);
-    //             cell(t_m,g,m,3);
-    //         }
-    //         if(experimentr.data()['mode']=="Partial_Row"){
-    //             d3.select(this.parentNode.parentNode).selectAll(".cell").remove();
-    //             pair(title.concat(dat[p%5][0]).concat(dat[p%5][1]),g,"Full_Partial");
-    //         }
-    //
-    //     });
-    // }
 
-    // coloring letters based on operations
     // indel, indel_, replace, replace_, transpose, transpose_
     // coloring '@' and '#'
     if(diff==1){
@@ -471,51 +516,22 @@ function cell(t,g,j,k){
         transpose_ = [];
 
         // replace display content to special symbols '@', '&'
-        if(["Full","Vanilla","Opti1"].indexOf(experimentr.data()['mode'])<0 && title[j%cwidth.length]=="Race"){
+        if(["Full","Vanilla","Opti1"].indexOf(mode)<0 && title[j%cwidth.length]=="Race"){
             if(j>2*cwidth.length){t = '&';}
             else if(j>cwidth.length){t = '@';}
         }
-        if(["Vanilla","Full", "Opti2"].indexOf(experimentr.data()['mode'])<0 && title[j%cwidth.length]=="ID" && t!=" "){
+        if(["Vanilla","Full", "Opti2"].indexOf(mode)<0 && title[j%cwidth.length]=="ID" && t!=" "){
             if(j>2*cwidth.length){t = t.replace(/[A-Z0-9]|\040|\'|\-/g, '&');}
             else if(j>cwidth.length){t = t.replace(/[A-Z0-9]|\040|\'|\-/g, '@');}
         }
-        if(["Vanilla","Full", "Opti1", "Opti2"].indexOf(experimentr.data()['mode'])<0 &&
+        if(["Vanilla","Full", "Opti1", "Opti2"].indexOf(mode)<0 &&
             ["First name", "Last name", "DoB(M/D/Y)","Race"].indexOf(title[j%cwidth.length])>-1 && t!=" "){
             if(j>2*cwidth.length){t = t.replace(/[A-Z0-9]|\040|\'|\-/g, '&');}
             else if(j>cwidth.length){t = t.replace(/[A-Z0-9]|\040|\'|\-/g, '@');}
         }
     }
-    // if(diff==0 && ["First name", "Last name", "DoB(M/D/Y)"].indexOf(title[j%cwidth.length])>-1 && experimentr.data()['mode']=="Opti1"){
-    //     var p = g.attr("id").slice(1),
-    //         dat = experimentr.data()['mat'][Math.floor(p/6)];
-    //     if(textbox.text().indexOf("*")>-1){
-    //         if(title[j%cwidth.length]=="First name"){
-    //             t = j<2*cwidth.length ? dat[p%6][0][j%cwidth.length-1] : dat[p%6][1][j%cwidth.length-1];
-    //         }else if(title[j%cwidth.length]=="Last name"){
-    //             t = j<2*cwidth.length ? dat[p%6][0][j%cwidth.length] : dat[p%6][1][j%cwidth.length];
-    //         }else{
-    //             t = j<2*cwidth.length ? dat[p%6][0][j%cwidth.length+1] : dat[p%6][1][j%cwidth.length+1];
-    //         }
-    //     }
-    // }
-    // if(diff==0 && ["First name", "Last name", "DoB(M/D/Y)"].indexOf(title[j%cwidth.length])>-1 && experimentr.data()['mode']=="Opti1"){
-    //     var p = g.attr("id").slice(1),
-    //         dat = experimentr.data()['mat'][Math.floor(p/6)];
-    //     if(textbox.text().indexOf("*")>-1){
-    //         if(title[j%cwidth.length]=="First name"){
-    //             t = j<2*cwidth.length ? dat[p%6][0][j%cwidth.length-1] : dat[p%6][1][j%cwidth.length-1];
-    //         }else if(title[j%cwidth.length]=="Last name"){
-    //             t = j<2*cwidth.length ? dat[p%6][0][j%cwidth.length] : dat[p%6][1][j%cwidth.length];
-    //         }else{
-    //             t = j<2*cwidth.length ? dat[p%6][0][j%cwidth.length+1] : dat[p%6][1][j%cwidth.length+1];
-    //         }
-    //     }
-    // }
-    // if(j>cwidth.length && diff==0 && experimentr.data()['mode']=='Opti1' &&
-    //     ['First name', 'Last name', 'DoB(M/D/Y)'].indexOf(title[j%cwidth.length])>-1){
-    //     console.log(t);
-    // }
-    if((experimentr.data()['mode']!="Vanilla") && k>=3 && k<=6 &&
+
+    if((mode!="Vanilla") && k>=3 && k<=6 &&
         title[j%cwidth.length]!="ID." && title[j%cwidth.length]!="LFreq" && title[j%cwidth.length]!="FFreq"){
         g.select("#c"+j.toString()).select(".span").remove();
         var p = g.attr("id").slice(1), //pair id
@@ -533,16 +549,17 @@ function cell(t,g,j,k){
             if(t_j[l]==t_m[l] && t_j[l]!='T' && t_j[l]!='X'){scheme.push(0);}
             else{scheme.push(1);}
         }
-        if(j>cwidth.length && diff==0 && experimentr.data()['mode']=='Opti1' &&
+        if(j>cwidth.length && diff==0 && mode=='Opti1' &&
             ['First name', 'Last name', 'DoB(M/D/Y)'].indexOf(title[j%cwidth.length])>-1){
             if(t.indexOf('*')>-1 && t_m!="" && t_j!=""){
                 t = t_jj;
-                //console.log(t_m, t_j);
+
             }
-            //console.log(t, t_jj);
+
         }
 
-        if(experimentr.data()['mode']=='Partial' && t!=" "){
+        if(mode=='Partial' && t!=" "){
+
             if(j>2*cwidth.length){t = t.replace(/[A-Z0-9]|\040|\'|\-/g, '&');}
             else if(j>cwidth.length){t = t.replace(/[A-Z0-9]|\040|\'|\-/g, '@');}
         }
@@ -579,121 +596,6 @@ function cell(t,g,j,k){
 
     }
 
-    // coloring text
-    /*
-     if(experimentr.data()['mode']!="Full"
-     &&(k==6||k==3)&&title[j%cwidth.length]!="ID." && title[j%cwidth.length]!="LFreq" && title[j%cwidth.length]!="FFreq"){
-     textbox.attr("opacity",0);
-     g.select("#c"+j.toString()).select(".span").remove();
-     var p = g.attr("id").slice(1), //pair id
-     dat = experimentr.data()['mat'][Math.floor(p/5)],
-     m = j>=2*cwidth.length ? j-cwidth.length : j+cwidth.length,
-     len = textbox.text().length,
-     $cel = g.select("#c"+j.toString()),
-     $tb = $cel.append("text").attr("class","span"),
-     t_j = j<2*cwidth.length ? dat[p%5][0][mapping[j%cwidth.length]] : dat[p%5][1][mapping[j%cwidth.length]],
-     t_m = m<2*cwidth.length ? dat[p%5][0][mapping[m%cwidth.length]] : dat[p%5][1][mapping[m%cwidth.length]],
-     t_jj = j<2*cwidth.length ? dat[p%5][0][j%cwidth.length] : dat[p%5][1][j%cwidth.length],
-     scheme = [];
-     for(f=0;f<len;f++){
-     if(t_j[f]==t_m[f]){scheme.push(0);}
-     else{scheme.push(1);}
-     }
-     for(l=0;l<len;l++){
-     var $tspan = $tb.append('tspan');
-     $tspan.attr("x",0.6*l+"em").attr("y",cy/2+5)
-     .attr("text-anchor","left")
-     .style("font",function(){if(experimentr.data()['os']=="MacOS"){return "16px Monaco";}
-     if(experimentr.data()['os']=="Linux"){return "16px Lucida Sans Typewriter";}return "16px Lucida Console";})
-     .attr("fill",function(){
-     if(t_j.length!=t_jj.length){return "black";}
-     if(k==3 && scheme[l]==1 && textbox.text()[l]!="*" && textbox.text()[l]!="/"){return"black";}return "black";})
-     .text(t[l]);
-
-     $tspan.on("mouseover",function(){d3.select(this).style("cursor", "pointer");});
-     $tspan.on("mouseout",function(){d3.select(this).style("cursor", "default");});
-
-     //click function not implemented yet.
-     }
-     }*/
-
-    //statictics
-    if(['mat'].indexOf(experimentr.data()['section'])>-1 && j>cwidth.length &&
-        ['ID', 'Last name', 'First name', 'DoB(M/D/Y)', 'Sex', 'Race'].indexOf(title[j%cwidth.length])>-1){
-        if(experimentr.data()['mode']=='Vanilla'||experimentr.data()['mode']=='Full'){
-            experimentr.data()['open_cell']+=1;
-            if(t.match(/[A-Z0-9]|\040|\'|\-/g)){
-                experimentr.data()['char_display']+=t.match(/[A-Z0-9]|\040|\'|\-/g).length;
-            }
-        }else{
-            if(cel.selectAll('.char')[0].length==1){
-                if([' ', '@', '&', '*'].indexOf(cel.select('.char').text())>-1){
-                    experimentr.data()['close_cell']+=1;
-                    if(['@', '&', '*'].indexOf(cel.select('.char').text())>-1){
-                        experimentr.data()['symbol_display']+=1;
-                        console.log(cel.select('.char').text());
-                    }
-                }else{
-                    experimentr.data()['open_cell']+=1;
-                    experimentr.data()['char_display']+=1;
-                }
-            }else{
-                if(t.match(/[A-Z0-9]|\040|\'|\-/g)){
-                    //console.log(t.match(/[A-Z0-9]|\040|\'|\-/g));
-                    if(t.match(/\*/g)){
-                        experimentr.data()['partial_cell']+=1;
-                    }else{
-                        experimentr.data()['open_cell']+=1;
-                    }
-                }else{
-                    experimentr.data()['close_cell']+=1;
-                }
-                if(t.match(/\&|\@|\*/g)){console.log(t.match(/\&|\@|\*/g));}
-                //if(t.match(/[A-Z0-9]|\'|\-/g)){console.log(t.match(/[A-Z0-9]|\'|\-/g));}
-                experimentr.data()['symbol_display']+= t.match(/\&|\@|\*/g)? t.match(/\&|\@|\*/g).length:0;
-                experimentr.data()['char_display']+=t.match(/[A-Z0-9]|\'|\-/g)?t.match(/[A-Z0-9]|\'|\-/g).length:0;
-
-            }
-            //console.log(title[j%cwidth.length], t, cel.selectAll('.char').length);
-        }
-        console.log(experimentr.data()['open_cell'],experimentr.data()['partial_cell'],experimentr.data()['close_cell'],
-            experimentr.data()['char_display'],experimentr.data()['symbol_display'],experimentr.data()['no_display'],);
-    }
-
-    if(['section2'].indexOf(experimentr.data()['section'])>-1 && j>cwidth.length &&
-        ['ID', 'Last name', 'First name', 'DoB(M/D/Y)', 'Sex', 'Race'].indexOf(title[j%cwidth.length])>-1){
-        if(experimentr.data()['mode']=='Vanilla'||experimentr.data()['mode']=='Full'){
-            experimentr.data()['s2_open_cell']+=1;
-            //console.log(title[j%cwidth.length], t);
-            if(t.match(/[A-Z0-9]/g)){
-                experimentr.data()['s2_char_display']+=t.match(/[A-Z0-9]/g).length;
-            }
-        }else{
-            if(cel.selectAll('.char')[0].length==1){
-                if([' ', '@', '&', '*'].indexOf(cel.select('.char').text())>-1){
-                    experimentr.data()['s2_close_cell']+=1;
-                }else{
-                    experimentr.data()['s2_open_cell']+=1;
-                }
-            }else{
-                if(t.match(/[A-Z0-9]/g)){
-                    if(t.indexOf('*')>-1){
-                        experimentr.data()['s2_partial_cell']+=1;
-                    }else{
-                        experimentr.data()['s2_open_cell']+=1;
-                    }
-                    experimentr.data()['s2_char_display']+=t.match(/[A-Z0-9]/g).length;
-                    experimentr.data()['s2_symbol_display']+=t.length-t.match(/[A-Z0-9]/g).length;
-                }else{
-                    experimentr.data()['s2_close_cell']+=1;
-                    experimentr.data()['s2_symbol_display']+=t.length;
-                }
-            }
-            //console.log(title[j%cwidth.length], t, cel.selectAll('.char').length);
-        }
-        console.log(experimentr.data()['s2_open_cell'],experimentr.data()['s2_partial_cell'],experimentr.data()['s2_close_cell'],
-            experimentr.data()['s2_char_display'],experimentr.data()['s2_symbol_display'],experimentr.data()['s2_no_display'],);
-    }
 }
 
 
@@ -704,19 +606,20 @@ function cell(t,g,j,k){
  * @param j : row number 0/1/2
  * @param k : cell type list
  */
-function row(t,g,j,k){
+function row(t,g,j,k, mode){
+
     var l = 0;
     for(var i=0;i<cwidth.length;i++){
         if(k[i]!=9){
             // console.log("The t is ",t[mapping[i]]);
             if(title[i%cwidth.length]=="Sex" && k[i]!=1){
-                if(experimentr.data()["mode"]=="Partial") {
-                    cell(t[i],g,j*cwidth.length+l,k[i],t[mapping[i]]);
+                if(mode=="Partial") {
+                    cell(t[i],g,j*cwidth.length+l,k[i], mode, t[mapping[i]]);
                 } else {
-                    cell(t[mapping[i]],g,j*cwidth.length+l,k[i],t[i]);
+                    cell(t[mapping[i]],g,j*cwidth.length+l,k[i],mode, t[mapping[i]]);
                 }
             } else {
-                cell(t[i],g,j*cwidth.length+l,k[i],t[mapping[i]]);
+                cell(t[i],g,j*cwidth.length+l,k[i],mode, t[mapping[i]]);
             }
             l+=1;
         }
@@ -744,6 +647,7 @@ function pair(t,g,m){
         k2 = k.slice(b,c);
 
     if(m=="Vanilla" || m=="Full"){
+
         mapping = [0,9,2,10,11,5,12,7,14,1,3,4,6,7,8,15];
     } else{
         mapping = [0,9,2,10,11,5,12,13,14,1,3,4,6,7,8,15];
@@ -760,7 +664,7 @@ function pair(t,g,m){
         for(var j=0;j<mapping.length;j++){
             row1[j] = t[a+mapping[j]];row2[j] = t[b+mapping[j]];
         }
-        //console.log(row1, row2);
+
 
         for(var j = 0;j<a;j++){
 
@@ -899,10 +803,12 @@ function pair(t,g,m){
         var bg = g.append("rect").attr("id",j).attr("height", 120).attr("width", 1800).attr("y", 10).style("fill", "#eaf2ff");
     }
     if(id==0){
-        row(t.slice(0,a),g,0,k.slice(0,a));
+        row(t.slice(0,a),g,0,k.slice(0,a),m);
     }
-    row(row1,g,1,k1);
-    row(row2,g,2,k2);
+    // console.log(row1);
+    // console.log(row2);
+    row(row1,g,1,k1,m);
+    row(row2,g,2,k2,m);
 }
 
 
@@ -924,18 +830,14 @@ function pairs(t,s,n,m) {
         var cur_len = ls_1 >= ls_2 ? ls_1:ls_2;
         len = len >= cur_len ? len:cur_len;
     }
-    //console.log(t);
-    //var cwidth = [60,80,60,160,200,60,140,150]; //910
-    //var lwidth = len* 13;
-    // var lwidth = 100 + (len-5) * 5;
-    // var extra_width = (200-lwidth)/2;
-    // //console.log(len,lwidth);
-    // cwidth = [60,200,60,180,lwidth,150,60+extra_width,100,20]; //910
+
+    // var mode = ["Partial", "Partial_Cell", "Opti1", "Full"];
     for(var i=0;i<n;i++){
         var g = d3.select("#table").append("svg").attr("class","blocks").attr("id","g"+(s*6+i).toString())
             .attr("width", 1800).attr("height", function(){if(i==0){return 140;}return 120;});
         t[i][0] = t[i][0].slice(0,t[i][0].length-2);
         t[i][1] = t[i][1].slice(0,t[i][1].length-2);
+
         pair(title.concat(t[i][0]).concat(t[i][1]),g,m);
         if(i==0){
             choices(g,1450,1,1,40);
@@ -1363,5 +1265,5 @@ function parse_url() {
  */
 function statictics(){
     var d = experimentr.data()['mat'];
-    console.log(d);
+    // console.log(d);
 }
