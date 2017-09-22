@@ -79,7 +79,7 @@ function cell(t,g,j,k, mode){
                     var j2 = j-10;
                     var otcell = "#c"+(j-10);
                 } else {
-                    var row_num = 0
+                    var row_num = 0;
                     var j2 = j+10;
                     var otcell = "#c"+(j+10);
                 }
@@ -105,14 +105,14 @@ function cell(t,g,j,k, mode){
 
 
                 if(next_mode == "Full" && title[j%cwidth.length]=="ID"){
-                    console.log(dat[g.attr("id").slice(1) % 6][row_num][1]);
-                    console.log(j);
-                    console.log(dat[g.attr("id").slice(1) % 6][row_num][9]);
-                    console.log(j+8);
-                    console.log(dat[g.attr("id").slice(1) % 6][Math.abs(row_num-1)][1]);
-                    console.log(j2);
-                    console.log(dat[g.attr("id").slice(1) % 6][Math.abs(row_num-1)][9]);
-                    console.log(j2+8);
+                    // console.log(dat[g.attr("id").slice(1) % 6][row_num][1]);
+                    // console.log(j);
+                    // console.log(dat[g.attr("id").slice(1) % 6][row_num][9]);
+                    // console.log(j+8);
+                    // console.log(dat[g.attr("id").slice(1) % 6][Math.abs(row_num-1)][1]);
+                    // console.log(j2);
+                    // console.log(dat[g.attr("id").slice(1) % 6][Math.abs(row_num-1)][9]);
+                    // console.log(j2+8);
                     cell(dat[g.attr("id").slice(1) % 6][row_num][1], g, j, 3, next_mode);
                     cell(dat[g.attr("id").slice(1) % 6][Math.abs(row_num-1)][1], g, j2, 3, next_mode);
                     cell(dat[g.attr("id").slice(1) % 6][Math.abs(row_num-1)][9], g, j2+8, 3, next_mode);
