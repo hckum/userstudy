@@ -72,7 +72,7 @@ function cell(t,g,j,k, mode){
 
             var current_mode = cel.attr("data-mode");
 
-            if(((current_mode=="Partial") || (current_mode=="Partial_Cell")) && (["ID", "First name", "Last name", "DoB(M/D/Y)", "Sex", "Race"].indexOf(title[j%cwidth.length]) >= 0)) {
+            if((((current_mode=="Partial") || (current_mode=="Partial_Cell")) && (["ID", "First name", "Last name", "DoB(M/D/Y)", "Sex", "Race"].indexOf(title[j%cwidth.length]) >= 0)&& (j > 9))) {
 
                 if(j > 20) {
                     var row_num = 1;
@@ -91,15 +91,18 @@ function cell(t,g,j,k, mode){
                 var prev_text = dat[g.attr("id").slice(1) % 6][row_num][mapping[j % cwidth.length]];
 
 
-                if(mode_list[mode_list.indexOf(current_mode) + 1] == "Opti1" && title[j%cwidth.length]=="ID") {
+                if(((mode_list[mode_list.indexOf(current_mode) + 1] == "Opti1" && title[j%cwidth.length]=="ID") || title[j%cwidth.length]=="Sex")|| title[j%cwidth.length]=="Race" ) {
                     var next_mode = "Full";
                 } else {
                     var next_mode = mode_list[mode_list.indexOf(current_mode) + 1];
                 }
 
                 if (next_mode == "Full") {
-                    mapping = [0, 9, 2, 10, 11, 5, 12, 7, 14, 1, 3, 4, 6, 7, 8, 15];
+                    mapping = [0, 9, 2, 10, 11, 5, 12, 7, 8, 1, 3, 4, 6, 7, 8, 15];
+                }else {
+                    mapping = [0,9,2,10,11,5,12,13,14,1,3,4,6,7,8,15];
                 }
+
 
 
 
@@ -322,7 +325,7 @@ function cell(t,g,j,k, mode){
                     t_m = dat[p % 6][1][mapping[m % cwidth.length]],
                     bin = [];
 
-                if(mode=="Full" && title[j % cwidth.length] == "Sex"){
+                if(mode=="Full" && (title[j % cwidth.length] == "Sex"||title[j % cwidth.length] == "Race")){
 
                     if(t_j != t_m && !(t_j=="" || t_m=="")){
                         if (j < 2 * cwidth.length) {
