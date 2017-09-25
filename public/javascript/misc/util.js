@@ -325,7 +325,7 @@ function cell(t,g,j,k, mode){
                     t_m = dat[p % 6][1][mapping[m % cwidth.length]],
                     bin = [];
 
-                if(mode=="Full" && (title[j % cwidth.length] == "Sex"||title[j % cwidth.length] == "Race")){
+                if(mode=="Full" && (title[j % cwidth.length] == "Sex"||title[j % cwidth.length] == "Race")){//fix diff icon location
 
                     if(t_j != t_m && !(t_j=="" || t_m=="")){
                         if (j < 2 * cwidth.length) {
