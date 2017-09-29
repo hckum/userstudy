@@ -43,6 +43,7 @@ var mode_list = ["Partial", "Partial_Cell", "Opti1", "Full"];
  *      }
  */
 function cell(t,g,j,k, mode){
+    // console.log(t);
 
 
     // if(title[j%cwidth.length]=="ID"){
@@ -68,67 +69,105 @@ function cell(t,g,j,k, mode){
         cx = cwidth[j%cwidth.length],
         cy = height;
     var cel = g.append("g").attr("id","c"+j.toString()).attr("class","cell").attr("data-mode",mode)
-        .attr("transform","translate("+x+","+y+")").on('click',function(){
+        .attr("transform","translate("+x+","+y+")").on('click',function() {
 
             var current_mode = cel.attr("data-mode");
 
-            if((((current_mode=="Partial") || (current_mode=="Partial_Cell")) && (["ID", "First name", "Last name", "DoB(M/D/Y)", "Sex", "Race"].indexOf(title[j%cwidth.length]) >= 0)&& (j > 9))) {
+            if ((((current_mode == "Partial") || (current_mode == "Partial_Cell")) && (["ID", "First name", "Last name", "DoB(M/D/Y)", "Sex", "Race"].indexOf(title[j % cwidth.length]) >= 0) && (j > 9))) {
 
-                if(j > 20) {
+                if (j > 20) {
                     var row_num = 1;
-                    var j2 = j-10;
-                    var otcell = "#c"+(j-10);
-                } else {
-                    var row_num = 0;
-                    var j2 = j+10;
-                    var otcell = "#c"+(j+10);
-                }
+                    var j2 = j - 10;
+                    var otcell = "#c" + (j - 10);
 
-                d3.select(this.parentNode)
-                    .select(otcell).remove();
-                d3.select(this).remove();
+            } else {
+                var row_num = 0;
+                var j2 = j + 10;
+                var otcell = "#c" + (j + 10);
+            }
 
-                var prev_text = dat[g.attr("id").slice(1) % 6][row_num][mapping[j % cwidth.length]];
+            if(["First name", "Last name"].indexOf(title[j%cwidth.length]) >=0){
+                // console.log(typeof(d3.select(this.parentNode).select("#c13").select("#swap")));
+                if(d3.select(this.parentNode).select("#c13").attr("swap_detect")){
+                    d3.select(this.parentNode)
+                        .select(otcell).remove();
+                    d3.select(this).remove();
 
-
-                if(((mode_list[mode_list.indexOf(current_mode) + 1] == "Opti1" && title[j%cwidth.length]=="ID") || title[j%cwidth.length]=="Sex")|| title[j%cwidth.length]=="Race" ) {
-                    var next_mode = "Full";
-                } else {
-                    var next_mode = mode_list[mode_list.indexOf(current_mode) + 1];
-                }
-
-                if (next_mode == "Full") {
-                    mapping = [0, 9, 2, 10, 11, 5, 12, 7, 8, 1, 3, 4, 6, 7, 8, 15];
-                }else {
-                    mapping = [0,9,2,10,11,5,12,13,14,1,3,4,6,7,8,15];
-                }
-
-
-
-
-
-                if(next_mode == "Full" && title[j%cwidth.length]=="ID"){
-                    // console.log(dat[g.attr("id").slice(1) % 6][row_num][1]);
-                    // console.log(j);
-                    // console.log(dat[g.attr("id").slice(1) % 6][row_num][9]);
-                    // console.log(j+8);
-                    // console.log(dat[g.attr("id").slice(1) % 6][Math.abs(row_num-1)][1]);
-                    // console.log(j2);
-                    // console.log(dat[g.attr("id").slice(1) % 6][Math.abs(row_num-1)][9]);
-                    // console.log(j2+8);
-                    cell(dat[g.attr("id").slice(1) % 6][row_num][1], g, j, 3, next_mode);
-                    cell(dat[g.attr("id").slice(1) % 6][Math.abs(row_num-1)][1], g, j2, 3, next_mode);
-                    cell(dat[g.attr("id").slice(1) % 6][Math.abs(row_num-1)][9], g, j2+8, 3, next_mode);
-                    cell(dat[g.attr("id").slice(1) % 6][row_num][9], g, j+8, 3, next_mode);
-                } else {
                     var next_text_1 = dat[g.attr("id").slice(1) % 6][row_num][mapping[j % cwidth.length]];
-                    var next_text_2 = dat[g.attr("id").slice(1) % 6][Math.abs(row_num-1)][mapping[j % cwidth.length]];
+                    var next_text_2 = dat[g.attr("id").slice(1) % 6][Math.abs(row_num - 1)][mapping[j % cwidth.length]];
+                    var next_text_3 = dat[g.attr("id").slice(1) % 6][Math.abs(row_num)][mapping[j % cwidth.length]];
+                    var next_text_4 = dat[g.attr("id").slice(1) % 6][Math.abs(row_num - 1)][mapping[j % cwidth.length]];
 
-                    cell(next_text_1, g, j, k, next_mode);
-                    cell(next_text_2, g, j2, k, next_mode);
+                    cell(next_text_2, g, 13, k,  "Full");
+                    cell(next_text_1, g, 23, k,  "Full");
+                    cell(next_text_4, g, 14, k, "Full");
+                    cell(next_text_3, g, 24, k,  "Full");
+                    // cell(next_text_2, g, 13, k,  "Full");
+                    // cell(next_text_2, g, 14, k,  "Full");
+                    // cell(next_text_1, g, 23, k, "Full");
+                    // cell(next_text_1, g, 24, k,  "Full");
+
                 }
             }
 
+
+            // var prev_text = dat[g.attr("id").slice(1) % 6][row_num][mapping[j % cwidth.length]];
+            var prev_text = d3.select(this).text();
+            // prev_text = prev_text.replace("@",'');
+            // prev_text = prev_text.replace("&",'');
+            prev_text = prev_text.split("&").join("");
+            prev_text = prev_text.split("/").join("");
+            prev_text = prev_text.split("@").join("");
+            console.log(prev_text);
+
+            d3.select(this.parentNode)
+                .select(otcell).remove();
+            d3.select(this).remove();
+
+
+            if (((mode_list[mode_list.indexOf(current_mode) + 1] == "Opti1" && title[j % cwidth.length] == "ID") || title[j % cwidth.length] == "Sex") || title[j % cwidth.length] == "Race" || prev_text.trim() === "") {
+                var next_mode = "Full";
+            } else {
+                var next_mode = mode_list[mode_list.indexOf(current_mode) + 1];
+            }
+
+            if (next_mode == "Full") {
+                mapping = [0, 9, 2, 3, 4, 5, 6, 7, 8, 1, 10, 11, 12, 7, 8, 15];
+            } else {
+                mapping = [0, 9, 2, 10, 11, 5, 12, 13, 14, 1, 3, 4, 6, 7, 8, 15];
+            }
+
+            // if(mode_list[mode_list.indexOf(current_mode) + 1] == "Opti1" && title[j%cwidth.length]=="DoB(M/D/Y)"){
+            //     cell(dat[g.attr("id").slice(1) % 6][row_num][1], g, j, 3, next_mode);
+            //     cell(dat[g.attr("id").slice(1) % 6][Math.abs(row_num-1)][1], g, j2, 3, next_mode);
+            //     cell(dat[g.attr("id").slice(1) % 6][Math.abs(row_num-1)][9], g, j2+8, 3, next_mode);
+            //     cell(dat[g.attr("id").slice(1) % 6][row_num][9], g, j+8, 3, next_mode);
+            //
+            // }
+
+
+            if (next_mode == "Full" && title[j % cwidth.length] == "ID") {
+                // console.log(dat[g.attr("id").slice(1) % 6][row_num][1]);
+                // console.log(j);
+                // console.log(dat[g.attr("id").slice(1) % 6][row_num][9]);
+                // console.log(j+8);
+                // console.log(dat[g.attr("id").slice(1) % 6][Math.abs(row_num-1)][1]);
+                // console.log(j2);
+                // console.log(dat[g.attr("id").slice(1) % 6][Math.abs(row_num-1)][9]);
+                // console.log(j2+8);
+                cell(dat[g.attr("id").slice(1) % 6][row_num][1], g, j, 3, next_mode);
+                cell(dat[g.attr("id").slice(1) % 6][Math.abs(row_num - 1)][1], g, j2, 3, next_mode);
+                cell(dat[g.attr("id").slice(1) % 6][Math.abs(row_num - 1)][9], g, j2 + 8, 3, next_mode);
+                cell(dat[g.attr("id").slice(1) % 6][row_num][9], g, j + 8, 3, next_mode);
+            } else {
+                var next_text_1 = dat[g.attr("id").slice(1) % 6][row_num][mapping[j % cwidth.length]];
+                var next_text_2 = dat[g.attr("id").slice(1) % 6][Math.abs(row_num - 1)][mapping[j % cwidth.length]];
+
+                cell(next_text_1, g, j, k, next_mode);
+                cell(next_text_2, g, j2, k, next_mode);
+            }
+
+        }
         });
 
     if((cel.attr("data-mode") == "Partial")||(cel.attr("data-mode") == "Partial_Cell")){
@@ -280,7 +319,10 @@ function cell(t,g,j,k, mode){
                 if(j<2*cwidth.length && title[j%cwidth.length]=="First name"){
                     cel.append("svg:image").attr("xlink:href","/resources/name_swap.svg").attr("class","icon")
                         .attr("x",cwidth[j%cwidth.length]-45).attr("y",cy/2-8).attr("width",60).attr("height",60);
+                    cel.attr("swap_detect",true);
+
                 }
+
                 if(["Vanilla","Full"].indexOf(mode)<0){
                     t = t.replace(/[A-Z0-9]/g, function(){if(j%14>9){return "&";}return "@";});
                 }
@@ -325,7 +367,8 @@ function cell(t,g,j,k, mode){
                     t_m = dat[p % 6][1][mapping[m % cwidth.length]],
                     bin = [];
 
-                if(mode=="Full" && (title[j % cwidth.length] == "Sex"||title[j % cwidth.length] == "Race")){//fix diff icon location
+                if(mode=="Full" && (title[j % cwidth.length] == "Sex"||title[j % cwidth.length] == "Race"||title[j % cwidth.length] == "First name"||title[j % cwidth.length] == "Last name"
+                        ||title[j % cwidth.length] == "DoB(M/D/Y)")){//fix diff icon location
 
                     if(t_j != t_m && !(t_j=="" || t_m=="")){
                         if (j < 2 * cwidth.length) {
@@ -410,7 +453,7 @@ function cell(t,g,j,k, mode){
                                 //replace
                                 else if (bin.indexOf(i) == -1 && t_j[i] != t_m[i] && t_j[i] != " " && t_m[i] != " ") {
                                     if (title[j % cwidth.length] != "ID" || (title[j % cwidth.length] == "ID" &&
-                                        (j < 10 || Math.max(t_j.length, t_m.length) <= 10))) {
+                                            (j < 10 || Math.max(t_j.length, t_m.length) <= 10))) {
                                         bin.push(i);
                                         replace.push(i);
                                         replace_.push(i);
@@ -582,9 +625,9 @@ function cell(t,g,j,k, mode){
                         return "16px Lucida Console";})
                     .style("font-weight",function(){if(diff==0 &&
                         (((j<2*cwidth.length && indel.indexOf(l)>-1)||(j>2*cwidth.length && indel_.indexOf(l)>-1))||
-                        (j<2*cwidth.length && replace.indexOf(l)>-1)||(j>2*cwidth.length && replace_.indexOf(l)>-1)||
-                        (j<2*cwidth.length && transpose.indexOf(l)>-1)||(j>2*cwidth.length && transpose_.indexOf(l)>-1)||
-                        (j<2*cwidth.length && trailing.indexOf(l)>-1)||(j>2*cwidth.length && trailing_.indexOf(l)>-1))){return "bold";}})
+                            (j<2*cwidth.length && replace.indexOf(l)>-1)||(j>2*cwidth.length && replace_.indexOf(l)>-1)||
+                            (j<2*cwidth.length && transpose.indexOf(l)>-1)||(j>2*cwidth.length && transpose_.indexOf(l)>-1)||
+                            (j<2*cwidth.length && trailing.indexOf(l)>-1)||(j>2*cwidth.length && trailing_.indexOf(l)>-1))){return "bold";}})
                     .attr("fill",function(){
                         if((j<2*cwidth.length && indel.indexOf(l)>-1)||(j>2*cwidth.length && indel_.indexOf(l)>-1)||
                             (j<2*cwidth.length && trailing.indexOf(l)>-1)||(j>2*cwidth.length && trailing_.indexOf(l)>-1)){return "#33ce45";}
