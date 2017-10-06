@@ -41,17 +41,21 @@
 <br>
 </body>
 </html>
+<script src="javascript/misc/clickable.js"></script>
 <script>
     (function(){
-        $.getScript("javascript/misc/util.js");
+        $.getScript("javascript/misc/clickable.js");
         experimentr.startTimer('section2');
         experimentr.hideNext();
         console.log("in");
+        seq = 3;//yumei
         parsing(experimentr.data()["section2_sample_name"],"section2");
         experimentr.data()['section'] = 'section2';
         var step = 0;
         d3.select("#endStudy").style("visibility","hidden");
         console.log(experimentr.data()["section2"]);
+            experimentr.data()["clickable"] = "true";
+
 
         function delay_next(time){
             d3.select("#submitComments").attr("disabled","true");
@@ -70,7 +74,7 @@
             experimentr.next();
         };
 
-       d3.select("#notation").append("h4").text("Now you are moving to section 2.").style("text-align","center");
+       d3.select("#notation").append("h4").text("Now you are moving to click-able interface.").style("text-align","center");
 
        d3.select("#summonEnd").on('click', function(){
            console.log((Date.now()-experimentr.data()["time_of_website_start"])/(1000*60));
@@ -92,15 +96,16 @@
                 console.log(step);
                 d3.select('#submitComments').style("position","absolute").style("left","90px");
 
-
-                if(step==experimentr.data()["section2"].length-1){
+               // console.log("length is ",experimentr.data()["section2"].length-1)
+                if(step==2){//when 2 pages of questions has been displayed(page 0, page1)
                     goToNext();
                 }else {
                     d3.select("#notation").text("Page " + (step + 1).toString());
                     setTimeout(function () {
                         d3.selectAll(".blocks").remove();
                         console.log(experimentr.data()["section2"][step-1]);
-                        pairs(experimentr.data()["section2"][step-1], step-1, experimentr.data()["section2"][step-1].length, experimentr.data()["mode"]);
+                        pairs(experimentr.data()["section2"][step-1], step-1, experimentr.data()["section2"][step-1].length, 'Partial');
+                        console.log("mode is",experimentr.data()["mode"]);
                         if (experimentr.data()["mode"] == "Vanilla") {
                             d3.selectAll(".icon").remove();
                             d3.selectAll(".freq").remove();

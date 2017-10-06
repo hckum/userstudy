@@ -49,6 +49,7 @@
 <br>
 </body>
 </html>
+<script src="javascript/misc/util.js"></script>
 <script>//display 6 record in page
     (function(){
         $.getScript("javascript/misc/util.js");
@@ -416,7 +417,23 @@
                             console.log(experimentr.data()["mode"]);
                             cwidth =  [60,200,45,225,200,45,175,60,60,80];
                         }
-                        pairs(experimentr.data()["mat"][step - 1], step - 1, experimentr.data()["mat"][step - 1].length, experimentr.data()["mode"]);
+                        //pairs(experimentr.data()["mat"][step - 1], step - 1, experimentr.data()["mat"][step - 1].length, experimentr.data()["mode"]);
+                        if(experimentr.data()["mode"] == "Partial"){
+                            pairs(experimentr.data()["mat"][step - 1], step - 1, 3, experimentr.data()["mode"]);
+                        }
+                        else if(experimentr.data()["mode"] == "Partial_Cell"){
+                            pairs(experimentr.data()["mat"][step - 1], step - 1, 3, experimentr.data()["mode"]);
+                        }
+                        else if(step == 6){
+                            pairs(experimentr.data()["mat"][step - 1], step - 1, 6, experimentr.data()["mode"]);
+                            console.log("step is", step);
+                        }
+                        else if(experimentr.data()["mode"] == "Opti1"){
+                            pairs(experimentr.data()["mat"][step - 1], step - 1, 3, experimentr.data()["mode"]);
+                            console.log("step is", step);
+                        }
+
+
                         if (experimentr.data()["mode"] == "Vanilla") {
                             d3.selectAll(".icon").remove();
                             d3.selectAll(".freq").remove();

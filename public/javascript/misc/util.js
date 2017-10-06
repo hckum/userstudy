@@ -39,6 +39,7 @@ var swap_switch=0;
  *      9:hidden data
  *      }
  */
+//console.log("ultil in working :)");
 function cell(t,g,j,k){
     // erase title columns
     var index_r = g.attr("id").slice(1)%6;
@@ -243,7 +244,8 @@ function cell(t,g,j,k){
                         }
                     }
                 } else {
-                    if (title[j % cwidth.length] != "Pair" && t_j.indexOf("*") == -1 && t_m.indexOf("*") == -1 && t_j.trim() != "" && t_m.trim() != "") {
+                    //if (title[j % cwidth.length] != "Pair" && t_j.indexOf("*") == -1 && t_m.indexOf("*") == -1 && t_j.trim() != "" && t_m.trim() != "")
+                        if (title[j % cwidth.length] != "Pair" && t_j.indexOf("*") == -1 && t_m.indexOf("*") == -1 && t_j.trim() != "" && t_m.trim() != "") {
                         //var len = (t_j.length<=t_m.length?t_j.length:t_m.length)/2;
                         //console.log(t_j, t_m);
                         diff = 1;

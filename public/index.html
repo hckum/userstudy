@@ -14,6 +14,8 @@
 <script src="javascript/misc/experimentr.js"></script>
 <script src="javascript/misc/jspatch.js"></script>
 <script src="javascript/misc/util.js"></script>
+<script src="javascript/misc/clickable.js"></script>
+
 
 
 <style>
@@ -57,14 +59,19 @@
         'modules/0.html',                            //3
       //  'modules/practice.html',                     //4
       //  'modules/data_mapping.html',                 //5
-        //'modules/practice2.html',                    //6
+      //  'modules/practice2.html',                    //6
     //    'modules/main_section_start.html',           //7
         'modules/5.html',                            //8
         'modules/data_mapping.html',                 //5
       //  'modules/main_section_start.html',           //7
         'modules/6.html',                            //8
         'modules/main_section_start.html',
-//        'modules/section2.html',                     //9
+        //  'modules/practice.html',                     //4
+        //  'modules/data_mapping.html',                 //5
+        //'modules/practice2.html',                    //6
+        //    'modules/main_section_start.html',           //7
+        'modules/section2.html',                     //9
+      //  'modules/practice2.html',                    //6
 //        'modules/post_study_questionnaire.html',     //10
         'modules/thanks.html'                       //11
 //        'modules/end.html'
@@ -96,6 +103,7 @@
     //console.log()
     console.log("The mode is", + QueryString.mode);
     var mode = QueryString.mode;
+    experimentr.data()["clickable"] ="true";
 
     function find_mode(mode){
         mode = parseInt(mode);
@@ -164,27 +172,34 @@
     //    console.log(window.location.href.toString().split("/")[2]);
     var server = window.location.href.toString().split("/")[2];
     var next_url;
+    seq=2;
     console.log("seq",seq);
     var seq_mode_order = [2,2,5,4,5];
     switch(seq){
         case 1:
             next_url = "http://".concat(server,"/","?","id=",id,"&mode=",seq_mode_order[seq],"&section=7","&seq=",seq+1);
             break;
+            console.log("urll case seq 1", next_url);
         case 2:
             next_url = "http://".concat(server,"/","?","id=",id,"&mode=",seq_mode_order[seq],"&section=4","&seq=",seq+1);
             break;
+            console.log("urll case seq 2", next_url);
         case 3:
             next_url = "http://".concat(server,"/","?","id=",id,"&mode=",seq_mode_order[seq],"&section=7","&seq=",seq+1);
             break;
+            console.log("urll case seq 3", next_url);
         case 4:
             next_url = "http://".concat(server,"/","?","id=",id,"&mode=",seq_mode_order[seq],"&section=7","&seq=",seq+1);
             break;
+            console.log("urll case seq 4.", next_url);
         default:
             next_url = "";
+            console.log("urll case seq whatever.", next_url);
             break;
     }
 
-    //    var next_url = "http://".concat(server,"/","?","id=",QueryString.id,"&mode=",mode_order[iteration],"&section=7");
+
+      //var next_url = "http://".concat(server,"/","?","id=",QueryString.id,"&mode=",mode_order[iteration],"&section=7");
     experimentr.data()["next_url"] = next_url;
 
     if(seq===5){
@@ -201,7 +216,8 @@
             'modules/data_mapping.html',                 //5
            // 'modules/main_section_start.html',           //7
             'modules/6.html',                            //8
-//        'modules/section2.html',                     //9
+    //   'modules/section2.html',                     //9
+            'modules/practice2.html',                    //6
             'modules/post_study_questionnaire.html',     //10
             'modules/thanks.html'                       //11
         ];
