@@ -322,9 +322,21 @@
 //                    console.log(mode_order[step-1]);
                     //leave 2 questions on each mode
                     if(experimentr.data()["mode"] == "Vanilla"){
+
                         pairs(experimentr.data()["mat"][step - 1], step - 1, 2, experimentr.data()["mode"]);
                     }
                     else if(experimentr.data()["mode"] == "Full"){
+                        experimentr.data()["mat"][step - 1][0][0][0] = "3";
+                        experimentr.data()["mat"][step - 1][0][1][0] = "3";
+                        experimentr.data()["mat"][step - 1][1][0][0] = "4";
+                        experimentr.data()["mat"][step - 1][1][1][0] = "4";//FIXME:: when flushing the data, is the answer under pair 7,8 or under 3,4?
+                        console.log("The pair number is ",experimentr.data()["mat"][step - 1][0][0][0]);
+
+                        console.log("The pair number is ",experimentr.data()["mat"][step - 1][0][1][0]);
+                        console.log("The pair number is ",experimentr.data()["mat"][step - 1][1][0][0]);
+                        console.log("The pair number is ",experimentr.data()["mat"][step - 1][1][1][0]);
+//                        console.log("The pair number is ",experimentr.data()["mat"][step - 1][1][2][0]);
+//                        console.log("The pair number is ",experimentr.data()["mat"][step - 1][1][1][0]);
                         pairs(experimentr.data()["mat"][step - 1], step - 1, 2, experimentr.data()["mode"]);
                     }
 
