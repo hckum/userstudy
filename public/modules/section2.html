@@ -108,9 +108,9 @@
        d3.select("#notation").append("h4").text("Now you are moving to the ").style("text-align","center").style("font-size","150%");
         d3.select("#notation").append("h4").text("PPIRL").style("text-align","center").style("font-size","250%").style("color","red");
         d3.select("#notation").append("h4").text("(Privacy Preserving Interactive Record Linkage)").style("text-align","center").style("font-size","100%");
-//        var html_to_insert = "<p>Where you can <strong>CLICK</strong> on the text, more information will disclose </p>";
-//        document.getElementById('notation').insertAdjacentHTML('beforeend', html_to_insert);
-//        add_mod_intros("PPIRL_instruction.PNG");
+        var html_to_insert = "<p>Where you can <strong>CLICK</strong> on the text, more information will disclose </p>";
+        document.getElementById('notation').insertAdjacentHTML('beforeend', html_to_insert);
+        add_mod_intros("PPIRL_instruction.PNG");
        d3.select("#summonEnd").on('click', function(){
            console.log((Date.now()-experimentr.data()["time_of_website_start"])/(1000*60));
            if(((Date.now()-experimentr.data()["time_of_website_start"])/(1000*60)) > 0.2){
