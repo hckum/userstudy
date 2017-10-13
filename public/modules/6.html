@@ -35,7 +35,7 @@
 <body>
 <div id="container">
     <div id="instruction" style="text-align:center;">
-        <!--<h1 id="heading">Main Study</h1>-->
+        <h1 id="heading"></h1>
 
         <br> <br>
         <div id="table"></div>
@@ -382,6 +382,7 @@
             }else {
 
                 if (sec_switch == 1 && (mod_pages.indexOf(step) > -1)) {
+                    d3.select("#heading").style("visibility","hidden");
                     console.log("Step is",step);
                     d3.select('#submitComments').style("left", "50%").property("innerHTML","Ready to Answer Questions?");
                     d3.selectAll(".blocks").remove();
@@ -419,6 +420,8 @@
                         }
                         //pairs(experimentr.data()["mat"][step - 1], step - 1, experimentr.data()["mat"][step - 1].length, experimentr.data()["mode"]);
                         if(experimentr.data()["mode"] == "Partial"){
+                            d3.select("#heading").style("visibility","visible");
+                            document.getElementById("heading").innerHTML = "Masked Mode";
                             //changing the pair number
                             experimentr.data()["mat"][step - 1][0][0][0] = "5";
                             experimentr.data()["mat"][step - 1][0][1][0] = "5";
@@ -429,6 +432,8 @@
                             pairs(experimentr.data()["mat"][step - 1], step - 1, 3, experimentr.data()["mode"]);
                         }
                         else if(experimentr.data()["mode"] == "Partial_Cell"){
+                            d3.select("#heading").style("visibility","visible");
+                            document.getElementById("heading").innerHTML = "Minimum Mode";
                             experimentr.data()["mat"][step - 1][0][0][0] = "8";
                             experimentr.data()["mat"][step - 1][0][1][0] = "8";
                             experimentr.data()["mat"][step - 1][1][0][0] = "9";
@@ -438,15 +443,19 @@
                             pairs(experimentr.data()["mat"][step - 1], step - 1, 3, experimentr.data()["mode"]);
                         }
                         else if(step == 6){
-                            for (i = 0; i < 6; i++) {
+                            d3.select("#heading").style("visibility","visible");
+                            document.getElementById("heading").innerHTML = "Encrypted Mode";
+                            for (i = 0; i < 3; i++) {
                                 var pairNum = i + 14;
                                 experimentr.data()["mat"][step - 1][i][0][0] = pairNum.toString();
                                 experimentr.data()["mat"][step - 1][i][1][0] = pairNum.toString();
                             }
-                            pairs(experimentr.data()["mat"][step - 1], step - 1, 6, experimentr.data()["mode"]);
+                            pairs(experimentr.data()["mat"][step - 1], step - 1, 3, experimentr.data()["mode"]);
                             console.log("step is", step);
                         }
                         else if(experimentr.data()["mode"] == "Opti1"){
+                            d3.select("#heading").style("visibility","visible");
+                            document.getElementById("heading").innerHTML = "Moderate Mode";
                             experimentr.data()["mat"][step - 1][0][0][0] = "11";
                             experimentr.data()["mat"][step - 1][0][1][0] = "11";
                             experimentr.data()["mat"][step - 1][1][0][0] = "12";
@@ -481,7 +490,7 @@
             .on('click', function () {
                 //console.log(experimentr.data());
                 d3.select("#answer_all").text("");
-                d3.select("#heading").remove();
+                //d3.select("#heading").remove();
                 d3.select('#submitComments').style("left","2.5%");
                 //console.log((Date.now()-experimentr.data()["time_of_website_start"])/(1000*60));
                 if(parse_url().testing === 'true'){

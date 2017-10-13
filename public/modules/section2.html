@@ -27,8 +27,11 @@
 <body>
 <div id="container">
     <div id="instruction" style="text-align:center;">
-        <h3>Section <button style="background:none; border:none; margin:0; padding:0;" id="summonEnd">2</button></h3>
-        <div id="notation" style="text-align:left;">
+        <h3 id="heading">PPIRL <button style="background:none; border:none; margin:0; padding:0;" id="summonEnd"></button></h3>
+        <div id="notation" style="text-align:center; font-size:200%">
+            <!--<label id="page"></label>-->
+        </div>
+        <div id="PPIRL" style="text-align:left;">
             <!--<label id="page"></label>-->
         </div>
         <br> <br>
@@ -43,6 +46,33 @@
 </html>
 <script src="javascript/misc/clickable.js"></script>
 <script>
+    function add_mod_intros(img_address){
+        var height = "550px",
+            width = "1000px",
+            x = "400px",
+            y = "20px";
+
+        d3.select("#notation").select(".image").remove();
+        var svg = d3.select("#PPIRL")
+            .append("svg")
+            .attr("class", "image")
+            .attr("width", 1800)
+            .attr("height", 600);
+        svg.append("svg:image")
+            .attr("xlink:href","/resources/module_intros/"+img_address)
+            .attr("x",x)
+            .attr("y",y)
+            .attr("width",width)
+            .attr("height",height);
+        svg.append("rect")
+            .attr("x", x)
+            .attr("y", y)
+            .attr("height", height)
+            .attr("width", width)
+            .style("stroke", "black")
+            .style("fill", "none");
+    }
+
     (function(){
         $.getScript("javascript/misc/clickable.js");
         experimentr.startTimer('section2');
@@ -53,6 +83,7 @@
         experimentr.data()['section'] = 'section2';
         var step = 0;
         d3.select("#endStudy").style("visibility","hidden");
+        d3.select("#heading").style("visibility","hidden");//PPIRL heading
         console.log(experimentr.data()["section2"]);
             experimentr.data()["clickable"] = "true";
 
@@ -74,8 +105,12 @@
             experimentr.next();
         };
 
-       d3.select("#notation").append("h4").text("Now you are moving to click-able interface.").style("text-align","center");
-
+       d3.select("#notation").append("h4").text("Now you are moving to the ").style("text-align","center").style("font-size","150%");
+        d3.select("#notation").append("h4").text("PPIRL").style("text-align","center").style("font-size","250%").style("color","red");
+        d3.select("#notation").append("h4").text("(Privacy Preserving Interactive Record Linkage)").style("text-align","center").style("font-size","100%");
+        var html_to_insert = "<p>Where you can <strong>CLICK</strong> on the text, more information will disclose </p>";
+        document.getElementById('notation').insertAdjacentHTML('beforeend', html_to_insert);
+        add_mod_intros("PPIRL_instruction.PNG");
        d3.select("#summonEnd").on('click', function(){
            console.log((Date.now()-experimentr.data()["time_of_website_start"])/(1000*60));
            if(((Date.now()-experimentr.data()["time_of_website_start"])/(1000*60)) > 0.2){
@@ -97,10 +132,15 @@
                 d3.select('#submitComments').style("position","absolute").style("left","90px");
 
                // console.log("length is ",experimentr.data()["section2"].length-1)
-                if(step==2){//when 2 pages of questions has been displayed(page 0, page1)
+                if(step==1){//when 1 pages of questions has been displayed(page 0, page1)
                     goToNext();
                 }else {
-                    d3.select("#notation").text("Page " + (step + 1).toString());
+                    d3.select("#heading").style("visibility","visible").style("font-size","300%").style("color","red");
+                    d3.select("#PPIRL").remove();
+                    d3.select("#notation").text("");
+                    d3.select("#notation").append("h4").text("(Privacy Preserving Interactive Record Linkage)").style("text-align","center").style("font-size","200%");
+//                    d3.select("#notation").text("Page " + (step + 1).toString()); display page number
+
                     setTimeout(function () {
                         d3.selectAll(".blocks").remove();
                         console.log(experimentr.data()["section2"][step-1]);

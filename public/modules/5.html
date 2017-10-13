@@ -35,7 +35,7 @@
 <body>
 <div id="container">
     <div id="instruction" style="text-align:center;">
-        <!--<h1 id="heading">Main Study</h1>-->
+        <h1 id="heading">Base Mode</h1>
 
         <br> <br>
         <div id="table"></div>
@@ -104,9 +104,11 @@
 
     console.log(experimentr.data());
     add_mod_intros("recap_1.PNG");
+    d3.select("#heading").style("visibility","hidden");
 
 
     var mod_pages = [1,2,3,4];//key for which pages display recap slides
+
 
 
     function goToNext() {
@@ -293,6 +295,7 @@
 
     var mode_order = ["Vanilla","Full"];
     function render_content(){
+        d3.select("#heading").style("visibility","visible");
         if(step==experimentr.data()["mat"].length-5){
            // experimentr.endTimer('main_section');
             console.log("In main_section",step);
@@ -301,6 +304,7 @@
         }else {
 
             if (sec_switch == 1 && (mod_pages.indexOf(step) > -1)) {
+                d3.select("#heading").style("visibility","hidden");
                 console.log("Step is",step);
                 d3.select('#submitComments').style("left", "50%").property("innerHTML","Ready to Answer Questions?");
                 d3.selectAll(".blocks").remove();
@@ -311,6 +315,7 @@
                 sec_switch = 0
             } else {
 //                    d3.select("#notation").text("Page " + (step + 1).toString() + "/" + (experimentr.data()['mat'].length - 1).toString());
+                d3.select("#heading").style("visibility","hidden");
                 d3.select("#notation").text("");
                 //console.log("Hi there is a notation");
                 d3.select('#submitComments').style("left", "5%")
@@ -322,10 +327,13 @@
 //                    console.log(mode_order[step-1]);
                     //leave 2 questions on each mode
                     if(experimentr.data()["mode"] == "Vanilla"){
-
+                        d3.select("#heading").style("visibility","visible");
+                        document.getElementById("heading").innerHTML = "Base Mode";
                         pairs(experimentr.data()["mat"][step - 1], step - 1, 2, experimentr.data()["mode"]);
                     }
                     else if(experimentr.data()["mode"] == "Full"){
+                        d3.select("#heading").style("visibility","visible");
+                        document.getElementById("heading").innerHTML = "Full Mode";
                         experimentr.data()["mat"][step - 1][0][0][0] = "3";
                         experimentr.data()["mat"][step - 1][0][1][0] = "3";
                         experimentr.data()["mat"][step - 1][1][0][0] = "4";
@@ -368,7 +376,7 @@
         .on('click', function () {
             //console.log(experimentr.data());
             d3.select("#answer_all").text("");
-            d3.select("#heading").remove();
+           // d3.select("#heading").remove();
 //            d3.select('#submitComments').style("left","2.5%");
             //console.log((Date.now()-experimentr.data()["time_of_website_start"])/(1000*60));
             if(parse_url().testing === 'true'){
