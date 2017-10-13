@@ -68,8 +68,9 @@ function cell(t,g,j,k, mode){
     var index_r = g.attr("id").slice(1)%6;
     var x = 40*(j%cwidth.length)+cwidth.slice(0,j%cwidth.length).reduce((a, b) => a + b, 0),
         y = index_r==0&&j>=cwidth.length ? ys[Math.floor(j/cwidth.length)]+20 : ys[Math.floor(j/cwidth.length)],
+
         cx = cwidth[j%cwidth.length],
-        cy = height;
+        cy = height ;
 
     var cel = g.append("g").attr("id","c"+j.toString()).attr("class","cell").attr("data-mode",mode)
         .attr("transform","translate("+x+","+y+")").on('click',function() {

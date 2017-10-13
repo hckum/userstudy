@@ -46,7 +46,7 @@ function cell(t,g,j,k){
     var x = 40*(j%cwidth.length)+cwidth.slice(0,j%cwidth.length).reduce((a, b) => a + b, 0),
         y = index_r==0&&j>=cwidth.length ? ys[Math.floor(j/cwidth.length)]+20 : ys[Math.floor(j/cwidth.length)],
         cx = cwidth[j%cwidth.length],
-        cy = height;
+        cy = height + 25;
     var cel = g.append("g").attr("id","c"+j.toString()).attr("class","cell")
         .attr("transform","translate("+x+","+y+")");
     var raw_t = t;
