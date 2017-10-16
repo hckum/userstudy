@@ -1,4 +1,4 @@
-Study of Record Linkage and Information Disclosure
+Study of Record Linkage and Information Disclosure.
 ================
 # Howto
 ## Environment Requirements
