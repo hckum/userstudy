@@ -78,9 +78,8 @@ function cell(t,g,j,k, mode){
                 clickCount +=1;
                // console.log("clickCount is", clickCount);
 
-
-
-                var current_mode = cel.attr("data-mode");
+               if (j > 10) {
+                    var current_mode = cel.attr("data-mode");
 
                 if ((((current_mode == "Partial") || (current_mode == "Partial_Cell")) && (["ID", "First name", "Last name", "DoB(M/D/Y)", "Sex", "Race"].indexOf(title[j % cwidth.length]) >= 0) && (j > 9))) {
 
@@ -192,21 +191,91 @@ function cell(t,g,j,k, mode){
 
                     }
                 }
+               }
+
+                
             }
         });
 
-    if(((cel.attr("data-mode") == "Partial")||(cel.attr("data-mode") == "Partial_Cell"||(cel.attr("data-mode") == "Optil1")))&& experimentr.data()["clickable"]=="true"){
-        cel.on({"mouseover": function(d) {
+    if(j > 10) {
+        if((cel.attr("data-mode") == "Partial")||(cel.attr("data-mode") == "Partial_Cell")){
+            cel.on("mouseover", function(d) {
+                var selection = d3.select(this.parentNode);
+                var rect = this.getBBox();
+                var x_offset = 2; // enlarge rect box 2 px on left & right side
+                var y_offset = 2;
+                var w = cwidth[j%cwidth.length] * 0.80;
+                if (cwidth[j%cwidth.length]==60) {
+                    w = cwidth[j%cwidth.length] * 1.20;
+                }
+                // selection.classed("mute", (selection.classed("mute") ? false : true));
+
+                // console.log(x,rect.x);
+                console.log(y, rect.y);
+                if(j>20){
+                    var pathinfo_deep = [
+                        {x: x - 5, y: y + 25},
+                        {x: x - 5 + w, y: y + 25},
+                        {x: x - 5 + w, y: y + 25 - 77}
+                    ];
+                    var pathinfo_light = [
+                        {x: x - 5 + w, y: y + 25 - 77},
+                        {x: x - 5, y: y + 25 - 77},
+                        {x: x - 5, y: y + 25}
+                    ];
+                } else {
+                    var pathinfo_deep = [
+                        {x: x - 5 + w, y: y - 5},
+                        {x: x - 5 + w, y: y - 5 + 77},
+                        {x: x - 5, y: y - 5 + 77}
+                    ];
+                    var pathinfo_light = [
+                        {x: x - 5, y: y - 5 + 77},
+                        {x: x - 5, y: y - 5},
+                        {x: x - 5 + w, y: y - 5}
+                    ];
+                }
+
+
+                // Specify the function for generating path data
+                var d3line = d3.svg.line()
+                    .x(function(d){return d.x;})
+                    .y(function(d){return d.y;})
+                    .interpolate("linear");
+
+                // Draw the line
+                selection.append("svg:path")
+                    .attr("d", d3line(pathinfo_deep))
+                    .style("stroke-width", 2)
+                    .style("stroke", "#808080")
+                    .style("fill", "none")
+                    .attr("class","highlight_rect");
+                selection.append("svg:path")
+                    .attr("d", d3line(pathinfo_light))
+                    .style("stroke-width", 2)
+                    .style("stroke", "#d9d9d9")
+                    .style("fill", "none")
+                    .attr("class","highlight_rect");
+
             d3.select(this).style("cursor", "pointer");
-        }});
-    } else {
-        cel.on({"mouseover": function(d) {
-            d3.select(this).style("cursor", "default");
-        }});
+            });
+
+            cel.on("mouseout", function(d){
+                d3.select(this).style("cursor", "default");
+                d3.selectAll(".highlight_rect").remove();
+            });
+        } else {
+            cel.on({"mouseover": function(d) {
+                d3.select(this).style("cursor", "default");
+            }});
+
+            cel.on("mouseout", function(d){
+                d3.selectAll(".highlight_rect").remove();
+            });
+        }
     }
 
     var raw_t = t;
-
 
     var rectangle = cel.append("rect").attr("id",j);
     //only show rect on clickable cells
