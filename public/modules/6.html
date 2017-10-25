@@ -351,10 +351,13 @@
 //                if(Object.keys(answer).length < d3.selectAll(".blocks")[0].length){
 //                    text = ['You have to answer all the questions to proceed.'];
 //                }
-
+            var allRight_3= true;
+            var allRight_4=true;
+            var allRight_5= true;
+            var allRight_6= true;
             if(wrong_ans.length > 0){
 
-                text.push("Good try." );
+                //text.push("Good try." );
                 if (experimentr.data()["mode"] == "Partial_Cell"){
                 for(var i=0;i<wrong_ans.length;i++) {
                     if (wrong_ans[i]==27){
@@ -364,25 +367,33 @@
                         text.push("QUESTION "+wrong_ans[i]+": It is likely that the pair are twin.");
                     }
                     else if(wrong_ans[i]==8||wrong_ans[i]==29){
+                        allRight_3= false;
                         text.push("Please review QUESTION "+wrong_ans[i]+": The race is different, the dob is missing, the IDs are different with the names being common names. Likely that the people are different");
                     }
                     else if(wrong_ans[i]==9||wrong_ans[i]==30){
+                        allRight_3= false;
                         text.push("Please review QUESTION "+wrong_ans[i]+": Notice the difference in age and the jr/sr post-fix. It's likely that they represent father and son.");
                     }
                     else if(wrong_ans[i]==10||wrong_ans[i]==28){
+                        allRight_3= false;
                         text.push("Please review QUESTION "+wrong_ans[i]+": The ID is missing but the first name might be a nick name and pair probably represents the same person.");
                     }
                     else if(wrong_ans[i]==26){
                         text.push("QUESTION "+wrong_ans[i]+": The first and last names have been swapped and the id is missing but they have the same birthdays. Likely represent the same person ");
                     }
+                }
+                if( allRight_3==true){
+                    text.push("Good job");
                 }}
                 else if(experimentr.data()["mode"] == "Opti1") {
                     for(var i=0;i<wrong_ans.length;i++) {
                         if(step==5){
                         if (wrong_ans[i]==13){
+                            allRight_4=false;
                             text.push("Please review QUESTION "+wrong_ans[i]+": The records are females. It is very likely that a woman is married and changed her last name.");
                         }
                         else if(wrong_ans[i]==11){
+                            allRight_4=false;
                             text.push("Please review QUESTION "+wrong_ans[i]+": It is likely that the pair are twin.");
                         }
 //                        else if(wrong_ans[i]==29){
@@ -395,14 +406,17 @@
 //                            text.push("QUESTION "+wrong_ans[i]+": The ID is missing but the first name might be a nick name and pair probably represents the same person.");
 //                        }
                         else if(wrong_ans[i]==12){
+                            allRight_4=false;
                             text.push("Please review QUESTION "+wrong_ans[i]+": The first and last names have been swapped and the id is missing but they have the same birthdays. Likely represent the same person ");
                         }
                     }
                     else{
                             if (wrong_ans[i]==14){
+                                allRight_6=false;
                                 text.push("Please review QUESTION "+wrong_ans[i]+": Here are the values before encryption. ID is 1001030318 and 1999839173, DOB is 12/14/1990 for the non-missing. Sex is female for both records, and Race is W and B. Note that both the first and last names are common names (Erin Carroll). Do you still think the two records refer to the same person?");
                             }
                             else if(wrong_ans[i]==15){
+                                allRight_6=false;
                                 text.push("Please review QUESTION "+wrong_ans[i]+": Here are the values before encryption. ID is 1000279225 for the non-missing, first name and last name are swapped between the two records (MAMIE-CLARA and BAKER) and sex is female. Note that the name frequencies indicate rare names except a common last name, when used as first name is rare. Do you still think the two records refer to two different people?");
                             }
 //                            else if(wrong_ans[i]==34){
@@ -415,33 +429,50 @@
 //                                text.push("QUESTION "+wrong_ans[i]+": The first names shown to be different are Judith and Judy but after encryption the attributes are very different. Knowing their first names, do you still think the two records refer to two different people?");
 //                            }
                             else if(wrong_ans[i]==16){
+                                allRight_6=false;
                                 text.push("Please review QUESTION "+wrong_ans[i]+": Here are the values before encryption. ID is X and Y (note that it is different only by 1 character), first names are ERIC and ERICA, with Eric being Male and Erica being Female. Do you think they might be twins? Do you still think the two records refer to the same person?");
                             }
 
                         }
                     }
-                }
+                    if(step==5&&allRight_4==true){
+                        text.push("Good job!");
+                    }
+                    if(step!=5&&allRight_6==true){
+                        text.push("Good job!");
+                    }
+                        }
+
                 else{//partial mode
                     for(var i=0;i<wrong_ans.length;i++) {
                         if (wrong_ans[i]==19||wrong_ans[i]==25){
+                            allRight_5=false;
                             text.push("Please review QUESTION "+wrong_ans[i]+": The records have the same gender. It is very likely that a woman is married and changed her last name.");
                         }
                         else if(wrong_ans[i]==6||wrong_ans[i]==20||wrong_ans[i]==26){
+                            allRight_5=false;
                             text.push("Please review QUESTION "+wrong_ans[i]+": It is likely that the pair are twin.");
                         }
                         else if(wrong_ans[i]==21||wrong_ans[i]==27){
+                            allRight_5=false;
                             text.push("QUESTION "+wrong_ans[i]+": The race is different, the dob is missing, the IDs are different with the names being common names. Likely that the people are different");
                         }
                         else if(wrong_ans[i]==7||wrong_ans[i]==22||wrong_ans[i]==28){
+                            allRight_5=false;
                             text.push("Please review QUESTION "+wrong_ans[i]+": Notice the difference in age and the jr/sr post-fix. It's likely that they represent father and son.");
                         }
                         else if(wrong_ans[i]==5||wrong_ans[i]==23||wrong_ans[i]==29){
+                            allRight_5=false;
                             text.push("Please review QUESTION "+wrong_ans[i]+": The ID is missing but the first name might be a nick name and pair probably represents the same person.");
                         }
                         else if(wrong_ans[i]==24||wrong_ans[i]==30){
+                            allRight_5=false;
                             text.push("QUESTION "+wrong_ans[i]+": The first and last names have been swapped and the id is missing but they have the same birthdays. Likely represent the same person ");
                         }
-                    }}
+                    }
+                if(allRight_5==true){
+                        text.push("Good job!");
+                }}
 
             }
 

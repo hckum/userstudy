@@ -21,7 +21,6 @@ var swap_switch=0;
 var mode_list = ["Partial", "Partial_Cell", "Opti1", "Full"];
 
 
-
 /**
  * draw a cell
  * x,y : position
@@ -42,7 +41,40 @@ var mode_list = ["Partial", "Partial_Cell", "Opti1", "Full"];
  *      9:hidden data
  *      }
  */
-var clickCount =0;
+var total_char=0;
+// console.log(experimentr.data()["section2"][0][0][1][1]); this is pair 1, row 2, column 1 which is 1000142704
+//calculate total number of characters on a page
+//coloumn 1,2,3 6,7,8 are the ones with information needed
+//There are 5 column
+for(var m=0;m<6;m++){
+    for(var i=0;i<9;i++){
+        if(i!=0&&i!=2&&i!=5) {
+            var line_1 = experimentr.data()["section2"][0][m][0][i];
+            var line_2 = experimentr.data()["section2"][0][m][1][i];
+
+
+            // console.log(line_1.length);
+            // console.log(line_2);
+            // console.log(line_2.length);
+            total_char = total_char+line_1.length+line_2.length;
+        }
+    }
+}
+total_char = 377;
+console.log(total_char);
+var char_disclosed = 0;
+
+function changeBar(total_char, char_disclosed) {
+    var current_progress_1;
+    current_progress_1 = char_disclosed/total_char*100;
+    $("#dynamic_1")
+        .css("width", current_progress_1 + "%")
+        .attr("aria-valuenow", current_progress_1)
+        .text(char_disclosed + "\n"+"("+current_progress_1.toFixed(1) + "%) ");
+
+};
+
+var swap_count=0;
 function cell(t,g,j,k, mode){
     // console.log(t);
 
@@ -62,8 +94,8 @@ function cell(t,g,j,k, mode){
     //     console.log("j",j);
     //     console.log("k",k);
     // }
-
     // erase title columns
+    changeBar(total_char, char_disclosed);
    // console.log("clickable.js in the working");
     var index_r = g.attr("id").slice(1)%6;
     var x = 40*(j%cwidth.length)+cwidth.slice(0,j%cwidth.length).reduce((a, b) => a + b, 0),
@@ -75,10 +107,142 @@ function cell(t,g,j,k, mode){
     var cel = g.append("g").attr("id","c"+j.toString()).attr("class","cell").attr("data-mode",mode)
         .attr("transform","translate("+x+","+y+")").on('click',function() {
             if(experimentr.data()["clickable"] == "true") {
-                clickCount +=1;
-               // console.log("clickCount is", clickCount);
+                // console.log(d3.select(this).attr("id"));
+                // console.log(d3.select(this.parentNode).attr("id"));
+                var cell_question_number = d3.select(this).attr("id");
+                var question_number=cell_question_number.replace("c", " ");
+                var cell_pair_number = d3.select(this.parentNode).attr("id");
+                var pair_number = cell_pair_number.replace("g", " ");
+                //console.log(question_number);
+                var pair_num =parseInt(pair_number );
+                // console.log(pair_number);
 
-               if (j > 10) {
+                var prev_text_id = parseInt(question_number);
+                var sibling_id;
+                if(prev_text_id<20){
+                    sibling_id = "c"+(prev_text_id +10).toString();
+                }
+                else if(prev_text_id>20){
+                    sibling_id = "c"+(prev_text_id -10).toString();
+                 }
+                //console.log(sibling_id);
+
+
+                var prev_text = d3.select(this).text();
+                var prev_text_sibling = d3.select(this.parentNode).select("#"+sibling_id).text();
+                console.log(prev_text);
+                console.log(prev_text_sibling);
+
+                var original_text;
+                var original_text_sibling;
+                if(question_number<20){
+                    //console.log(experimentr.data()["section2"][0][pair_num ][0][question_number-10]);
+                   original_text = experimentr.data()["section2"][0][pair_num ][0][question_number-10];
+                   original_text_sibling = experimentr.data()["section2"][0][pair_num ][1][question_number-10];
+                   // console.log(experimentr.data()["section2"][0][pair_num ][1][question_number-10]);
+
+                }
+                else if(question_number >20){
+                    original_text = experimentr.data()["section2"][0][pair_num ][1][question_number-20];
+                    original_text_sibling = experimentr.data()["section2"][0][pair_num ][0][question_number-20];
+                   // console.log(experimentr.data()["section2"][0][pair_num ][0][question_number-20]);
+                    //console.log(experimentr.data()["section2"][0][pair_num ][1][question_number-20]);
+
+                }
+
+                //prev_text,prev_text_sibling are what's on the screen
+                // original_text are original_text_sibling the final text
+
+                //original_text_sibling = original_text_sibling.toString();
+                var char_difference=0;
+                var at_and_count=0;//@,&
+
+                for(var i=0,c=prev_text.length;i<c;i++){
+                    if(prev_text[i] != original_text[i]){
+                       char_difference +=1;}
+                    if(prev_text[i] == "&"||prev_text[i] == "@"){
+                        at_and_count += 1;
+                    }
+                }
+                //console.log("char_difference is ", char_difference);
+                //console.log("this &@ count is ", at_and_count);
+                //console.log("prev_text_sibling is",prev_text_sibling);
+
+                console.log("original_text_sibling",original_text_sibling);
+
+                for(var i=0,c=prev_text_sibling.length;i<c;i++){
+
+                    if(prev_text_sibling[i] != original_text_sibling[i]){
+                        char_difference +=1;}
+                    if(prev_text_sibling[i] == "&"||prev_text_sibling[i] == "@"){
+                        at_and_count += 1;
+                    }
+                }
+               // console.log("total char_difference is ", char_difference);
+                //console.log("plus sibling's &@ count is ", at_and_count);
+                if(at_and_count != 0){
+                char_difference = at_and_count;
+                }
+                if(prev_text == " " && prev_text_sibling == " "){
+                    char_difference = original_text.length * 2;
+                }
+                //d3.select(this).attr("id");
+                console.log(d3.select(this).attr("id"));
+                if(d3.select(this).attr("id")=="c10"||d3.select(this).attr("id")=="c12"||d3.select(this).attr("id")=="c15"
+                ||d3.select(this).attr("id")=="c22"||d3.select(this).attr("id")=="c25"){
+                    char_difference= 0;
+                }
+
+                if(prev_text == "@@@@@" || prev_text == "&&&&&&&&&&&"||prev_text=="&&&&&@&&&&&" ){
+                    swap_count+=1;
+                    if(swap_count==1){
+                    char_difference= 16*2;}
+                    else{
+                        char_difference=0;
+                    }
+                }
+                if(d3.select(this).attr("id")=="c16" ||d3.select(this).attr("id")=="c26"){
+                    if(prev_text == " "){
+                    char_difference= 16;}
+                    else if(prev_text == "**/**/****"){
+                        char_difference = 8;
+                    }
+                    else if(prev_text == "" &&prev_text_sibling == "**/**/****"){
+                        char_difference = 8;
+                    }
+                    else{
+                        char_difference = 0;
+                    }
+                }
+
+                console.log("char difference is ",char_difference);
+                char_disclosed += char_difference;
+                console.log(char_disclosed);
+                // for(var i=0,c=original_text.length;i<c;i++){
+                //     if(prev_text[i] != original_text[i]){
+                //         char_difference +=1;
+                //     }
+                // }
+
+
+
+
+                // var prev_sib_text = d3.select(this.previousSibling.previousSibling.previousSibling).text();
+                // var prev_text = d3.select(this).text();
+                // console.log(prev_sib_text);
+                // console.log(prev_text);
+               // console.log(char_difference);
+
+
+
+
+
+
+                changeBar(total_char, char_disclosed);
+
+
+
+                if (j > 10) {
                     var current_mode = cel.attr("data-mode");
 
                 if ((((current_mode == "Partial") || (current_mode == "Partial_Cell")) && (["ID", "First name", "Last name", "DoB(M/D/Y)", "Sex", "Race"].indexOf(title[j % cwidth.length]) >= 0) && (j > 9))) {
@@ -94,6 +258,20 @@ function cell(t,g,j,k, mode){
                         var otcell = "#c" + (j + 10);
                     }
 
+                    var x = d3.select(this.parentNode);
+                    //show opened element
+                    // var array_elements = ["#c11", "#c13", "#c14", "#c15","#c16", "#c17", "#c18", "#c19", "#c21"];
+                    // if(array_elements.indexOf(otcell)>0){
+                    //     array_elements = array_elements.remove(array_elements.indexOf(otcell));
+                    // }
+                    // for(var i = 0; i < array_elements.length; i++){
+                    //     // console.log(array_elements[i]);
+                    //     console.log(x.select(array_elements[i]).text());
+                    // }
+
+
+
+
                     if ((["First name", "Last name"].indexOf(title[j % cwidth.length]) >= 0) && d3.select(this.parentNode).select("#c13").attr("swap_detect")) {
                         // console.log(typeof(d3.select(this.parentNode).select("#c13").select("#swap")));
                         var x = d3.select(this.parentNode);
@@ -105,6 +283,8 @@ function cell(t,g,j,k, mode){
                         if (j % 10 == 4) {
                             j = j - 1;
                         }
+
+
                         var next_text_1 = dat[g.attr("id").slice(1) % 6][1][mapping[j % cwidth.length]];
                         var next_text_2 = dat[g.attr("id").slice(1) % 6][0][mapping[j % cwidth.length]];
 
@@ -120,27 +300,26 @@ function cell(t,g,j,k, mode){
                         cell(next_text_1, g, 14, k, "Full");
                         cell(next_text_1, g, 23, k, "Full");
                         cell(next_text_2, g, 24, k, "Full");
-                        // cell(next_text_2, g, 13, k,  "Full");
-                        // cell(next_text_1 , g, 23, k,  "Full");
-                        // cell(next_text_2 , g, 14, k, "Full");
-                        // cell(next_text_1, g, 24, k,  "Full");
-                        // cell(next_text_2, g, 13, k,  "Full");
-                        // cell(next_text_2, g, 14, k,  "Full");
-                        // cell(next_text_1, g, 23, k, "Full");
-                        // cell(next_text_1, g, 24, k,  "Full");
+
 
 
                     }
                     else {
-
+                       // clickCount +=1;
+                        //changeBar();
+                        //console.log("clickCount is", clickCount);
                         // var prev_text = dat[g.attr("id").slice(1) % 6][row_num][mapping[j % cwidth.length]];
+                        //show text
+                        // var prev_sib_text = d3.select(this.previousSibling).text();
                         var prev_text = d3.select(this).text();
+                        // console.log(prev_sib_text);
+                        // console.log(prev_text);
                         // prev_text = prev_text.replace("@",'');
                         // prev_text = prev_text.replace("&",'');
                         prev_text = prev_text.split("&").join("");
                         prev_text = prev_text.split("/").join("");
                         prev_text = prev_text.split("@").join("");
-                        console.log(prev_text);
+                        //console.log(prev_text);
 
                         d3.select(this.parentNode)
                             .select(otcell).remove();
@@ -211,7 +390,7 @@ function cell(t,g,j,k, mode){
                 // selection.classed("mute", (selection.classed("mute") ? false : true));
 
                 // console.log(x,rect.x);
-                console.log(y, rect.y);
+                //console.log(y, rect.y);
                 if(j>20){
                     var pathinfo_deep = [
                         {x: x - 5, y: y + 25},
@@ -1410,3 +1589,5 @@ function statictics(){
     var d = experimentr.data()['mat'];
     // console.log(d);
 }
+
+

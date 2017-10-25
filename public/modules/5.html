@@ -230,18 +230,26 @@
 //                    text = ['You have to answer all the questions to proceed.'];
 //                }
             console.log("wrong ans are" , wrong_ans);
+            var allRight= true;
+            var allRight_2=true;
             if(wrong_ans.length > 0){
-                text.push("Good Try. ");
+
+                //text.push("Good Try. ");
                if (experimentr.data()["mode"] == "Vanilla"){
                     for(var i=0;i<wrong_ans.length;i++) {
                     if(wrong_ans[i]==1||wrong_ans[i]==12||wrong_ans[i]==14||wrong_ans[i]==23||wrong_ans[i]==25||wrong_ans==32){//type 8
                         text.push("Please reivew QUESTION "+wrong_ans[i]+": It is likely that the pair are twin.");
+                        allRight=false;
                     }
                     else if(wrong_ans[i]==2||wrong_ans[i]==7||wrong_ans[i]==16||wrong_ans[i]==24||wrong_ans[i]==26||wrong_ans==32){//33
                         text.push("Please reivew QUESTION "+wrong_ans[i]+": The first and last names have been swapped and the id is missing but they have the same birthdays. Likely represent the same person ");
+                        allRight=false;
                     }
                 }
-}
+                if(allRight==true){
+                   text.push("Good job!");
+                    }
+               }
             else {
                    for(var i=0;i<wrong_ans.length;i++) {
 //                       if (wrong_ans[i]==10||wrong_ans[i]==18||wrong_ans[i]==22){//question type 2
@@ -254,16 +262,23 @@
 //                           text.push("QUESTION "+wrong_ans[i]+": The race is different, the dob is missing, the IDs are different with the names being common names. Likely that the people are different");
 //                       }
                        if(wrong_ans[i]==4){//22
+                           allRight_2=false;
                            text.push("Please review QUESTION "+wrong_ans[i]+": Notice the difference in age and the jr/sr post-fix. It's likely that they represent father and son.");
                        }
 //                       else if(wrong_ans[i]==11||wrong_ans[i]==13||wrong_ans[i]==21){//27
 //                           text.push("QUESTION "+wrong_ans[i]+": The ID is missing but the first name might be a nick name and pair probably represents the same person.");
 //                       }
                        else if(wrong_ans[i]==3){//33
+                           allRight_2=false;
                            text.push("Please review QUESTION "+wrong_ans[i]+": The first and last names have been swapped and the id is missing but they have the same birthdays. Likely represent the same person ");
                        }
 
-               }}}
+
+               }
+                   if(allRight_2==true){
+                       text.push("Good job!");
+                   }
+               }}
 
 
             restore = answer;
