@@ -46,20 +46,20 @@ var total_char=0;
 //calculate total number of characters on a page
 //coloumn 1,2,3 6,7,8 are the ones with information needed
 //There are 5 column
-for(var m=0;m<6;m++){
-    for(var i=0;i<9;i++){
-        if(i!=0&&i!=2&&i!=5) {
-            var line_1 = experimentr.data()["section2"][0][m][0][i];
-            var line_2 = experimentr.data()["section2"][0][m][1][i];
-
-
-            // console.log(line_1.length);
-            // console.log(line_2);
-            // console.log(line_2.length);
-            total_char = total_char+line_1.length+line_2.length;
-        }
-    }
-}
+// for(var m=0;m<6;m++){
+//     for(var i=0;i<9;i++){
+//         if(i!=0&&i!=2&&i!=5) {
+//             var line_1 = experimentr.data()["section2"][0][m][0][i];
+//             var line_2 = experimentr.data()["section2"][0][m][1][i];
+//
+//
+//             // console.log(line_1.length);
+//             // console.log(line_2);
+//             // console.log(line_2.length);
+//             total_char = total_char+line_1.length+line_2.length;
+//         }
+//     }
+// }
 total_char = 377;
 console.log(total_char);
 var char_disclosed = 0;
