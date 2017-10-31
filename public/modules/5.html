@@ -36,15 +36,12 @@
 <div id="container">
     <div id="instruction" style="text-align:center;">
         <h1 id="heading">Base Mode</h1>
-
-        <br> <br>
         <div id="table"></div>
     </div>
-    <br>
     <div id="notation" style="text-align:left;padding:5px;width:1400px;">
         <!--<label id="page"></label>-->
     </div>
-    <button id="submitComments" class="next-button" type="button">Ready to Answer Questions?</button><label id="answer_all" style="position: absolute; left: 150px; color: red;"></label><br>
+    <button id="submitComments" class="next-button" type="button">Ready to Answer Questions?</button><label id="answer_all" style="position: absolute; left: 150px; color: red;"></label><br/><br/><br/>
 </div>
 <br>
 </body>
@@ -76,9 +73,9 @@
     delay_next(250);
 
     function add_mod_intros(img_address){
-        var height = "550px",
-            width = "1000px",
-            x = "400px",
+        var height = "760px",
+            width = "1280px",
+            x = "110px",
             y = "20px";
 
         d3.select("#notation").select(".image").remove();
@@ -86,7 +83,7 @@
             .append("svg")
             .attr("class", "image")
             .attr("width", 1800)
-            .attr("height", 600);
+            .attr("height", 800);
         svg.append("svg:image")
             .attr("xlink:href","/resources/module_intros/"+img_address)
             .attr("x",x)
