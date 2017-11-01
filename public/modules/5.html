@@ -7,7 +7,7 @@
 <style>
     #submitComments {
         position: absolute;
-        left: 50%;
+        left: 38%;
         transform: translate(-50%, 0%);
     }
     body{
@@ -27,7 +27,7 @@
     }
     #container{
         /*Styling for any element with the id="container" */
-        width:1800px; /* The width is fixed by pixels */
+        width:1366px; /* The width is fixed by pixels */
         height:800px; /* The height is fixed by pixels*/
         color:black;
     }
@@ -35,10 +35,10 @@
 <body>
 <div id="container">
     <div id="instruction" style="text-align:center;">
-        <h1 id="heading">Base Mode</h1>
+        <h1 id="heading"></h1>
         <div id="table"></div>
     </div>
-    <div id="notation" style="text-align:left;padding:5px;width:1400px;">
+    <div id="notation" style="text-align:left;padding:5px;width:1366px;">
         <!--<label id="page"></label>-->
     </div>
     <button id="submitComments" class="next-button" type="button">Ready to Answer Questions?</button><label id="answer_all" style="position: absolute; left: 150px; color: red;"></label><br/><br/><br/>
@@ -73,17 +73,17 @@
     delay_next(250);
 
     function add_mod_intros(img_address){
-        var height = "760px",
+        var height = "720px",
             width = "1280px",
-            x = "110px",
-            y = "20px";
+            x = "0px",
+            y = "0px";
 
         d3.select("#notation").select(".image").remove();
         var svg = d3.select("#notation")
             .append("svg")
             .attr("class", "image")
-            .attr("width", 1800)
-            .attr("height", 800);
+            .attr("width", 1280)
+            .attr("height", 720);
         svg.append("svg:image")
             .attr("xlink:href","/resources/module_intros/"+img_address)
             .attr("x",x)
@@ -326,7 +326,7 @@
             if (sec_switch == 1 && (mod_pages.indexOf(step) > -1)) {
                 d3.select("#heading").style("visibility","hidden");
                 console.log("Step is",step);
-                d3.select('#submitComments').style("left", "50%").property("innerHTML","Ready to Answer Questions?");
+                d3.select('#submitComments').style("left", "38%").property("innerHTML","Ready to Answer Questions?");
                 d3.selectAll(".blocks").remove();
                 d3.select("#notation").html("");
                 add_mod_intros("recap_" + (step + 1) + ".PNG");
