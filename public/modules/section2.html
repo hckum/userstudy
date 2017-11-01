@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>Title</title>
+        </head>
+        <style>
+            #submitComments {
+                position: absolute;
+                top: 93%;
+                left: 52%;
+                transform: translate(-50%, 0%);
+            }
+            body{
+                color:#000;
+            }
+            #container{
+                /*Styling for any element with the id="container" */
+                width:1800px; /* The width is fixed by pixels */
+                height:800px; /* The height is fixed by pixels*/
+                color:black;
+            }
+            #space{
+                /*Styling for any element with the id="container" */
+                width:1800px; /* The width is fixed by pixels */
+                height:20px; /* The height is fixed by pixels*/
+            }
+            #space_2{
+                /*Styling for any element with the id="container" */
+                width:1800px; /* The width is fixed by pixels */
+                height:100px; /* The height is fixed by pixels*/
+            }
+
+
+            .progress {
+                display: table-cell;
+                width:300px; /* The width is fixed by pixels */
+                height:50px; /* The height is fixed by pixels*/
+                position: relative;
+                left: 90%;
+                text-align:center;
+                border: 2px solid black;
+            }
+            .bar-text {
+                position:relative;
+                padding: 15px;
+                display: table-cell;
+                vertical-align: top;
+                font-size:150%;
+                left: 80%;
+            }
+            .progress-bar
+             {
+                 display: table;
+                 /*border-spacing: 20px;*/
+                 border-collapse: separate;
+             }
+            .progress-value {
+                vertical-align: middle;
+                position:absolute;
+                right:0;
+                left:0;
+            }
+            .instruction-text{
+                position:absolute;
+                top:83%;
+                left:27%;
+            }
+
+
+
+        </style>
+<body>
+<div id="container">
+    <div id="instruction" style="text-align:center;">
+        <!--<h3 id="heading">PPIRL <button style="background:none; border:none; margin:0; padding:0;" id="summonEnd"></button></h3>-->
+        <div id="notation" style="text-align:center; font-size:200%;position:relative;">
+            <!--<label id="page"></label>-->
+        </div>
+        <div id="PPIRL" style="text-align:left;">
+            <!--<label id="page"></label>-->
+        </div>
+        <div id="notation_sub" style="text-align:center; font-size:200%">
+            <!--<label id="page"></label>-->
+        </div>
+        <div class="instruction-text" style=" font-size:500px";>
+            <h2 id="instruction-text"> <strong>STOP</strong>. Please wait for the facilitator before you press the submit button</h2>
+        </div>
+
+
+        <!--progressbar-->
+
+        <div id="progress-bar">
+            <div class="bar-text">
+                <h3 id="name_1"> Number of Characters Disclosed  <br> (Percentage of Characters Disclosed)</h3>
+            </div>
+
+        <div class="progress">
+            <span class="progress-value" id= "progress_value"></span>
+            <div id="dynamic_1" class="progress-bar  progress-bar-danger progress-bar-striped active" role="progressbar" aria-valuenow="0.1" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                <span id="current-progress_1"></span>
+            </div>
+        </div>
+
+            <!--<div class="bar-text">-->
+            <!--<h3 id="name_2"> Privacy Budget</h3>-->
+            <!--</div>-->
+
+        <!--<div class="progress">-->
+            <!--<div id="dynamic" class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">-->
+                <!--<span id="current-progress"></span>-->
+            <!--</div>-->
+        <!--</div>-->
+
+    </div>
+        <div id="space">
+
+        </div>
+        <!--progressbar-->
+        <!--intruction- notation_sub-->
+
+
+        <div id="table"></div>
+    </div>
+</div>
+<div id="space_2">
+
+</div>
+    <button id="submitComments" class="next-button" type="button">Submit</button>
+    <button id="endStudy" class="next-button" type="button" style="position: absolute; left: 1600px; top: 25px;">End Study</button><br>
+</div>
+<br>
+</body>
+</html>
+<script src="javascript/misc/clickable.js"></script>
+<script>
+    function add_mod_intros(img_address){
+        var height = "450px",
+            width = "1000px",
+            x = "400px",
+            y = "20px";
+
+        d3.select("#notation").select(".image").remove();
+        var svg = d3.select("#PPIRL")
+            .append("svg")
+            .attr("class", "image")
+            .attr("width", 1800)
+            .attr("height", 600);
+        svg.append("svg:image")
+            .attr("xlink:href","/resources/module_intros/"+img_address)
+            .attr("x",x)
+            .attr("y",y)
+            .attr("width",width)
+            .attr("height",height);
+        svg.append("rect")
+            .attr("x", x)
+            .attr("y", y)
+            .attr("height", height)
+            .attr("width", width)
+            .style("stroke", "black")
+            .style("fill", "none");
+    }
+
+    (function(){
+        $.getScript("javascript/misc/clickable.js");
+        experimentr.startTimer('section2');
+        experimentr.hideNext();
+        console.log("in");
+        seq = 3;//yumei
+        parsing(experimentr.data()["section2_sample_name"],"section2");
+        experimentr.data()['section'] = 'section2';
+        var step = 0;
+        d3.select("#endStudy").style("visibility","hidden");
+        d3.select("#heading").style("visibility","hidden");//PPIRL heading
+        console.log(experimentr.data()["section2"]);
+            experimentr.data()["clickable"] = "true";
+
+
+        function delay_next(time){
+            d3.select("#submitComments").attr("disabled","true");
+            d3.select("#submitComments").style("color","#b3b3b3");
+            setTimeout(function(){
+                d3.select("#submitComments").attr("disabled",null);
+                d3.select("#submitComments").style("color","black");
+            },time);
+        }
+
+        delay_next(250);
+
+        function goToNext() {
+            delete experimentr.data()['section2'];
+            experimentr.endTimer('section2');
+            experimentr.next();
+        };
+
+       d3.select("#notation").append("h4").text("Now you are moving to the ").style("text-align","center").style("font-size","150%");
+        d3.select("#notation").append("h4").text("Privacy Preserving Interactive Record Linkage (PPIRL)").style("text-align","center").style("font-size","200%");
+        var html_to_insert = "<p><strong>CLICK</strong> on the text if you want more information disclosed. </p>";
+        document.getElementById('notation').insertAdjacentHTML('beforeend', html_to_insert);
+        add_mod_intros("PPIRL_instruction.PNG");
+        d3.selectAll("#progress-bar").style("visibility","hidden");
+
+       d3.select("#summonEnd").on('click', function(){
+           console.log((Date.now()-experimentr.data()["time_of_website_start"])/(1000*60));
+           if(((Date.now()-experimentr.data()["time_of_website_start"])/(1000*60)) > 0.2){
+               console.log("time elapsed");
+               d3.select("#endStudy").style("visibility", "visible");
+           } else {
+               console.log("time not elapsed");
+           }
+       });
+
+        d3.select('#endStudy')
+            .on('click', function () {
+                goToNext();
+            });
+
+        d3.select('#submitComments')
+            .on('click', function () {
+                d3.select("#instruction-text").remove();
+                console.log(step);
+                d3.select('#submitComments').style("position","absolute").style("left","100px").style("top","1040px");
+                d3.select("#progress-bar").style("visibility","visible");
+
+
+                // console.log("length is ",experimentr.data()["section2"].length-1)
+                if(step==1){//when 1 pages of questions has been displayed(page 0, page1)
+                    goToNext();
+                }else {
+                    //d3.select("#heading").style("visibility","visible").style("font-size","300%").style("color","red");
+                    d3.select("#heading").remove();
+                    d3.select("#PPIRL").remove();
+                    d3.select("#notation").text("");
+                    d3.select("#notation").append("h4").text("Privacy Preserving Interactive Record Linkage (PPIRL)").style("text-align","center").style("font-size","200%");
+//                    d3.select("#notation").text("Page " + (step + 1).toString()); display page number
+                    var html_to_insert = "<p> <strong>CLICK</strong> on the text if you want more information disclosed. </p>";
+                    document.getElementById('notation_sub').insertAdjacentHTML('beforeend', html_to_insert);
+
+                    setTimeout(function () {
+                        d3.selectAll(".blocks").remove();
+                        console.log(experimentr.data()["section2"][step-1]);
+                        pairs(experimentr.data()["section2"][step-1], step-1, experimentr.data()["section2"][step-1].length, 'Partial');
+                        //console.log(experimentr.data()["section2"][step-1][0][0][3]);
+
+
+                        if (experimentr.data()["mode"] == "Vanilla") {
+                            d3.selectAll(".icon").remove();
+                            d3.selectAll(".freq").remove();
+                            d3.selectAll(".tip").remove();
+                        }
+                    }, 100);
+
+                    delay_next(350);
+                    step += 1;
+                 }
+                // time elapse
+                grading2();
+                experimentr.data()['switch'].push(Date.now());
+                experimentr.save();
+            });
+    }());
+</script></title>
+</head>
+<body>
+<script>$(function() {
+    var current_progress = 0;
+    var interval = setInterval(function() {
+        current_progress = 80;
+        $("#dynamic")
+            .css("width", current_progress + "%")
+            .attr("aria-valuenow", current_progress)
+            .text(current_progress + "% ");
+        if (current_progress >= 100)
+            clearInterval(interval);
+    }, 1000);
+});
+//
+//
+//var cel = g.append("g").attr("id","c"+j.toString()).attr("class","cell").attr("data-mode",mode)
+//    .attr("transform","translate("+x+","+y+")").on('click',function() {
+//        if(experimentr.data()["clickable"] == "true") {
+//            clickCount +=1;}});
+
+//$(function() {
+//    var current_progress_1 = 100;
+//
+//    current_progress_1 = 100-10*clickCount;
+//    $("#dynamic_1")
+//        .css("width", current_progress_1 + "%")
+//        .attr("aria-valuenow", current_progress_1)
+//        .text(current_progress_1 + "% ");
+//
+//});
+</script>
+</body>
+</html>
