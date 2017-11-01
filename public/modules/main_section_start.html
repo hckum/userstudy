@@ -9,22 +9,22 @@
 
     </div>
     <!--<img src="resources/module_intros/main_study.png" alt="main study start" height="550px" width="1000px" style="position: absolute; left: 400px; top:20px">-->
-    <button id="submitComments" class="next-button" type="button" style="position: absolute; left: 900px;">Next</button>
+    <button id="submitComments" class="next-button" type="button" style="position: absolute; left: 38%; margin-top: 10px">Next</button>
 </body>
 <script>
     (function(){
         function add_mod_intros(img_address){
-            var height = "550px",
-                width = "1000px",
-                x = "400px",
-                y = "20px";
+            var height = "720px",
+                width = "1280px",
+                x = "0px",
+                y = "0px";
 
             d3.select("#notation").select(".image").remove();
             var svg = d3.select("#notation")
                 .append("svg")
                 .attr("class", "image")
-                .attr("width", 1800)
-                .attr("height", 600);
+                .attr("width", 1280)
+                .attr("height", 720);
             svg.append("svg:image")
                 .attr("xlink:href","/resources/module_intros/"+img_address)
                 .attr("x",x)
