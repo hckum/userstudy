@@ -41,7 +41,7 @@
                 width:300px; /* The width is fixed by pixels */
                 height:50px; /* The height is fixed by pixels*/
                 position: relative;
-                left: 90%;
+                left: 40%;
                 text-align:center;
                 border: 2px solid black;
             }
@@ -51,7 +51,7 @@
                 display: table-cell;
                 vertical-align: top;
                 font-size:150%;
-                left: 80%;
+                left: 40%;
             }
             .progress-bar
              {
@@ -95,26 +95,27 @@
         <!--progressbar-->
 
         <div id="progress-bar">
-            <div class="bar-text">
-                <h3 id="name_1"> Number of Characters Disclosed  <br> (Percentage of Characters Disclosed)</h3>
-            </div>
-
-        <div class="progress">
-            <span class="progress-value" id= "progress_value"></span>
-            <div id="dynamic_1" class="progress-bar  progress-bar-danger progress-bar-striped active" role="progressbar" aria-valuenow="0.1" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
-                <span id="current-progress_1"></span>
-            </div>
-        </div>
-
             <!--<div class="bar-text">-->
-            <!--<h3 id="name_2"> Privacy Budget</h3>-->
+                <!--<h3 id="name_1"> Number of Characters Disclosed  <br> (Percentage of Characters Disclosed)</h3>-->
             <!--</div>-->
 
         <!--<div class="progress">-->
-            <!--<div id="dynamic" class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">-->
-                <!--<span id="current-progress"></span>-->
+            <!--<span class="progress-value" id= "progress_value"></span>-->
+            <!--<div id="dynamic" class="progress-bar  progress-bar-danger progress-bar-striped active" role="progressbar" aria-valuenow="0.1" aria-valuemin="0" aria-valuemax="100" style="width: 0%">-->
+                <!--<span id="current-progress_1"></span>-->
             <!--</div>-->
         <!--</div>-->
+
+            <div class="bar-text">
+            <h3 id="name_2"> Privacy Budget</h3>
+            </div>
+
+        <div class="progress">
+            <span class="progress-value" id= "progress_value_privacy"></span>
+            <div id="dynamic_privacy" class="progress-bar progress-bar-danger progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                <span id="current-progress"></span>
+            </div>
+        </div>
 
     </div>
         <div id="space">
@@ -138,6 +139,8 @@
 </html>
 <script src="javascript/misc/clickable.js"></script>
 <script>
+
+
     function add_mod_intros(img_address){
         var height = "450px",
             width = "1000px",
@@ -176,7 +179,7 @@
         var step = 0;
         d3.select("#endStudy").style("visibility","hidden");
         d3.select("#heading").style("visibility","hidden");//PPIRL heading
-        console.log(experimentr.data()["section2"]);
+        //console.log(experimentr.data()["section2"]);
             experimentr.data()["clickable"] = "true";
 
 
@@ -266,35 +269,5 @@
 </script></title>
 </head>
 <body>
-<script>$(function() {
-    var current_progress = 0;
-    var interval = setInterval(function() {
-        current_progress = 80;
-        $("#dynamic")
-            .css("width", current_progress + "%")
-            .attr("aria-valuenow", current_progress)
-            .text(current_progress + "% ");
-        if (current_progress >= 100)
-            clearInterval(interval);
-    }, 1000);
-});
-//
-//
-//var cel = g.append("g").attr("id","c"+j.toString()).attr("class","cell").attr("data-mode",mode)
-//    .attr("transform","translate("+x+","+y+")").on('click',function() {
-//        if(experimentr.data()["clickable"] == "true") {
-//            clickCount +=1;}});
-
-//$(function() {
-//    var current_progress_1 = 100;
-//
-//    current_progress_1 = 100-10*clickCount;
-//    $("#dynamic_1")
-//        .css("width", current_progress_1 + "%")
-//        .attr("aria-valuenow", current_progress_1)
-//        .text(current_progress_1 + "% ");
-//
-//});
-</script>
 </body>
 </html>

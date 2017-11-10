@@ -15,11 +15,11 @@ var ys = [0,30,77];
 //index mapping from hidden data to visible data per row
 var mapping = [0,9,2,10,11,5,12,13,14,1,3,4,6,7,8,15];
 var data = {}; // experimentr data
+var key_value ="";//show opened items
 var n_pair = 0;
 var s2_n_pair = 0;
 var swap_switch=0;
 var mode_list = ["Partial", "Partial_Cell", "Opti1", "Full"];
-
 
 /**
  * draw a cell
@@ -43,9 +43,9 @@ var mode_list = ["Partial", "Partial_Cell", "Opti1", "Full"];
  */
 var total_char=0;
 // console.log(experimentr.data()["section2"][0][0][1][1]); this is pair 1, row 2, column 1 which is 1000142704
-//calculate total number of characters on a page
-//coloumn 1,2,3 6,7,8 are the ones with information needed
-//There are 5 column
+// calculate total number of characters on a page
+// coloumn 1,2,3 6,7,8 are the ones with information needed
+// // There are 5 column
 // for(var m=0;m<6;m++){
 //     for(var i=0;i<9;i++){
 //         if(i!=0&&i!=2&&i!=5) {
@@ -60,20 +60,60 @@ var total_char=0;
 //         }
 //     }
 // }
-total_char = 377;
-console.log(total_char);
+total_char = 377;//the number is 377
+console.log("total number of characters is : ",total_char);
 var char_disclosed = 0;
 
+$.getJSON("modules/rareset.json", function(json) {
+;
+    console.log(happy);
+    console.log(json); // this will show the info it in firebug console
+});
+
+var json_content =
+    {
+    "L:SWANSON#D:05/16/1961": 1000,
+    "F:ALEXANDRA#D:05/04/1994#S:F#R:W": 2000};//todo: load json properly
+var comb_array = [];
+
+//console.log(json_content["L:SWANSON#D:05/16/1961"]);
+//var json_content = JSON.stringify(json_file);
+function findInJason(json_cont){
+
+    for (var i = 0; i < json_cont.length; i++){
+        // look for the entry with a matching `code` value
+
+
+        // if (json_cont[i].code == p_name){
+        //     console.log("found");
+        // }
+    }
+
+}
+
+findInJason(json_content);
 function changeBar(total_char, char_disclosed) {
     var current_progress_1;
     current_progress_1 = char_disclosed/total_char*100;
-    $("#dynamic_1")
+    $("#dynamic")
         .css("width", current_progress_1 + "%")
         .attr("aria-valuenow", current_progress_1).css("vertical-align","middle");
     $("#progress_value")
         .text(char_disclosed + "\n"+"("+current_progress_1.toFixed(1) + "%) ").css("font-size", "350%").css("color", "black").css("transform"," translateY(22%)") ;
     experimentr.data()["current_progress"] = current_progress_1;
-    console.log(experimentr.data()["current_progress"] );
+
+
+};
+
+function changePrivacy(total_char, char_disclosed) {
+    var current_progress_1;
+    current_progress_1 = char_disclosed/total_char*100;
+    $("#dynamic_privacy")
+        .css("width", current_progress_1 + "%")
+        .attr("aria-valuenow", current_progress_1).css("vertical-align","middle");
+    $("#progress_value_privacy")
+        .text(char_disclosed + "\n"+"("+current_progress_1.toFixed(1) + "%) ").css("font-size", "350%").css("color", "black").css("transform"," translateY(22%)") ;
+    experimentr.data()["current_progress"] = current_progress_1;
 
 };
 
@@ -99,6 +139,7 @@ function cell(t,g,j,k, mode){
     // }
     // erase title columns
     changeBar(total_char, char_disclosed);
+    changePrivacy(total_char, char_disclosed);
    // console.log("clickable.js in the working");
     var index_r = g.attr("id").slice(1)%6;
     var x = 40*(j%cwidth.length)+cwidth.slice(0,j%cwidth.length).reduce((a, b) => a + b, 0),
@@ -133,8 +174,8 @@ function cell(t,g,j,k, mode){
 
                 var prev_text = d3.select(this).text();
                 var prev_text_sibling = d3.select(this.parentNode).select("#"+sibling_id).text();
-                console.log(prev_text);
-                console.log(prev_text_sibling);
+                //console.log(prev_text);
+                //console.log(prev_text_sibling);
 
                 var original_text;
                 var original_text_sibling;
@@ -171,7 +212,7 @@ function cell(t,g,j,k, mode){
                 //console.log("this &@ count is ", at_and_count);
                 //console.log("prev_text_sibling is",prev_text_sibling);
 
-                console.log("original_text_sibling",original_text_sibling);
+               // console.log("original_text_sibling",original_text_sibling);
 
                 for(var i=0,c=prev_text_sibling.length;i<c;i++){
 
@@ -190,7 +231,7 @@ function cell(t,g,j,k, mode){
                     char_difference = original_text.length * 2;
                 }
                 //d3.select(this).attr("id");
-                console.log(d3.select(this).attr("id"));
+              //  console.log(d3.select(this).attr("id"));
                 if(d3.select(this).attr("id")=="c10"||d3.select(this).attr("id")=="c12"||d3.select(this).attr("id")=="c15"
                 ||d3.select(this).attr("id")=="c22"||d3.select(this).attr("id")=="c25"){
                     char_difference= 0;
@@ -218,9 +259,9 @@ function cell(t,g,j,k, mode){
                     }
                 }
 
-                console.log("char difference is ",char_difference);
+                //console.log("char difference is ",char_difference);
                 char_disclosed += char_difference;
-                console.log(char_disclosed);
+               // console.log(char_disclosed);
                 // for(var i=0,c=original_text.length;i<c;i++){
                 //     if(prev_text[i] != original_text[i]){
                 //         char_difference +=1;
@@ -262,16 +303,77 @@ function cell(t,g,j,k, mode){
                     }
 
                     var x = d3.select(this.parentNode);
-                    //show opened element
-                    // var array_elements = ["#c11", "#c13", "#c14", "#c15","#c16", "#c17", "#c18", "#c19", "#c21"];
-                    // if(array_elements.indexOf(otcell)>0){
-                    //     array_elements = array_elements.remove(array_elements.indexOf(otcell));
-                    // }
-                    // for(var i = 0; i < array_elements.length; i++){
-                    //     // console.log(array_elements[i]);
-                    //     console.log(x.select(array_elements[i]).text());
-                    // }
 
+                    //show opened cell; now all the current text on the screen; ignore the pictures
+
+                    var array_elements = ["#c11", "#c21", "#c13","#c23", "#c14","#c24","#c16", "#c26","#c17","#c27","#c18","#c28"];
+                    if(array_elements.indexOf(j)>0){
+                        array_elements = array_elements.splice(array_elements.indexOf(j));
+                    }
+
+                    for(var i = 0; i < array_elements.length; i++){
+                        var displayedText = x.select(array_elements[i]).text();
+                        displayedText = displayedText.split("&").join("");
+                        displayedText = displayedText.split("/").join("");
+                        displayedText = displayedText.split("@").join("");
+                        displayedText = displayedText.split("*").join("");
+                        displayedText = displayedText.split(" ").join("");
+                        displayedText = displayedText.trim();
+                        if(displayedText != ""){
+                        //console.log(array_elements[i]);
+                        cell_question_number = array_elements[i];//#c11
+                        question_number=cell_question_number.replace("c", "");
+                        question_number=question_number.replace("#", "");//11
+                        cell_pair_number = d3.select(this.parentNode).attr("id");//g11
+                        pair_number = cell_pair_number.replace("g", " ")//11
+                        //label #D,#I,#F
+                        console.log(parseInt(question_number));
+                        switch(parseInt(question_number)) {
+                            case 11:
+                            case 21:
+                                    original_text = "#I:";
+                                    break;
+                            case 13:
+                            case 23:
+                                    original_text = "#F:";
+                                    break;
+                            case 14:
+                            case 24:
+                                    original_text = "#L:";
+                                    break;
+                            case 16:
+                            case 26:
+                                    original_text = "#D:";
+                                    break;
+                            case 17:
+                            case 27:
+                                    original_text = "#S:";
+                                    break;
+                            case 18:
+                            case 28:
+                                    original_text = "#R:";
+                                    break;
+                                default:
+                                    break;
+                            }
+                            if(parseInt(question_number)<20){
+                        original_text = original_text + experimentr.data()["section2"][0][pair_num ][0][question_number-10];
+                        }
+                        else if(parseInt(question_number)>20){
+                            original_text = original_text + experimentr.data()["section2"][0][pair_num ][1][question_number-20];
+                            }
+                        console.log(original_text);
+                        key_value = key_value + original_text ;
+                        }
+
+                        //console.log("List of opened items are: ");
+                        //console.log(x.select(array_elements[i]).text());
+                    }
+                    //console.log(key_value);
+                    console.log("end");
+                    // prev_text = prev_text.split("&").join("");
+                    // prev_text = prev_text.split("/").join("");
+                    // prev_text = prev_text.split("@").join("");
 
 
 
@@ -291,13 +393,13 @@ function cell(t,g,j,k, mode){
                         var next_text_1 = dat[g.attr("id").slice(1) % 6][1][mapping[j % cwidth.length]];
                         var next_text_2 = dat[g.attr("id").slice(1) % 6][0][mapping[j % cwidth.length]];
 
-                        console.log("j is", j);
-                        console.log("cwidth.length is", cwidth.length);
+                        //console.log("j is", j);
+                        //console.log("cwidth.length is", cwidth.length);
                         // var next_text_3 = dat[g.attr("id").slice(1) % 6][Math.abs(row_num)][mapping[j % cwidth.length]];
                         // var next_text_4 = dat[g.attr("id").slice(1) % 6][Math.abs(row_num - 1)][mapping[j % cwidth.length]];
-                        console.log("row num is", row_num);
-                        console.log("text_1 is", next_text_1);
-                        console.log("text_2 is", next_text_2);
+                        //console.log("row num is", row_num);
+                        //console.log("text_1 is", next_text_1);
+                        //console.log("text_2 is", next_text_2);
 
                         cell(next_text_2, g, 13, k, "Full");
                         cell(next_text_1, g, 14, k, "Full");
