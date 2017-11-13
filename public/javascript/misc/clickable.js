@@ -16,10 +16,13 @@ var ys = [0,30,77];
 var mapping = [0,9,2,10,11,5,12,13,14,1,3,4,6,7,8,15];
 var data = {}; // experimentr data
 var key_value ="";//show opened items
+var key_value_prev ="";//show previous opened items
 var n_pair = 0;
 var s2_n_pair = 0;
 var swap_switch=0;
 var mode_list = ["Partial", "Partial_Cell", "Opti1", "Full"];
+var privacy_score_decrement = 0;
+var current_privacy = 100;
 
 /**
  * draw a cell
@@ -64,19 +67,25 @@ total_char = 377;//the number is 377
 console.log("total number of characters is : ",total_char);
 var char_disclosed = 0;
 
-$.getJSON("modules/rareset.json", function(json) {
-;
-    console.log(happy);
-    console.log(json); // this will show the info it in firebug console
-});
+if(true) {
+//     {
+//        // "L:SWANSON#D:05/16/1961": 1000,
+//         //"F:ALEXANDRA#D:05/04/1994#S:F#R:W": 2000
+//     };//todo: load json properly
 
-var json_content =
-    {
-    "L:SWANSON#D:05/16/1961": 1000,
-    "F:ALEXANDRA#D:05/04/1994#S:F#R:W": 2000};//todo: load json properly
-var comb_array = [];
+// $.getJSON("modules/rareset.json", function(json) {
+//     console.log(json); // this will show the info it in firebug console
+// });
 
-//console.log(json_content["L:SWANSON#D:05/16/1961"]);
+
+    var json_load = document.createElement('script');
+    json_load.src = "/modules/rareset.js";
+    document.head.appendChild(json_load);
+    console.log(json_load);
+    //console.log(json_content);
+    var comb_array = [];
+}
+//console.log(json_content["F:EMMA"]);
 //var json_content = JSON.stringify(json_file);
 function findInJason(json_cont){
 
@@ -91,7 +100,7 @@ function findInJason(json_cont){
 
 }
 
-findInJason(json_content);
+//findInJason(json_content);
 function changeBar(total_char, char_disclosed) {
     var current_progress_1;
     current_progress_1 = char_disclosed/total_char*100;
@@ -105,15 +114,15 @@ function changeBar(total_char, char_disclosed) {
 
 };
 
-function changePrivacy(total_char, char_disclosed) {
-    var current_progress_1;
-    current_progress_1 = char_disclosed/total_char*100;
+
+function changePrivacy(current_privacy,deltaK) {
+    //console.log("current privacy is", current_privacy);
     $("#dynamic_privacy")
-        .css("width", current_progress_1 + "%")
-        .attr("aria-valuenow", current_progress_1).css("vertical-align","middle");
+        .css("width", current_privacy + "%")
+        .attr("aria-valuenow", current_privacy).css("vertical-align","middle");
     $("#progress_value_privacy")
-        .text(char_disclosed + "\n"+"("+current_progress_1.toFixed(1) + "%) ").css("font-size", "350%").css("color", "black").css("transform"," translateY(22%)") ;
-    experimentr.data()["current_progress"] = current_progress_1;
+        .text("("+current_privacy.toFixed(1) + "%) ").css("font-size", "350%").css("color", "black").css("transform"," translateY(22%)") ;
+    experimentr.data()["current_privacy"] = current_privacy;
 
 };
 
@@ -139,7 +148,7 @@ function cell(t,g,j,k, mode){
     // }
     // erase title columns
     changeBar(total_char, char_disclosed);
-    changePrivacy(total_char, char_disclosed);
+    changePrivacy(current_privacy, privacy_score_decrement);
    // console.log("clickable.js in the working");
     var index_r = g.attr("id").slice(1)%6;
     var x = 40*(j%cwidth.length)+cwidth.slice(0,j%cwidth.length).reduce((a, b) => a + b, 0),
@@ -153,7 +162,7 @@ function cell(t,g,j,k, mode){
             if(experimentr.data()["clickable"] == "true") {
                 // console.log(d3.select(this).attr("id"));
                 // console.log(d3.select(this.parentNode).attr("id"));
-                var cell_question_number = d3.select(this).attr("id");
+                var cell_question_number = d3.select(this).attr("id");//findId
                 var question_number=cell_question_number.replace("c", " ");
                 var cell_pair_number = d3.select(this.parentNode).attr("id");
                 var pair_number = cell_pair_number.replace("g", " ");
@@ -180,20 +189,19 @@ function cell(t,g,j,k, mode){
                 var original_text;
                 var original_text_sibling;
                 if(question_number<20){
-                    //console.log(experimentr.data()["section2"][0][pair_num ][0][question_number-10]);
+
                    original_text = experimentr.data()["section2"][0][pair_num ][0][question_number-10];
                    original_text_sibling = experimentr.data()["section2"][0][pair_num ][1][question_number-10];
-                   // console.log(experimentr.data()["section2"][0][pair_num ][1][question_number-10]);
+                    //console.log(original_text);
 
                 }
                 else if(question_number >20){
                     original_text = experimentr.data()["section2"][0][pair_num ][1][question_number-20];
                     original_text_sibling = experimentr.data()["section2"][0][pair_num ][0][question_number-20];
-                   // console.log(experimentr.data()["section2"][0][pair_num ][0][question_number-20]);
-                    //console.log(experimentr.data()["section2"][0][pair_num ][1][question_number-20]);
+                    //console.log(original_text);
 
                 }
-
+                //console.log("clicked quesiton number is",question_number);
                 //prev_text,prev_text_sibling are what's on the screen
                 // original_text are original_text_sibling the final text
 
@@ -305,13 +313,659 @@ function cell(t,g,j,k, mode){
                     var x = d3.select(this.parentNode);
 
                     //show opened cell; now all the current text on the screen; ignore the pictures
-
+                    var json_content ={
+                        "F:ERNESTO#L:PEDROZA SR": 1,
+                        "L:SWANSON#D:05/16/1961": 1,
+                        "F:ALEXANDRA#D:05/04/1994#S:F#R:W": 1,
+                        "F:GAILYA#D:09/29/1978#R:W": 1,
+                        "I:1742668281#R:W": 1,
+                        "I:1742682819#F:SARA": 1,
+                        "I:1742668281#F:SARA#L:STYLES-BOONE#D:05/21/1988": 1,
+                        "F:ALEXANDER#L:BROST#R:W": 1,
+                        "I:1777743278#F:ALEXANDRA#S:F": 1,
+                        "L:OMONDI#D:09/29/1978": 1,
+                        "F:ALEXANDER#S:M#R:W": 1,
+                        "F:SARA#S:F": 2,
+                        "I:9320952205": 2,
+                        "I:9320952205#F:EMMA#L:BRIGGS#D:12/29/1987": 1,
+                        "I:1742668281#L:STYLES-BOONE#R:W": 1,
+                        "F:EMMA#L:BRIGGS": 1,
+                        "I:1299747019#F:ERNESTO#S:M#R:O": 1,
+                        "F:ERNESTO#L:PEDROZA SR#D:04/19/1964#S:M#R:O": 1,
+                        "I:1299747019#S:M": 1,
+                        "F:GAILYA#R:W": 1,
+                        "L:BRIGGS#R:W": 1,
+                        "F:ERNESTO#L:PEDROZA JR#R:O": 1,
+                        "F:ERNESTO#D:07/23/1997": 1,
+                        "I:1742668281#D:05/21/1988#S:F#R:W": 1,
+                        "I:4897541253#F:RUFORD#L:SWANSON#S:M#R:B": 1,
+                        "D:05/16/1961#S:M": 1,
+                        "I:1742668281#F:SARA#L:STYLES-BOONE#D:05/21/1988#S:F#R:W": 1,
+                        "D:05/21/1988#S:F": 2,
+                        "D:05/16/1916#R:B": 1,
+                        "I:1742682819#F:SARA#S:F": 1,
+                        "I:1299747019#S:M#R:O": 1,
+                        "F:SARA#L:STYLES-BOONE#S:F#R:W": 1,
+                        "L:BRIGGS#D:12/29/1987#S:F": 1,
+                        "I:1777743278#F:ALEXANDRA#L:BROST#S:F": 1,
+                        "I:1777743279#F:ALEXANDER#D:05/04/1994#S:M#R:W": 1,
+                        "L:SWANSON#S:M#R:B": 2,
+                        "F:SARA#D:05/21/1988#R:W": 2,
+                        "F:ERNESTO#L:PEDROZA JR#D:07/23/1997#R:O": 1,
+                        "D:12/29/1987": 2,
+                        "I:1299747019#F:ERNESTO#L:PEDROZA SR#D:04/19/1964#S:M#R:O": 1,
+                        "F:SARA#D:05/21/1988#S:F#R:W": 2,
+                        "F:SARA#L:STYLES-BOONE#D:05/21/1988": 1,
+                        "I:6456839076#L:PEDROZA JR#R:O": 1,
+                        "I:1742682819#L:BOONE#D:05/21/1988#R:W": 1,
+                        "I:1777743278#L:BROST#S:F": 1,
+                        "I:1777743279#S:M#R:W": 1,
+                        "F:SARA#L:BOONE#D:05/21/1988#R:W": 1,
+                        "L:SWANSON#D:05/16/1961#S:M": 1,
+                        "I:5678412359#F:RUFORD#L:SWANSON#R:B": 1,
+                        "F:ALEXANDER#L:BROST#D:05/04/1994#S:M#R:W": 1,
+                        "I:1299747019#F:ERNESTO#D:04/19/1964#S:M#R:O": 1,
+                        "F:ERNESTO#D:04/19/1964": 1,
+                        "I:1299747019#D:04/19/1964#R:O": 1,
+                        "I:1777743278#F:ALEXANDRA#D:05/04/1994#S:F#R:W": 1,
+                        "F:RUFORD#L:SWANSON#D:05/16/1961#S:M": 1,
+                        "L:BROST#S:F#R:W": 1,
+                        "I:4897541253#F:RUFORD#L:SWANSON": 1,
+                        "F:EMMA#L:DEYTON#S:F": 1,
+                        "L:DEYTON#S:F#R:W": 1,
+                        "F:ALEXANDER#D:05/04/1994#R:W": 1,
+                        "I:1742682819#L:BOONE#S:F#R:W": 1,
+                        "F:GAILYA#L:OMONDI#D:09/29/1978": 1,
+                        "F:ALEXANDRA#L:BROST#R:W": 1,
+                        "F:OMONDI#L:GAILYA#S:F": 1,
+                        "L:STYLES-BOONE": 1,
+                        "I:5678412359#R:B": 1,
+                        "I:9320952205#D:12/29/1987#S:F": 2,
+                        "I:1777743279#F:ALEXANDER#L:BROST#S:M": 1,
+                        "S:M#R:W": 1,
+                        "I:5678412359#L:SWANSON#D:05/16/1961#R:B": 1,
+                        "I:6456839076#F:ERNESTO#L:PEDROZA JR#D:07/23/1997#S:M#R:O": 1,
+                        "I:4897541253#L:SWANSON#S:M#R:B": 1,
+                        "S:M#R:B": 2,
+                        "F:EMMA#L:BRIGGS#D:12/29/1987#S:F": 1,
+                        "D:07/23/1997#S:M": 1,
+                        "F:RUFORD#D:05/16/1916#S:M": 1,
+                        "F:RUFORD#L:SWANSON#D:05/16/1916#S:M#R:B": 1,
+                        "I:5678412359#L:SWANSON": 1,
+                        "S:M#R:O": 2,
+                        "L:STYLES-BOONE#S:F#R:W": 1,
+                        "I:1742668281#L:STYLES-BOONE": 1,
+                        "F:ALEXANDRA#S:F#R:W": 1,
+                        "L:GAILYA#D:09/29/1978": 1,
+                        "F:GAILYA#L:OMONDI#S:F#R:W": 1,
+                        "F:ALEXANDER#L:BROST": 1,
+                        "L:BROST#R:W": 2,
+                        "F:RUFORD#L:SWANSON#D:05/16/1916": 1,
+                        "I:5678412359#F:RUFORD#R:B": 1,
+                        "I:1856554310#L:OMONDI#D:09/29/1978#S:F#R:W": 1,
+                        "I:4897541253#F:RUFORD#L:SWANSON#D:05/16/1916#S:M": 1,
+                        "F:ALEXANDER#S:M": 1,
+                        "I:4897541253#F:RUFORD#L:SWANSON#S:M": 1,
+                        "I:9320952205#L:BRIGGS#R:W": 1,
+                        "L:SWANSON": 2,
+                        "I:1299747019#F:ERNESTO#L:PEDROZA SR": 1,
+                        "I:1742682819#D:05/21/1988#S:F": 1,
+                        "F:EMMA#L:BRIGGS#D:12/29/1987#S:F#R:W": 1,
+                        "I:4897541253#D:05/16/1916#S:M#R:B": 1,
+                        "I:1777743278#F:ALEXANDRA#L:BROST#S:F#R:W": 1,
+                        "I:9320952205#L:BRIGGS#D:12/29/1987#S:F": 1,
+                        "L:OMONDI#D:09/29/1978#S:F": 1,
+                        "F:OMONDI#D:09/29/1978#S:F#R:W": 1,
+                        "I:1742668281#L:STYLES-BOONE#S:F#R:W": 1,
+                        "I:1742668281#L:STYLES-BOONE#D:05/21/1988#R:W": 1,
+                        "F:ALEXANDER#R:W": 1,
+                        "F:EMMA#L:DEYTON#D:12/29/1987": 1,
+                        "I:1777743279#F:ALEXANDER#S:M#R:W": 1,
+                        "I:1299747019#D:04/19/1964#S:M#R:O": 1,
+                        "L:DEYTON#S:F": 1,
+                        "I:9320952205#F:EMMA#L:DEYTON#D:12/29/1987#R:W": 1,
+                        "L:STYLES-BOONE#S:F": 1,
+                        "L:GAILYA#D:09/29/1978#R:W": 1,
+                        "F:ERNESTO#L:PEDROZA SR#R:O": 1,
+                        "I:1777743278#F:ALEXANDRA#L:BROST#D:05/04/1994#R:W": 1,
+                        "I:9320952205#L:BRIGGS#D:12/29/1987#S:F#R:W": 1,
+                        "I:1777743278#D:05/04/1994#R:W": 1,
+                        "I:5678412359#L:SWANSON#S:M#R:B": 1,
+                        "I:9320952205#L:DEYTON#D:12/29/1987#S:F#R:W": 1,
+                        "I:1742682819#F:SARA#L:BOONE#S:F#R:W": 1,
+                        "I:1856554310#F:GAILYA": 1,
+                        "F:SARA#L:BOONE#D:05/21/1988#S:F#R:W": 1,
+                        "I:1742682819#F:SARA#L:BOONE#D:05/21/1988": 1,
+                        "I:9320952205#L:DEYTON#S:F": 1,
+                        "I:4897541253#L:SWANSON#D:05/16/1916#R:B": 1,
+                        "F:ALEXANDRA#D:05/04/1994#S:F": 1,
+                        "L:PEDROZA SR#S:M": 1,
+                        "F:EMMA#R:W": 2,
+                        "S:M": 5,
+                        "F:RUFORD#L:SWANSON": 2,
+                        "S:F": 7,
+                        "I:1299747019#F:ERNESTO#S:M": 1,
+                        "L:GAILYA#S:F": 1,
+                        "I:5678412359#D:05/16/1961": 1,
+                        "I:9320952205#F:EMMA#L:BRIGGS#D:12/29/1987#R:W": 1,
+                        "I:6456839076#F:ERNESTO#L:PEDROZA JR#D:07/23/1997#S:M": 1,
+                        "I:5678412359#F:RUFORD#D:05/16/1961#S:M": 1,
+                        "I:1856554310#L:OMONDI#D:09/29/1978": 1,
+                        "I:1742668281#F:SARA#L:STYLES-BOONE#R:W": 1,
+                        "I:1777743279#L:BROST": 1,
+                        "R:B": 2,
+                        "I:1777743279#D:05/04/1994#R:W": 1,
+                        "R:O": 2,
+                        "I:9320952205#F:EMMA#L:DEYTON#S:F": 1,
+                        "I:1742682819#F:SARA#L:BOONE": 1,
+                        "F:ALEXANDER#L:BROST#D:05/04/1994#S:M": 1,
+                        "I:1742668281": 1,
+                        "I:1742682819": 1,
+                        "F:SARA#D:05/21/1988#S:F": 2,
+                        "I:1777743279#F:ALEXANDER#L:BROST#D:05/04/1994": 1,
+                        "L:BROST#D:05/04/1994#S:M": 1,
+                        "I:1777743278#D:05/04/1994": 1,
+                        "L:BROST#D:05/04/1994#S:F#R:W": 1,
+                        "F:OMONDI#S:F": 1,
+                        "L:PEDROZA SR": 1,
+                        "F:RUFORD#L:SWANSON#S:M#R:B": 2,
+                        "I:1742682819#F:SARA#S:F#R:W": 1,
+                        "I:1777743278#L:BROST#D:05/04/1994#S:F": 1,
+                        "D:12/29/1987#R:W": 2,
+                        "D:05/04/1994": 2,
+                        "I:6456839076#L:PEDROZA JR#D:07/23/1997#S:M": 1,
+                        "I:1742668281#S:F": 1,
+                        "L:BOONE#D:05/21/1988#R:W": 1,
+                        "F:ERNESTO#D:07/23/1997#S:M": 1,
+                        "I:4897541253#F:RUFORD#D:05/16/1916": 1,
+                        "I:1856554310#D:09/29/1978#S:F": 1,
+                        "I:9320952205#F:EMMA#L:BRIGGS": 1,
+                        "L:PEDROZA SR#D:04/19/1964#S:M#R:O": 1,
+                        "I:5678412359#F:RUFORD#L:SWANSON#S:M": 1,
+                        "I:9320952205#L:DEYTON#D:12/29/1987#S:F": 1,
+                        "L:OMONDI#S:F#R:W": 1,
+                        "F:OMONDI#L:GAILYA#S:F#R:W": 1,
+                        "L:DEYTON#D:12/29/1987#R:W": 1,
+                        "R:W": 8,
+                        "I:6456839076#D:07/23/1997#R:O": 1,
+                        "I:1742682819#L:BOONE#D:05/21/1988": 1,
+                        "I:6456839076#F:ERNESTO#S:M#R:O": 1,
+                        "I:1299747019#F:ERNESTO#L:PEDROZA SR#D:04/19/1964#S:M": 1,
+                        "I:1742682819#L:BOONE#S:F": 1,
+                        "L:SWANSON#D:05/16/1961#S:M#R:B": 1,
+                        "I:5678412359#F:RUFORD#L:SWANSON#D:05/16/1961#S:M#R:B": 1,
+                        "L:BROST#D:05/04/1994": 2,
+                        "I:9320952205#F:EMMA#R:W": 2,
+                        "F:EMMA#D:12/29/1987#R:W": 2,
+                        "I:1856554310#F:GAILYA#L:OMONDI#R:W": 1,
+                        "L:BRIGGS#S:F": 1,
+                        "F:ERNESTO#S:M#R:O": 2,
+                        "F:ALEXANDRA#R:W": 1,
+                        "F:RUFORD#L:SWANSON#D:05/16/1916#R:B": 1,
+                        "L:BOONE#S:F#R:W": 1,
+                        "D:05/21/1988": 2,
+                        "L:SWANSON#D:05/16/1961#R:B": 1,
+                        "D:05/16/1916": 1,
+                        "F:ALEXANDRA#L:BROST": 1,
+                        "I:1856554310#L:OMONDI#R:W": 1,
+                        "F:ERNESTO#L:PEDROZA SR#D:04/19/1964#R:O": 1,
+                        "L:PEDROZA JR#D:07/23/1997#S:M": 1,
+                        "I:5678412359#F:RUFORD#L:SWANSON#S:M#R:B": 1,
+                        "F:EMMA": 2,
+                        "I:4897541253#F:RUFORD#D:05/16/1916#S:M#R:B": 1,
+                        "L:SWANSON#D:05/16/1916#S:M#R:B": 1,
+                        "F:EMMA#L:DEYTON#D:12/29/1987#R:W": 1,
+                        "I:1742668281#F:SARA#S:F": 1,
+                        "F:EMMA#L:BRIGGS#D:12/29/1987": 1,
+                        "I:9320952205#D:12/29/1987": 2,
+                        "F:SARA#L:STYLES-BOONE#S:F": 1,
+                        "I:4897541253#F:RUFORD#R:B": 1,
+                        "L:BROST#S:M": 1,
+                        "L:BROST#S:F": 1,
+                        "L:PEDROZA JR#S:M#R:O": 1,
+                        "I:1742682819#D:05/21/1988#S:F#R:W": 1,
+                        "I:1299747019#F:ERNESTO#L:PEDROZA SR#D:04/19/1964": 1,
+                        "F:RUFORD#L:SWANSON#R:B": 2,
+                        "I:1299747019#F:ERNESTO#D:04/19/1964#R:O": 1,
+                        "I:1777743278#L:BROST#S:F#R:W": 1,
+                        "L:PEDROZA JR": 1,
+                        "I:1856554310#F:GAILYA#D:09/29/1978#S:F": 1,
+                        "I:1777743279#L:BROST#S:M": 1,
+                        "L:OMONDI#S:F": 1,
+                        "F:RUFORD#R:B": 2,
+                        "I:1299747019#F:ERNESTO": 1,
+                        "I:4897541253#S:M#R:B": 1,
+                        "D:04/19/1964#S:M": 1,
+                        "I:5678412359#F:RUFORD#L:SWANSON#D:05/16/1961#S:M": 1,
+                        "I:4897541253#L:SWANSON#D:05/16/1916": 1,
+                        "D:05/16/1916#S:M": 1,
+                        "L:DEYTON#D:12/29/1987": 1,
+                        "I:6456839076#F:ERNESTO#D:07/23/1997#R:O": 1,
+                        "L:GAILYA#D:09/29/1978#S:F#R:W": 1,
+                        "I:1742668281#F:SARA#L:STYLES-BOONE#D:05/21/1988#S:F": 1,
+                        "I:1856554310#F:GAILYA#L:OMONDI#D:09/29/1978": 1,
+                        "L:BROST#S:M#R:W": 1,
+                        "F:GAILYA#D:09/29/1978#S:F": 1,
+                        "I:9320952205#F:EMMA#D:12/29/1987#R:W": 2,
+                        "F:GAILYA#L:OMONDI#R:W": 1,
+                        "I:1777743279#D:05/04/1994#S:M": 1,
+                        "I:9320952205#D:12/29/1987#S:F#R:W": 2,
+                        "I:1856554310#L:OMONDI#D:09/29/1978#R:W": 1,
+                        "F:ERNESTO#D:07/23/1997#S:M#R:O": 1,
+                        "I:5678412359#L:SWANSON#D:05/16/1961": 1,
+                        "D:09/29/1978#R:W": 2,
+                        "F:OMONDI#L:GAILYA#D:09/29/1978#R:W": 1,
+                        "I:1777743279#F:ALEXANDER#L:BROST#D:05/04/1994#R:W": 1,
+                        "L:STYLES-BOONE#D:05/21/1988#S:F#R:W": 1,
+                        "L:BROST": 2,
+                        "L:GAILYA#D:09/29/1978#S:F": 1,
+                        "I:6456839076#F:ERNESTO#L:PEDROZA JR#D:07/23/1997#R:O": 1,
+                        "F:ALEXANDRA#L:BROST#D:05/04/1994#R:W": 1,
+                        "I:1777743279#L:BROST#D:05/04/1994#S:M#R:W": 1,
+                        "I:9320952205#F:EMMA#L:BRIGGS#R:W": 1,
+                        "F:OMONDI#L:GAILYA": 1,
+                        "I:1742668281#D:05/21/1988#S:F": 1,
+                        "I:1777743279#F:ALEXANDER#L:BROST": 1,
+                        "I:4897541253#R:B": 1,
+                        "I:9320952205#L:BRIGGS": 1,
+                        "I:1742682819#R:W": 1,
+                        "I:1777743279#L:BROST#D:05/04/1994": 1,
+                        "F:ALEXANDER#D:05/04/1994": 1,
+                        "F:EMMA#L:BRIGGS#S:F": 1,
+                        "F:EMMA#L:DEYTON#S:F#R:W": 1,
+                        "L:STYLES-BOONE#D:05/21/1988#R:W": 1,
+                        "I:1856554310#F:GAILYA#L:OMONDI#D:09/29/1978#R:W": 1,
+                        "I:5678412359#L:SWANSON#S:M": 1,
+                        "I:1856554310#F:GAILYA#L:OMONDI#S:F#R:W": 1,
+                        "I:1299747019#L:PEDROZA SR#D:04/19/1964#S:M#R:O": 1,
+                        "I:6456839076#L:PEDROZA JR": 1,
+                        "I:1299747019#L:PEDROZA SR#D:04/19/1964#R:O": 1,
+                        "L:PEDROZA SR#D:04/19/1964#S:M": 1,
+                        "F:ERNESTO#S:M": 2,
+                        "I:6456839076#F:ERNESTO#S:M": 1,
+                        "I:1299747019#F:ERNESTO#D:04/19/1964": 1,
+                        "I:6456839076#F:ERNESTO#L:PEDROZA JR#S:M#R:O": 1,
+                        "I:1777743279#L:BROST#D:05/04/1994#S:M": 1,
+                        "F:ALEXANDER": 1,
+                        "I:1742682819#F:SARA#L:BOONE#S:F": 1,
+                        "F:OMONDI#D:09/29/1978#R:W": 1,
+                        "I:5678412359#L:SWANSON#D:05/16/1961#S:M": 1,
+                        "F:OMONDI#D:09/29/1978": 1,
+                        "I:4897541253#L:SWANSON": 1,
+                        "F:EMMA#L:BRIGGS#S:F#R:W": 1,
+                        "I:4897541253#D:05/16/1916": 1,
+                        "I:1777743278#L:BROST#D:05/04/1994#R:W": 1,
+                        "I:1777743279#F:ALEXANDER#L:BROST#D:05/04/1994#S:M#R:W": 1,
+                        "I:1742682819#L:BOONE#R:W": 1,
+                        "I:1777743278#F:ALEXANDRA#D:05/04/1994#R:W": 1,
+                        "I:1856554310#L:OMONDI#D:09/29/1978#S:F": 1,
+                        "D:05/16/1961": 1,
+                        "F:ERNESTO#L:PEDROZA JR": 1,
+                        "F:SARA#R:W": 2,
+                        "I:4897541253#D:05/16/1916#S:M": 1,
+                        "I:6456839076": 1,
+                        "F:ALEXANDRA#L:BROST#S:F#R:W": 1,
+                        "F:SARA#L:STYLES-BOONE": 1,
+                        "I:4897541253#L:SWANSON#R:B": 1,
+                        "I:1742682819#F:SARA#R:W": 1,
+                        "F:GAILYA#S:F#R:W": 1,
+                        "D:05/16/1961#R:B": 1,
+                        "I:1742682819#F:SARA#L:BOONE#D:05/21/1988#S:F": 1,
+                        "I:1856554310#D:09/29/1978#S:F#R:W": 1,
+                        "F:ERNESTO": 2,
+                        "I:1777743279#F:ALEXANDER#D:05/04/1994#S:M": 1,
+                        "L:STYLES-BOONE#D:05/21/1988": 1,
+                        "F:ALEXANDER#L:BROST#D:05/04/1994": 1,
+                        "I:9320952205#L:DEYTON#R:W": 1,
+                        "I:1777743279#F:ALEXANDER#D:05/04/1994": 1,
+                        "I:1742682819#F:SARA#D:05/21/1988#R:W": 1,
+                        "I:1299747019#L:PEDROZA SR#D:04/19/1964": 1,
+                        "I:1299747019#F:ERNESTO#L:PEDROZA SR#S:M": 1,
+                        "F:RUFORD#L:SWANSON#D:05/16/1961#S:M#R:B": 1,
+                        "F:ERNESTO#D:04/19/1964#S:M": 1,
+                        "L:BROST#D:05/04/1994#S:F": 1,
+                        "F:SARA#L:STYLES-BOONE#D:05/21/1988#S:F": 1,
+                        "I:9320952205#F:EMMA#L:DEYTON#D:12/29/1987#S:F": 1,
+                        "F:ERNESTO#L:PEDROZA SR#D:04/19/1964": 1,
+                        "I:6456839076#L:PEDROZA JR#D:07/23/1997": 1,
+                        "I:1856554310#S:F#R:W": 1,
+                        "I:4897541253#F:RUFORD#S:M#R:B": 1,
+                        "I:1299747019#F:ERNESTO#D:04/19/1964#S:M": 1,
+                        "I:1742682819#L:BOONE#D:05/21/1988#S:F#R:W": 1,
+                        "I:1742668281#F:SARA#S:F#R:W": 1,
+                        "I:1742668281#S:F#R:W": 1,
+                        "I:1742682819#F:SARA#D:05/21/1988#S:F#R:W": 1,
+                        "L:BOONE#D:05/21/1988": 1,
+                        "F:ALEXANDER#D:05/04/1994#S:M": 1,
+                        "I:1777743279#F:ALEXANDER#S:M": 1,
+                        "I:5678412359#L:SWANSON#R:B": 1,
+                        "F:SARA#L:STYLES-BOONE#D:05/21/1988#S:F#R:W": 1,
+                        "F:SARA#L:BOONE#S:F": 1,
+                        "F:RUFORD#L:SWANSON#S:M": 2,
+                        "I:1856554310#F:GAILYA#S:F#R:W": 1,
+                        "I:5678412359#L:SWANSON#D:05/16/1961#S:M#R:B": 1,
+                        "I:6456839076#D:07/23/1997#S:M#R:O": 1,
+                        "L:SWANSON#R:B": 2,
+                        "D:12/29/1987#S:F": 2,
+                        "I:1777743278#S:F#R:W": 1,
+                        "F:GAILYA#L:OMONDI#D:09/29/1978#R:W": 1,
+                        "I:6456839076#F:ERNESTO#L:PEDROZA JR#D:07/23/1997": 1,
+                        "I:4897541253#F:RUFORD#D:05/16/1916#S:M": 1,
+                        "L:OMONDI#D:09/29/1978#S:F#R:W": 1,
+                        "F:OMONDI#L:GAILYA#D:09/29/1978": 1,
+                        "I:1742668281#F:SARA#D:05/21/1988#S:F#R:W": 1,
+                        "F:EMMA#L:BRIGGS#D:12/29/1987#R:W": 1,
+                        "I:1299747019": 1,
+                        "D:05/16/1916#S:M#R:B": 1,
+                        "F:ALEXANDER#L:BROST#S:M#R:W": 1,
+                        "I:1777743279#F:ALEXANDER#L:BROST#R:W": 1,
+                        "I:4897541253": 1,
+                        "D:05/04/1994#S:M": 1,
+                        "F:ALEXANDER#L:BROST#S:M": 1,
+                        "I:1742668281#L:STYLES-BOONE#S:F": 1,
+                        "D:05/04/1994#S:F": 1,
+                        "I:1742668281#F:SARA#L:STYLES-BOONE#D:05/21/1988#R:W": 1,
+                        "I:5678412359#F:RUFORD#S:M": 1,
+                        "I:1742668281#D:05/21/1988#R:W": 1,
+                        "F:OMONDI#D:09/29/1978#S:F": 1,
+                        "I:9320952205#L:DEYTON#S:F#R:W": 1,
+                        "F:SARA#S:F#R:W": 2,
+                        "F:RUFORD#D:05/16/1961#S:M": 1,
+                        "I:9320952205#F:EMMA#D:12/29/1987#S:F#R:W": 2,
+                        "I:9320952205#F:EMMA": 2,
+                        "F:ALEXANDRA#L:BROST#D:05/04/1994#S:F#R:W": 1,
+                        "F:ALEXANDRA#L:BROST#D:05/04/1994#S:F": 1,
+                        "L:SWANSON#S:M": 2,
+                        "I:1777743279#L:BROST#S:M#R:W": 1,
+                        "L:BOONE#S:F": 1,
+                        "L:STYLES-BOONE#R:W": 1,
+                        "F:ERNESTO#L:PEDROZA SR#S:M#R:O": 1,
+                        "I:9320952205#L:BRIGGS#D:12/29/1987#R:W": 1,
+                        "I:1299747019#L:PEDROZA SR": 1,
+                        "I:5678412359#S:M": 1,
+                        "F:ERNESTO#L:PEDROZA JR#D:07/23/1997": 1,
+                        "L:PEDROZA SR#S:M#R:O": 1,
+                        "I:1856554310#F:GAILYA#D:09/29/1978#R:W": 1,
+                        "D:05/04/1994#S:M#R:W": 1,
+                        "D:05/21/1988#R:W": 2,
+                        "I:1742682819#L:BOONE#D:05/21/1988#S:F": 1,
+                        "I:1742682819#L:BOONE": 1,
+                        "F:ERNESTO#L:PEDROZA JR#D:07/23/1997#S:M#R:O": 1,
+                        "I:1856554310#F:GAILYA#L:OMONDI#S:F": 1,
+                        "F:EMMA#L:DEYTON": 1,
+                        "L:BRIGGS#D:12/29/1987#R:W": 1,
+                        "L:DEYTON#R:W": 1,
+                        "I:4897541253#F:RUFORD": 1,
+                        "F:ALEXANDRA#L:BROST#D:05/04/1994": 1,
+                        "I:9320952205#F:EMMA#L:BRIGGS#S:F#R:W": 1,
+                        "F:ALEXANDRA#D:05/04/1994": 1,
+                        "L:OMONDI#R:W": 1,
+                        "I:1299747019#L:PEDROZA SR#R:O": 1,
+                        "L:BROST#D:05/04/1994#S:M#R:W": 1,
+                        "I:1856554310#F:GAILYA#R:W": 1,
+                        "F:ALEXANDRA#D:05/04/1994#R:W": 1,
+                        "I:1299747019#F:ERNESTO#L:PEDROZA SR#S:M#R:O": 1,
+                        "I:1777743279#L:BROST#R:W": 1,
+                        "I:1299747019#F:ERNESTO#R:O": 1,
+                        "I:1777743279#S:M": 1,
+                        "I:9320952205#F:EMMA#L:DEYTON#D:12/29/1987#S:F#R:W": 1,
+                        "F:SARA#L:BOONE#D:05/21/1988": 1,
+                        "I:1856554310#L:OMONDI#S:F#R:W": 1,
+                        "L:STYLES-BOONE#D:05/21/1988#S:F": 1,
+                        "F:RUFORD#D:05/16/1961#S:M#R:B": 1,
+                        "L:BOONE#D:05/21/1988#S:F": 1,
+                        "L:OMONDI": 1,
+                        "L:GAILYA#R:W": 1,
+                        "F:RUFORD#L:SWANSON#D:05/16/1961#R:B": 1,
+                        "I:9320952205#F:EMMA#L:DEYTON": 1,
+                        "F:RUFORD#D:05/16/1916#R:B": 1,
+                        "F:OMONDI#L:GAILYA#R:W": 1,
+                        "D:05/21/1988#S:F#R:W": 2,
+                        "I:1777743279#D:05/04/1994#S:M#R:W": 1,
+                        "F:ALEXANDRA": 1,
+                        "I:1777743279#F:ALEXANDER#D:05/04/1994#R:W": 1,
+                        "I:1856554310#D:09/29/1978#R:W": 1,
+                        "I:1742682819#F:SARA#D:05/21/1988#S:F": 1,
+                        "F:ERNESTO#D:07/23/1997#R:O": 1,
+                        "I:6456839076#R:O": 1,
+                        "D:05/16/1961#S:M#R:B": 1,
+                        "D:09/29/1978": 2,
+                        "I:1777743278#R:W": 1,
+                        "F:SARA#L:BOONE": 1,
+                        "D:07/23/1997#R:O": 1,
+                        "D:09/29/1978#S:F#R:W": 2,
+                        "F:RUFORD#D:05/16/1916": 1,
+                        "I:9320952205#D:12/29/1987#R:W": 2,
+                        "I:1742668281#F:SARA#D:05/21/1988#S:F": 1,
+                        "I:1299747019#F:ERNESTO#L:PEDROZA SR#R:O": 1,
+                        "L:BOONE": 1,
+                        "I:1777743278#F:ALEXANDRA#L:BROST#D:05/04/1994#S:F#R:W": 1,
+                        "L:PEDROZA JR#S:M": 1,
+                        "I:1742682819#D:05/21/1988#R:W": 1,
+                        "I:1299747019#L:PEDROZA SR#S:M#R:O": 1,
+                        "I:9320952205#L:BRIGGS#S:F": 1,
+                        "D:12/29/1987#S:F#R:W": 2,
+                        "L:PEDROZA SR#D:04/19/1964": 1,
+                        "I:1856554310#L:OMONDI": 1,
+                        "I:1777743278#D:05/04/1994#S:F": 1,
+                        "I:4897541253#F:RUFORD#L:SWANSON#D:05/16/1916#R:B": 1,
+                        "D:05/04/1994#S:F#R:W": 1,
+                        "D:04/19/1964#S:M#R:O": 1,
+                        "I:1777743278#F:ALEXANDRA": 1,
+                        "L:SWANSON#D:05/16/1916#S:M": 1,
+                        "I:1777743278#L:BROST": 1,
+                        "I:6456839076#D:07/23/1997#S:M": 1,
+                        "I:1742668281#F:SARA": 1,
+                        "I:1856554310#F:GAILYA#S:F": 1,
+                        "F:EMMA#L:DEYTON#D:12/29/1987#S:F#R:W": 1,
+                        "I:1742682819#S:F": 1,
+                        "I:1777743279#F:ALEXANDER": 1,
+                        "L:OMONDI#D:09/29/1978#R:W": 1,
+                        "F:SARA#D:05/21/1988": 2,
+                        "I:1777743278#F:ALEXANDRA#L:BROST#D:05/04/1994#S:F": 1,
+                        "L:SWANSON#D:05/16/1916": 1,
+                        "I:1742682819#F:SARA#D:05/21/1988": 1,
+                        "I:5678412359#F:RUFORD#S:M#R:B": 1,
+                        "I:1856554310#S:F": 1,
+                        "L:DEYTON": 1,
+                        "F:EMMA#D:12/29/1987#S:F": 2,
+                        "F:ERNESTO#L:PEDROZA SR#S:M": 1,
+                        "I:1742682819#S:F#R:W": 1,
+                        "I:1742668281#L:STYLES-BOONE#D:05/21/1988": 1,
+                        "L:BRIGGS#D:12/29/1987#S:F#R:W": 1,
+                        "F:OMONDI#L:GAILYA#D:09/29/1978#S:F#R:W": 1,
+                        "F:RUFORD#L:SWANSON#D:05/16/1961": 1,
+                        "I:5678412359": 1,
+                        "I:1777743278#F:ALEXANDRA#L:BROST#D:05/04/1994": 1,
+                        "I:1742668281#F:SARA#R:W": 1,
+                        "F:GAILYA#L:OMONDI": 1,
+                        "F:EMMA#L:DEYTON#D:12/29/1987#S:F": 1,
+                        "I:6456839076#F:ERNESTO#L:PEDROZA JR#S:M": 1,
+                        "I:1856554310#F:GAILYA#L:OMONDI#D:09/29/1978#S:F#R:W": 1,
+                        "L:PEDROZA SR#R:O": 1,
+                        "I:1777743278": 1,
+                        "I:1777743279": 1,
+                        "L:GAILYA#S:F#R:W": 1,
+                        "I:6456839076#D:07/23/1997": 1,
+                        "I:5678412359#F:RUFORD#L:SWANSON#D:05/16/1961": 1,
+                        "I:9320952205#R:W": 2,
+                        "L:GAILYA": 1,
+                        "I:5678412359#F:RUFORD#D:05/16/1961#R:B": 1,
+                        "F:ALEXANDER#L:BROST#D:05/04/1994#R:W": 1,
+                        "I:1777743278#L:BROST#R:W": 1,
+                        "F:SARA#L:BOONE#S:F#R:W": 1,
+                        "L:BRIGGS#S:F#R:W": 1,
+                        "I:9320952205#F:EMMA#S:F": 2,
+                        "I:1742668281#F:SARA#L:STYLES-BOONE#S:F": 1,
+                        "F:OMONDI#R:W": 1,
+                        "F:GAILYA#L:OMONDI#D:09/29/1978#S:F": 1,
+                        "I:6456839076#F:ERNESTO#D:07/23/1997#S:M#R:O": 1,
+                        "L:BOONE#R:W": 1,
+                        "F:SARA#L:BOONE#D:05/21/1988#S:F": 1,
+                        "I:4897541253#F:RUFORD#S:M": 1,
+                        "I:9320952205#F:EMMA#L:DEYTON#S:F#R:W": 1,
+                        "I:1742668281#L:STYLES-BOONE#D:05/21/1988#S:F#R:W": 1,
+                        "F:ERNESTO#L:PEDROZA JR#S:M": 1,
+                        "D:04/19/1964": 1,
+                        "F:RUFORD#L:SWANSON#D:05/16/1916#S:M": 1,
+                        "I:6456839076#L:PEDROZA JR#D:07/23/1997#R:O": 1,
+                        "I:5678412359#F:RUFORD#L:SWANSON": 1,
+                        "S:F#R:W": 7,
+                        "I:9320952205#S:F#R:W": 2,
+                        "I:5678412359#F:RUFORD#D:05/16/1961": 1,
+                        "I:6456839076#F:ERNESTO": 1,
+                        "F:SARA": 2,
+                        "I:1742682819#F:SARA#L:BOONE#D:05/21/1988#R:W": 1,
+                        "I:6456839076#L:PEDROZA JR#S:M#R:O": 1,
+                        "I:5678412359#D:05/16/1961#S:M": 1,
+                        "D:07/23/1997#S:M#R:O": 1,
+                        "I:1742668281#F:SARA#D:05/21/1988": 1,
+                        "I:1856554310#F:GAILYA#D:09/29/1978#S:F#R:W": 1,
+                        "L:BRIGGS": 1,
+                        "D:07/23/1997": 1,
+                        "F:EMMA#S:F#R:W": 2,
+                        "L:DEYTON#D:12/29/1987#S:F": 1,
+                        "I:6456839076#F:ERNESTO#D:07/23/1997": 1,
+                        "I:6456839076#F:ERNESTO#D:07/23/1997#S:M": 1,
+                        "I:9320952205#L:DEYTON#D:12/29/1987#R:W": 1,
+                        "I:9320952205#F:EMMA#S:F#R:W": 2,
+                        "I:1299747019#R:O": 1,
+                        "I:1777743278#F:ALEXANDRA#D:05/04/1994#S:F": 1,
+                        "I:1299747019#L:PEDROZA SR#D:04/19/1964#S:M": 1,
+                        "I:1742668281#F:SARA#L:STYLES-BOONE": 1,
+                        "I:1856554310#D:09/29/1978": 1,
+                        "I:9320952205#F:EMMA#L:BRIGGS#S:F": 1,
+                        "I:1777743279#R:W": 1,
+                        "I:4897541253#F:RUFORD#L:SWANSON#R:B": 1,
+                        "I:1777743279#F:ALEXANDER#L:BROST#D:05/04/1994#S:M": 1,
+                        "I:1742668281#L:STYLES-BOONE#D:05/21/1988#S:F": 1,
+                        "I:1742682819#F:SARA#L:BOONE#D:05/21/1988#S:F#R:W": 1,
+                        "I:1777743278#D:05/04/1994#S:F#R:W": 1,
+                        "I:9320952205#F:EMMA#D:12/29/1987": 2,
+                        "F:SARA#L:STYLES-BOONE#R:W": 1,
+                        "F:RUFORD#S:M#R:B": 2,
+                        "I:1777743278#F:ALEXANDRA#R:W": 1,
+                        "F:RUFORD": 2,
+                        "L:PEDROZA SR#D:04/19/1964#R:O": 1,
+                        "F:EMMA#L:BRIGGS#R:W": 1,
+                        "L:PEDROZA JR#D:07/23/1997#R:O": 1,
+                        "I:1856554310#F:GAILYA#D:09/29/1978": 1,
+                        "I:4897541253#F:RUFORD#L:SWANSON#D:05/16/1916": 1,
+                        "I:4897541253#F:RUFORD#D:05/16/1916#R:B": 1,
+                        "I:1777743278#F:ALEXANDRA#L:BROST#R:W": 1,
+                        "I:5678412359#D:05/16/1961#R:B": 1,
+                        "I:4897541253#L:SWANSON#D:05/16/1916#S:M#R:B": 1,
+                        "I:1856554310#R:W": 1,
+                        "I:1777743279#L:BROST#D:05/04/1994#R:W": 1,
+                        "I:1777743278#S:F": 1,
+                        "I:1742682819#F:SARA#L:BOONE#R:W": 1,
+                        "I:1742668281#F:SARA#D:05/21/1988#R:W": 1,
+                        "F:RUFORD#D:05/16/1961#R:B": 1,
+                        "I:6456839076#F:ERNESTO#L:PEDROZA JR": 1,
+                        "D:05/04/1994#R:W": 2,
+                        "L:PEDROZA JR#D:07/23/1997": 1,
+                        "F:ERNESTO#D:04/19/1964#S:M#R:O": 1,
+                        "I:1856554310#F:GAILYA#L:OMONDI#D:09/29/1978#S:F": 1,
+                        "I:9320952205#F:EMMA#L:DEYTON#R:W": 1,
+                        "L:SWANSON#D:05/16/1916#R:B": 1,
+                        "I:9320952205#F:EMMA#L:BRIGGS#D:12/29/1987#S:F": 1,
+                        "I:1777743278#L:BROST#D:05/04/1994": 1,
+                        "I:4897541253#L:SWANSON#S:M": 1,
+                        "L:PEDROZA JR#R:O": 1,
+                        "I:1742668281#D:05/21/1988": 1,
+                        "F:ERNESTO#R:O": 2,
+                        "I:4897541253#D:05/16/1916#R:B": 1,
+                        "I:6456839076#L:PEDROZA JR#S:M": 1,
+                        "F:EMMA#S:F": 2,
+                        "F:EMMA#L:DEYTON#R:W": 1,
+                        "F:OMONDI#L:GAILYA#D:09/29/1978#S:F": 1,
+                        "I:1742668281#F:SARA#L:STYLES-BOONE#S:F#R:W": 1,
+                        "F:GAILYA#L:OMONDI#S:F": 1,
+                        "F:OMONDI#S:F#R:W": 1,
+                        "I:1777743278#F:ALEXANDRA#S:F#R:W": 1,
+                        "F:ALEXANDER#D:05/04/1994#S:M#R:W": 1,
+                        "I:1299747019#D:04/19/1964": 1,
+                        "F:RUFORD#S:M": 2,
+                        "F:OMONDI": 1,
+                        "D:04/19/1964#R:O": 1,
+                        "I:1856554310#F:GAILYA#L:OMONDI": 1,
+                        "I:1777743278#L:BROST#D:05/04/1994#S:F#R:W": 1,
+                        "I:9320952205#L:DEYTON": 1,
+                        "I:5678412359#S:M#R:B": 1,
+                        "I:5678412359#F:RUFORD#D:05/16/1961#S:M#R:B": 1,
+                        "F:SARA#L:STYLES-BOONE#D:05/21/1988#R:W": 1,
+                        "F:EMMA#D:12/29/1987#S:F#R:W": 2,
+                        "I:1856554310": 1,
+                        "F:ALEXANDRA#L:BROST#S:F": 1,
+                        "L:BROST#D:05/04/1994#R:W": 2,
+                        "F:ERNESTO#D:04/19/1964#R:O": 1,
+                        "L:PEDROZA JR#D:07/23/1997#S:M#R:O": 1,
+                        "D:09/29/1978#S:F": 2,
+                        "F:GAILYA#D:09/29/1978#S:F#R:W": 1,
+                        "I:9320952205#F:EMMA#L:BRIGGS#D:12/29/1987#S:F#R:W": 1,
+                        "I:9320952205#F:EMMA#D:12/29/1987#S:F": 2,
+                        "F:GAILYA#D:09/29/1978": 1,
+                        "I:6456839076#F:ERNESTO#L:PEDROZA JR#R:O": 1,
+                        "I:1777743279#F:ALEXANDER#L:BROST#S:M#R:W": 1,
+                        "I:9320952205#S:F": 2,
+                        "I:5678412359#D:05/16/1961#S:M#R:B": 1,
+                        "I:1856554310#L:OMONDI#S:F": 1,
+                        "I:6456839076#S:M#R:O": 1,
+                        "F:GAILYA#S:F": 1,
+                        "F:GAILYA#L:OMONDI#D:09/29/1978#S:F#R:W": 1,
+                        "I:1299747019#F:ERNESTO#L:PEDROZA SR#D:04/19/1964#R:O": 1,
+                        "F:ERNESTO#L:PEDROZA JR#S:M#R:O": 1,
+                        "F:SARA#L:BOONE#R:W": 1,
+                        "F:GAILYA": 1,
+                        "I:4897541253#S:M": 1,
+                        "I:1777743278#F:ALEXANDRA#L:BROST": 1,
+                        "F:EMMA#D:12/29/1987": 2,
+                        "L:BRIGGS#D:12/29/1987": 1,
+                        "I:6456839076#S:M": 1,
+                        "L:DEYTON#D:12/29/1987#S:F#R:W": 1,
+                        "I:4897541253#L:SWANSON#D:05/16/1916#S:M": 1,
+                        "I:5678412359#F:RUFORD": 1,
+                        "F:RUFORD#D:05/16/1916#S:M#R:B": 1,
+                        "I:1742682819#D:05/21/1988": 1,
+                        "I:1777743279#F:ALEXANDER#R:W": 1,
+                        "I:9320952205#F:EMMA#L:DEYTON#D:12/29/1987": 1,
+                        "I:9320952205#L:BRIGGS#D:12/29/1987": 1,
+                        "I:5678412359#F:RUFORD#L:SWANSON#D:05/16/1961#R:B": 1,
+                        "I:1299747019#D:04/19/1964#S:M": 1,
+                        "I:6456839076#L:PEDROZA JR#D:07/23/1997#S:M#R:O": 1,
+                        "I:9320952205#L:DEYTON#D:12/29/1987": 1,
+                        "L:BOONE#D:05/21/1988#S:F#R:W": 1,
+                        "I:1299747019#L:PEDROZA SR#S:M": 1,
+                        "I:4897541253#F:RUFORD#L:SWANSON#D:05/16/1916#S:M#R:B": 1,
+                        "F:ALEXANDRA#S:F": 1,
+                        "I:1777743278#F:ALEXANDRA#D:05/04/1994": 1,
+                        "I:9320952205#L:BRIGGS#S:F#R:W": 1,
+                        "I:1777743279#D:05/04/1994": 1,
+                        "F:ERNESTO#L:PEDROZA SR#D:04/19/1964#S:M": 1,
+                        "I:6456839076#F:ERNESTO#R:O": 1,
+                        "F:RUFORD#D:05/16/1961": 1,
+                        "F:ERNESTO#L:PEDROZA JR#D:07/23/1997#S:M": 1
+                    };
                     var array_elements = ["#c11", "#c21", "#c13","#c23", "#c14","#c24","#c16", "#c26","#c17","#c27","#c18","#c28"];
+                    key_value = "";
+                    key_value_prev = "";
                     if(array_elements.indexOf(j)>0){
                         array_elements = array_elements.splice(array_elements.indexOf(j));
                     }
-
+                    var isClicked = false;
+                    var current_id = d3.select(this).attr("id");
+                    var current_cell = d3.select(this).text();
+                    if( current_cell.indexOf('*') != -1 ){
+                        current_cell = current_cell.split("*").join("");
+                        if(current_cell.indexOf('&') != -1||current_cell.indexOf('@') != -1 ){
+                    isClicked = true;}
+                    else{isClicked = false;}
+                    }
+                    var current_id_number=current_id.replace("c", " ");
+                    //console.log("current id number is",current_id_number);
+                    var onclick_id = "#c"+question_number.toString().trim();
                     for(var i = 0; i < array_elements.length; i++){
+
                         var displayedText = x.select(array_elements[i]).text();
                         displayedText = displayedText.split("&").join("");
                         displayedText = displayedText.split("/").join("");
@@ -319,7 +973,7 @@ function cell(t,g,j,k, mode){
                         displayedText = displayedText.split("*").join("");
                         displayedText = displayedText.split(" ").join("");
                         displayedText = displayedText.trim();
-                        if(displayedText != ""){
+                        if(displayedText != ""||array_elements[i]==onclick_id){
                         //console.log(array_elements[i]);
                         cell_question_number = array_elements[i];//#c11
                         question_number=cell_question_number.replace("c", "");
@@ -327,7 +981,7 @@ function cell(t,g,j,k, mode){
                         cell_pair_number = d3.select(this.parentNode).attr("id");//g11
                         pair_number = cell_pair_number.replace("g", " ")//11
                         //label #D,#I,#F
-                        console.log(parseInt(question_number));
+
                         switch(parseInt(question_number)) {
                             case 11:
                             case 21:
@@ -356,20 +1010,48 @@ function cell(t,g,j,k, mode){
                                 default:
                                     break;
                             }
-                            if(parseInt(question_number)<20){
+                            if(parseInt(question_number)<20 && current_id_number <20){
+                               // console.log(parseInt(question_number));
                         original_text = original_text + experimentr.data()["section2"][0][pair_num ][0][question_number-10];
                         }
-                        else if(parseInt(question_number)>20){
+                        else if(parseInt(question_number)>20&& current_id_number >20){
+                               //console.log(parseInt(question_number));
                             original_text = original_text + experimentr.data()["section2"][0][pair_num ][1][question_number-20];
                             }
-                        console.log(original_text);
+                        else{
+                            original_text="";
+                            }
+                        //console.log(original_text);
                         key_value = key_value + original_text ;
+                        if(array_elements[i]!=onclick_id){
+                            key_value_prev = key_value_prev + original_text ;
+                        }
                         }
 
-                        //console.log("List of opened items are: ");
-                        //console.log(x.select(array_elements[i]).text());
                     }
-                    //console.log(key_value);
+                    if(isClicked == false){
+                    key_value =key_value.substring(1);
+                    key_value_prev =key_value_prev.substring(1);
+                    console.log("key_value prev is",key_value_prev);
+                    console.log("key value is:",key_value);
+                    console.log("key value is:",json_content[key_value]);
+
+                    if(typeof json_content[key_value_prev] == 'undefined'){//nothing has been opened in this row
+                        json_content[key_value_prev] = 5;}
+                     console.log("key value prev is:",json_content[key_value_prev]);
+                    var deltaK  = json_content[key_value_prev]-json_content[key_value];
+                    console.log("deltaK is:",deltaK);
+                    if(deltaK >= 5||deltaK<0){
+                        privacy_score_decrement = 0;
+                    }
+                    else{
+                    var privacy_score_decrement  = 100 * deltaK /12/5;}}
+                    else{
+                        privacy_score_decrement  = 0;
+                    }
+
+                    current_privacy = current_privacy - privacy_score_decrement;
+                    changePrivacy(current_privacy,privacy_score_decrement);
                     console.log("end");
                     // prev_text = prev_text.split("&").join("");
                     // prev_text = prev_text.split("/").join("");
