@@ -17,11 +17,14 @@ var mapping = [0,9,2,10,11,5,12,13,14,1,3,4,6,7,8,15];
 var data = {}; // experimentr data
 var key_value ="";//show opened items
 var key_value_prev ="";//show previous opened items
+var key_value_sib = "";
+var key_value_sib_prev = "";
 var n_pair = 0;
 var s2_n_pair = 0;
 var swap_switch=0;
 var mode_list = ["Partial", "Partial_Cell", "Opti1", "Full"];
 var privacy_score_decrement = 0;
+var privacy_score_decrement_sib = 0;
 var current_privacy = 100;
 
 /**
@@ -149,6 +152,7 @@ function cell(t,g,j,k, mode){
     // erase title columns
     changeBar(total_char, char_disclosed);
     changePrivacy(current_privacy, privacy_score_decrement);
+    //changePrivacy(current_privacy, privacy_score_decrement_sib);
    // console.log("clickable.js in the working");
     var index_r = g.attr("id").slice(1)%6;
     var x = 40*(j%cwidth.length)+cwidth.slice(0,j%cwidth.length).reduce((a, b) => a + b, 0),
@@ -949,6 +953,8 @@ function cell(t,g,j,k, mode){
                     var array_elements = ["#c11", "#c21", "#c13","#c23", "#c14","#c24","#c16", "#c26","#c17","#c27","#c18","#c28"];
                     key_value = "";
                     key_value_prev = "";
+                    key_value_sib = "";
+                    key_value_sib_prev = "";
                     if(array_elements.indexOf(j)>0){
                         array_elements = array_elements.splice(array_elements.indexOf(j));
                     }
@@ -1010,48 +1016,84 @@ function cell(t,g,j,k, mode){
                                 default:
                                     break;
                             }
+                            original_text_sibling = original_text;
                             if(parseInt(question_number)<20 && current_id_number <20){
                                // console.log(parseInt(question_number));
                         original_text = original_text + experimentr.data()["section2"][0][pair_num ][0][question_number-10];
+                        original_text_sibling = original_text_sibling + experimentr.data()["section2"][0][pair_num ][1][question_number-10];
                         }
                         else if(parseInt(question_number)>20&& current_id_number >20){
                                //console.log(parseInt(question_number));
                             original_text = original_text + experimentr.data()["section2"][0][pair_num ][1][question_number-20];
+                            original_text_sibling = original_text_sibling + experimentr.data()["section2"][0][pair_num ][0][question_number-20];
                             }
                         else{
                             original_text="";
+                            original_text_sibling="";
                             }
-                        //console.log(original_text);
+                        //console.log("original_text_sibling is",original_text_sibling);
                         key_value = key_value + original_text ;
-                        if(array_elements[i]!=onclick_id){
+                        key_value_sib = key_value_sib + original_text_sibling;
+                        console.log("current key_value is,", key_value);
+                        console.log("current key_value_sib is,", key_value_sib);
+                            if(array_elements[i]!=onclick_id){//do not count the current cell
                             key_value_prev = key_value_prev + original_text ;
-                        }
+                            key_value_sib_prev = key_value_sib_prev + original_text_sibling ;
+
+                            }
                         }
 
                     }
                     if(isClicked == false){
                     key_value =key_value.substring(1);
                     key_value_prev =key_value_prev.substring(1);
-                    console.log("key_value prev is",key_value_prev);
-                    console.log("key value is:",key_value);
+                    key_value_sib =key_value_sib.substring(1);
+                    key_value_sib_prev =key_value_sib_prev.substring(1);
+                    //console.log("key_value prev is",key_value_prev);
+                    //console.log("key value is:",key_value);
                     console.log("key value is:",json_content[key_value]);
-
+                    console.log("key_value_sib is:",json_content[key_value_sib]);
                     if(typeof json_content[key_value_prev] == 'undefined'){//nothing has been opened in this row
-                        json_content[key_value_prev] = 5;}
-                     console.log("key value prev is:",json_content[key_value_prev]);
+                        json_content[key_value_prev] = 5;
+                    }
+                    if(typeof json_content[key_value_sib_prev] == 'undefined'){//nothing has been opened in this row
+                            json_content[key_value_sib_prev] = 5;
+                    }
+                    if(typeof json_content[key_value_sib] == 'undefined'){//there is a missing value, use a big num so deltaK<0
+                            json_content[key_value_sib] = 1000;
+                    }
+                    if(typeof json_content[key_value] == 'undefined'){//there is a missing value,, use a big num so deltaK<0
+                            json_content[key_value] = 1000;
+                    }
+                    console.log("key value prev is:",json_content[key_value_prev]);
+                    console.log("key_value_sib prev is:",json_content[key_value_sib_prev]);
+                     //console.log("key value prev is:",json_content[key_value_prev]);
                     var deltaK  = json_content[key_value_prev]-json_content[key_value];
+                    var deltaK_sib = json_content[key_value_sib_prev]-json_content[key_value_sib];
                     console.log("deltaK is:",deltaK);
-                    if(deltaK >= 5||deltaK<0){
+                    console.log("deltaK_sib is:",deltaK_sib);
+                     if(deltaK >= 5||deltaK<0){
                         privacy_score_decrement = 0;
                     }
                     else{
-                    var privacy_score_decrement  = 100 * deltaK /12/5;}}
+                        privacy_score_decrement  = 100 * deltaK /12/4;}
+                    if(deltaK_sib >= 5||deltaK_sib <0){
+                        privacy_score_decrement_sib = 0;
+                    }
+                    else{
+                        privacy_score_decrement_sib  = 100 * deltaK_sib /12/4;}}
                     else{
                         privacy_score_decrement  = 0;
+                        privacy_score_decrement_sib  = 0;
                     }
 
+
+                    if(json_content[key_value]<5){
                     current_privacy = current_privacy - privacy_score_decrement;
-                    changePrivacy(current_privacy,privacy_score_decrement);
+                    changePrivacy(current_privacy,privacy_score_decrement);}
+                    if(json_content[key_value_sib]<5){
+                    current_privacy = current_privacy - privacy_score_decrement_sib;
+                    changePrivacy(current_privacy,privacy_score_decrement_sib);}
                     console.log("end");
                     // prev_text = prev_text.split("&").join("");
                     // prev_text = prev_text.split("/").join("");
