@@ -66,7 +66,7 @@ var total_char=0;
 //         }
 //     }
 // }
-total_char = 377;//the number is 377
+total_char = 343;//the number is 377
 console.log("total number of characters is : ",total_char);
 var char_disclosed = 0;
 
