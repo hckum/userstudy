@@ -1006,7 +1006,7 @@ function cell(t,g,j,k, mode){
                         displayedText = displayedText.split("*").join("");
                         displayedText = displayedText.split(" ").join("");
                         displayedText = displayedText.trim();
-                        if(displayedText != ""||array_elements[i]==onclick_id||isEmpty){
+                        if(displayedText != ""||array_elements[i]==onclick_id||isEmpty){//here
                             isEmpty = false;
                         //console.log(array_elements[i]);
                         cell_question_number = array_elements[i];//#c11
