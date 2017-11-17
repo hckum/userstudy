@@ -318,6 +318,15 @@ function cell(t,g,j,k, mode){
 
                     //show opened cell; now all the current text on the screen; ignore the pictures
                     var json_content ={
+                        "I:#D:09/29/1978":1,
+                        "I:#L:GAILYA#D:09/29/1978":1,
+                        "I:#D:09/29/1978#R:W":1,
+                        "I:#R:W":1,
+                        "I:#S:F":1,
+                        "I:#L:GAILYA":1,
+                        " ":1,
+                        "I:#D:09/29/1978#S:F":1,
+                        "I:#L:OMONDI#D:09/29/1978": 1,
                         "F:ERNESTO#L:PEDROZA SR": 1,
                         "L:SWANSON#D:05/16/1961": 1,
                         "F:ALEXANDRA#D:05/04/1994#S:F#R:W": 1,
@@ -657,6 +666,7 @@ function cell(t,g,j,k, mode){
                         "I:4897541253#F:RUFORD#D:05/16/1916#S:M": 1,
                         "L:OMONDI#D:09/29/1978#S:F#R:W": 1,
                         "F:OMONDI#L:GAILYA#D:09/29/1978": 1,
+                        "I:#F:OMONDI#L:GAILYA#D:09/29/1978": 1,
                         "I:1742668281#F:SARA#D:05/21/1988#S:F#R:W": 1,
                         "F:EMMA#L:BRIGGS#D:12/29/1987#R:W": 1,
                         "I:1299747019": 1,
@@ -672,6 +682,7 @@ function cell(t,g,j,k, mode){
                         "I:5678412359#F:RUFORD#S:M": 1,
                         "I:1742668281#D:05/21/1988#R:W": 1,
                         "F:OMONDI#D:09/29/1978#S:F": 1,
+                        "L:#F:OMONDI#D:09/29/1978#S:F": 1,
                         "I:9320952205#L:DEYTON#S:F#R:W": 1,
                         "F:SARA#S:F#R:W": 2,
                         "F:RUFORD#D:05/16/1961#S:M": 1,
@@ -765,6 +776,7 @@ function cell(t,g,j,k, mode){
                         "I:1742682819#S:F": 1,
                         "I:1777743279#F:ALEXANDER": 1,
                         "L:OMONDI#D:09/29/1978#R:W": 1,
+                        "I:#L:OMONDI#D:09/29/1978#R:W": 1,
                         "F:SARA#D:05/21/1988": 2,
                         "I:1777743278#F:ALEXANDRA#L:BROST#D:05/04/1994#S:F": 1,
                         "L:SWANSON#D:05/16/1916": 1,
@@ -778,6 +790,7 @@ function cell(t,g,j,k, mode){
                         "I:1742668281#L:STYLES-BOONE#D:05/21/1988": 1,
                         "L:BRIGGS#D:12/29/1987#S:F#R:W": 1,
                         "F:OMONDI#L:GAILYA#D:09/29/1978#S:F#R:W": 1,
+                        "I:#F:OMONDI#L:GAILYA#D:09/29/1978#S:F#R:W": 1,
                         "F:RUFORD#L:SWANSON#D:05/16/1961": 1,
                         "I:5678412359": 1,
                         "I:1777743278#F:ALEXANDRA#L:BROST#D:05/04/1994": 1,
@@ -883,14 +896,20 @@ function cell(t,g,j,k, mode){
                         "F:EMMA#S:F": 2,
                         "F:EMMA#L:DEYTON#R:W": 1,
                         "F:OMONDI#L:GAILYA#D:09/29/1978#S:F": 1,
+                        "I:F:OMONDI#L:GAILYA#D:09/29/1978#S:F": 1,
                         "I:1742668281#F:SARA#L:STYLES-BOONE#S:F#R:W": 1,
                         "F:GAILYA#L:OMONDI#S:F": 1,
                         "F:OMONDI#S:F#R:W": 1,
+                        "I:#F:OMONDI#S:F#R:W": 1,
+                        "I:#F:OMONDI#L:GAILYA#D:09/29/1978#S:F":1,
+                        "I:#F:OMONDI#L:GAILYA#D:09/29/1978":1,
+                        "I:#F:OMONDI#L:GAILYA":1,
                         "I:1777743278#F:ALEXANDRA#S:F#R:W": 1,
                         "F:ALEXANDER#D:05/04/1994#S:M#R:W": 1,
                         "I:1299747019#D:04/19/1964": 1,
                         "F:RUFORD#S:M": 2,
                         "F:OMONDI": 1,
+                        "I:#F:OMONDI": 1,
                         "D:04/19/1964#R:O": 1,
                         "I:1856554310#F:GAILYA#L:OMONDI": 1,
                         "I:1777743278#L:BROST#D:05/04/1994#S:F#R:W": 1,
@@ -955,15 +974,19 @@ function cell(t,g,j,k, mode){
                     key_value_prev = "";
                     key_value_sib = "";
                     key_value_sib_prev = "";
-                    if(array_elements.indexOf(j)>0){
-                        array_elements = array_elements.splice(array_elements.indexOf(j));
+                    //console.log(original_text);
+                    //console.log(original_text_sibling);
+                    //console.log(j);
+                    //console.log(original_text != "","true?");
+                    if(array_elements.indexOf(j)>0){//&&original_text != ""
+                        array_elements = array_elements.splice(array_elements.indexOf(j));//skipping the missing value
                     }
                     var isClicked = false;
                     var current_id = d3.select(this).attr("id");
-                    var current_cell = d3.select(this).text();
+                    var current_cell = d3.select(this).text();// prev_text_sibling is actually current_cell's sibling
                     if( current_cell.indexOf('*') != -1 ){
                         current_cell = current_cell.split("*").join("");
-                        if(current_cell.indexOf('&') != -1||current_cell.indexOf('@') != -1 ){
+                        if(current_cell.indexOf('&') != -1||current_cell.indexOf('@') != -1 ||prev_text_sibling.indexOf('&') != -1||current_cell.indexOf('@') != -1 ){
                     isClicked = true;}
                     else{isClicked = false;}
                     }
@@ -973,13 +996,18 @@ function cell(t,g,j,k, mode){
                     for(var i = 0; i < array_elements.length; i++){
 
                         var displayedText = x.select(array_elements[i]).text();
+                        var isEmpty = false;
+                        if(x.select(array_elements[i]).text()==""){
+                            isEmpty = true;
+                        }
                         displayedText = displayedText.split("&").join("");
                         displayedText = displayedText.split("/").join("");
                         displayedText = displayedText.split("@").join("");
                         displayedText = displayedText.split("*").join("");
                         displayedText = displayedText.split(" ").join("");
                         displayedText = displayedText.trim();
-                        if(displayedText != ""||array_elements[i]==onclick_id){
+                        if(displayedText != ""||array_elements[i]==onclick_id||isEmpty){
+                            isEmpty = false;
                         //console.log(array_elements[i]);
                         cell_question_number = array_elements[i];//#c11
                         question_number=cell_question_number.replace("c", "");
@@ -987,6 +1015,24 @@ function cell(t,g,j,k, mode){
                         cell_pair_number = d3.select(this.parentNode).attr("id");//g11
                         pair_number = cell_pair_number.replace("g", " ")//11
                         //label #D,#I,#F
+                            var missingValue = "";
+                            var skipMissingValue = false;
+                            var skipMissingValue_sib = false;
+                            // if(parseInt(question_number)<20){
+                            //     original_text = experimentr.data()["section2"][0][pair_num ][0][question_number-10];
+                            // }
+                            // else if(parseInt(question_number)>20){
+                            //     original_text = experimentr.data()["section2"][0][pair_num ][1][question_number-20];
+                            // }
+                            // if(original_text == missingValue){
+                            //     skipMissingValue = true;
+                            // }
+                            // if(original_text_sibling == missingValue){
+                            //     skipMissingValue_sib = true;
+                            // }
+                            //console.log(skipMissingValue,":skipMissingval");
+                            //console.log(skipMissingValue_sib,":skipMissingval_sib");
+                            current_cell = d3.select(this).text();
 
                         switch(parseInt(question_number)) {
                             case 11:
@@ -1016,13 +1062,43 @@ function cell(t,g,j,k, mode){
                                 default:
                                     break;
                             }
-                            original_text_sibling = original_text;
-                            if(parseInt(question_number)<20 && current_id_number <20){
+                            //console.log(prev_text_sibling);
+                            // if(current_cell != "" && prev_text_sibling !=""){
+                            // original_text_sibling = original_text;}
+                            // else if(current_cell != "" && prev_text_sibling ==""){
+                            //     original_text_sibling ="";
+                            // }
+                            // else if(current_cell == "" && prev_text_sibling !=""){
+                            //     original_text = "";
+                            // }
+                            // else{
+                            //     original_text = "";
+                            //     original_text_sibling = original_text;
+                            // }
+
+                            if( skipMissingValue == false){
+                            original_text_sibling = original_text;}
+                            else{
+                                original_text = "";
+                                skipMissingValue = false;
+                            }
+
+                            if( skipMissingValue_sib == false){
+                                original_text_sibling = original_text;}
+                            else{
+                                original_text_sibling = "";
+                                skipMissingValue_sib = false;
+                            }
+                            //console.log("parseInt(question_number)",parseInt(question_number));
+
+                            var current_id_num = parseInt(current_id_number);
+                            //console.log("current_id_number",current_id_num);
+                            if(parseInt(question_number)<20 && current_id_num <20){
                                // console.log(parseInt(question_number));
                         original_text = original_text + experimentr.data()["section2"][0][pair_num ][0][question_number-10];
                         original_text_sibling = original_text_sibling + experimentr.data()["section2"][0][pair_num ][1][question_number-10];
                         }
-                        else if(parseInt(question_number)>20&& current_id_number >20){
+                        else if(parseInt(question_number)>20&& current_id_num >20){
                                //console.log(parseInt(question_number));
                             original_text = original_text + experimentr.data()["section2"][0][pair_num ][1][question_number-20];
                             original_text_sibling = original_text_sibling + experimentr.data()["section2"][0][pair_num ][0][question_number-20];
@@ -1031,26 +1107,53 @@ function cell(t,g,j,k, mode){
                             original_text="";
                             original_text_sibling="";
                             }
-                        //console.log("original_text_sibling is",original_text_sibling);
-                        key_value = key_value + original_text ;
-                        key_value_sib = key_value_sib + original_text_sibling;
-                        console.log("current key_value is,", key_value);
-                        console.log("current key_value_sib is,", key_value_sib);
-                            if(array_elements[i]!=onclick_id){//do not count the current cell
-                            key_value_prev = key_value_prev + original_text ;
-                            key_value_sib_prev = key_value_sib_prev + original_text_sibling ;
+                        console.log("original_text_sibling is",original_text_sibling);
+                            //handle missing value
+                            current_cell = d3.select(this).text();
+                            prev_text_sibling = d3.select(this.parentNode).select("#"+sibling_id).text();
+                            //console.log(current_cell);
+                            //console.log(prev_text_sibling);
+                            current_cell = current_cell.split('/').join("");
 
+                            if(current_cell != "" && current_cell.split('*').join("") == "" && prev_text_sibling == ""){//click on **, sibling missing
+                                key_value = key_value + original_text;
+                                key_value_sib = key_value_sib + "";
                             }
+                            else if(current_cell == "" && prev_text_sibling.split('*').join("") == "" && prev_text_sibling != ""){
+                                original_text = "";
+                                key_value = key_value + "";
+                                key_value_sib = key_value_sib + original_text_sibling;
+                            }
+                            else if(current_cell == "" && prev_text_sibling.split('*').join("") != "" ){
+                                original_text ="";
+                                original_text_sibling ="";
+                                key_value = key_value + "";
+                                key_value_sib = key_value_sib + "";
+                            }
+                            else{
+                        key_value = key_value + original_text;
+                        key_value_sib = key_value_sib + original_text_sibling;}
+                        //console.log("current key_value is,", key_value);
+                        //console.log("current key_value_sib is,", key_value_sib);
+                            if(array_elements[i]!=onclick_id){//do not count the current cell
+
+                                    key_value_prev = key_value_prev + original_text;
+                                    key_value_sib_prev = key_value_sib_prev + original_text_sibling;}
+
+
                         }
 
                     }
+                    console.log(isClicked,":is clicked");
                     if(isClicked == false){
                     key_value =key_value.substring(1);
                     key_value_prev =key_value_prev.substring(1);
                     key_value_sib =key_value_sib.substring(1);
                     key_value_sib_prev =key_value_sib_prev.substring(1);
-                    //console.log("key_value prev is",key_value_prev);
-                    //console.log("key value is:",key_value);
+                    console.log("key_value prev is",key_value_prev);
+                    console.log("key value is:",key_value);
+                    console.log("key value sib is:",key_value_sib);
+                    console.log("key value sib prev is:",key_value_sib_prev);
                     console.log("key value is:",json_content[key_value]);
                     console.log("key_value_sib is:",json_content[key_value_sib]);
                     if(typeof json_content[key_value_prev] == 'undefined'){//nothing has been opened in this row
@@ -1059,12 +1162,12 @@ function cell(t,g,j,k, mode){
                     if(typeof json_content[key_value_sib_prev] == 'undefined'){//nothing has been opened in this row
                             json_content[key_value_sib_prev] = 5;
                     }
-                    if(typeof json_content[key_value_sib] == 'undefined'){//there is a missing value, use a big num so deltaK<0
-                            json_content[key_value_sib] = 1000;
-                    }
-                    if(typeof json_content[key_value] == 'undefined'){//there is a missing value,, use a big num so deltaK<0
-                            json_content[key_value] = 1000;
-                    }
+                    // if(typeof json_content[key_value_sib] == 'undefined'){//there is a missing value, use a big num so deltaK<0
+                    //         json_content[key_value_sib] = 1000;
+                    // }
+                    // if(typeof json_content[key_value] == 'undefined'){//there is a missing value,, use a big num so deltaK<0
+                    //         json_content[key_value] = 1000;
+                    // }
                     console.log("key value prev is:",json_content[key_value_prev]);
                     console.log("key_value_sib prev is:",json_content[key_value_sib_prev]);
                      //console.log("key value prev is:",json_content[key_value_prev]);
@@ -1072,16 +1175,34 @@ function cell(t,g,j,k, mode){
                     var deltaK_sib = json_content[key_value_sib_prev]-json_content[key_value_sib];
                     console.log("deltaK is:",deltaK);
                     console.log("deltaK_sib is:",deltaK_sib);
-                     if(deltaK >= 5||deltaK<0){
+
+                     if(deltaK<0){
                         privacy_score_decrement = 0;
                     }
                     else{
                         privacy_score_decrement  = 100 * deltaK /12/4;}
-                    if(deltaK_sib >= 5||deltaK_sib <0){
+                    if(deltaK_sib <0){
                         privacy_score_decrement_sib = 0;
                     }
                     else{
-                        privacy_score_decrement_sib  = 100 * deltaK_sib /12/4;}}
+                        privacy_score_decrement_sib  = 100 * deltaK_sib /12/4;}
+
+                        if(json_content[key_value_prev] >=5){
+                        if(json_content[key_value] >= 5){
+                            privacy_score_decrement = 0;
+                        }
+                        else{
+                            privacy_score_decrement  = 100 * (5-json_content[key_value]) /12/4;
+                        }
+                        }
+                        if(json_content[key_value_sib_prev] >=5){
+                            if(json_content[key_value_sib] >= 5){
+                                privacy_score_decrement_sib = 0;
+                            }
+                            else{
+                                privacy_score_decrement_sib  = 100 * (5-json_content[key_value_sib]) /12/4;
+                            }
+                        }}
                     else{
                         privacy_score_decrement  = 0;
                         privacy_score_decrement_sib  = 0;
