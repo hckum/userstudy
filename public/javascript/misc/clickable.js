@@ -124,7 +124,7 @@ function changePrivacy(current_privacy,deltaK) {
         .css("width", current_privacy + "%")
         .attr("aria-valuenow", current_privacy).css("vertical-align","middle");
     $("#progress_value_privacy")
-        .text("("+current_privacy.toFixed(1) + "%) ").css("font-size", "350%").css("color", "black").css("transform"," translateY(22%)") ;
+        .text(""+current_privacy.toFixed(1) + "% ").css("font-size", "350%").css("color", "black").css("transform"," translateY(22%)") ;
     experimentr.data()["current_privacy"] = current_privacy;
 
 };
@@ -1375,14 +1375,14 @@ function cell(t,g,j,k, mode){
                 // Draw the line
                 selection.append("svg:path")
                     .attr("d", d3line(pathinfo_deep))
-                    .style("stroke-width", 2)
-                    .style("stroke", "#808080")
+                    .style("stroke-width", 3)
+                    .style("stroke", "#d9534f")
                     .style("fill", "none")
                     .attr("class","highlight_rect");
                 selection.append("svg:path")
                     .attr("d", d3line(pathinfo_light))
-                    .style("stroke-width", 2)
-                    .style("stroke", "#d9d9d9")
+                    .style("stroke-width", 3)
+                    .style("stroke", "#d9534f")
                     .style("fill", "none")
                     .attr("class","highlight_rect");
 

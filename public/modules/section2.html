@@ -11,9 +11,8 @@
         <style>
             #submitComments {
                 position: absolute;
-                top: 93%;
-                left: 52%;
-                transform: translate(-50%, 0%);
+                left:50%;
+                /*transform: translate(-50%, 0%);*/
             }
             body{
                 color:#000;
@@ -66,9 +65,8 @@
                 left:0;
             }
             .instruction-text{
-                position:absolute;
-                top:83%;
-                left:17%;
+                position:relative;
+                text-align:center;
             }
 
 
@@ -101,7 +99,7 @@
 
         <div class="progress">
             <span class="progress-value" id= "progress_value"></span>
-            <div id="dynamic" class="progress-bar  progress-bar-danger progress-bar-striped active" role="progressbar" aria-valuenow="0.1" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+            <div id="dynamic" class="progress-bar  progress-bar-danger " role="progressbar" aria-valuenow="0.1" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
                 <span id="current-progress_1"></span>
             </div>
         </div>
@@ -112,7 +110,7 @@
 
         <div class="progress">
             <span class="progress-value" id= "progress_value_privacy"></span>
-            <div id="dynamic_privacy" class="progress-bar progress-bar-danger progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+            <div id="dynamic_privacy" class="progress-bar progress-bar-danger " role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
                 <span id="current-progress"></span>
             </div>
         </div>
@@ -129,9 +127,9 @@
         <div id="table"></div>
     </div>
 </div>
-<div id="space_2">
+<!--<div id="space_2">-->
 
-</div>
+<!--</div>-->
     <button id="submitComments" class="next-button" type="button">Submit</button>
     <button id="endStudy" class="next-button" type="button" style="position: absolute; left: 1600px; top: 25px;">End Study</button><br>
 </div>
@@ -153,7 +151,7 @@
             .append("svg")
             .attr("class", "image")
             .attr("width", 1800)
-            .attr("height", 600);
+            .attr("height", 500);
         svg.append("svg:image")
             .attr("xlink:href","/resources/module_intros/"+img_address)
             .attr("x",x)
@@ -206,7 +204,7 @@
         var html_to_insert = "<p><strong>CLICK</strong> on the text if you want more information disclosed. </p>";
         document.getElementById('notation').insertAdjacentHTML('beforeend', html_to_insert);
         add_mod_intros("PPIRL_instruction.PNG");
-        d3.selectAll("#progress-bar").style("visibility","hidden");
+        d3.selectAll("#progress-bar").style("display","none");
 
        d3.select("#summonEnd").on('click', function(){
            console.log((Date.now()-experimentr.data()["time_of_website_start"])/(1000*60));
@@ -228,7 +226,7 @@
                 d3.select("#instruction-text").remove();
                 console.log(step);
                 d3.select('#submitComments').style("position","absolute").style("left","100px").style("top","1040px");
-                d3.select("#progress-bar").style("visibility","visible");
+                d3.select("#progress-bar").style("display","inline");
 
 
                 // console.log("length is ",experimentr.data()["section2"].length-1)
