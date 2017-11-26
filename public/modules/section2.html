@@ -172,7 +172,7 @@
         experimentr.startTimer('section2');
         experimentr.hideNext();
         console.log("in");
-        seq = 3;//yumei
+       // seq = 3;//yumei
         parsing(experimentr.data()["section2_sample_name"],"section2");
         experimentr.data()['section'] = 'section2';
         var step = 0;
@@ -230,7 +230,8 @@
 
 
                 // console.log("length is ",experimentr.data()["section2"].length-1)
-                if(step==1){//when 1 pages of questions has been displayed(page 0, page1)
+                //if(step==1){//when 1 pages of questions has been displayed(page 0, page1)
+                if(step==experimentr.data()["section2"].length-1){
                     goToNext();
                 }else {
                     //d3.select("#heading").style("visibility","visible").style("font-size","300%").style("color","red");
@@ -240,8 +241,8 @@
                     d3.select("#notation").append("h4").text("Privacy Preserving Interactive Record Linkage (PPIRL)").style("text-align","center").style("font-size","200%");
 //                    d3.select("#notation").text("Page " + (step + 1).toString()); display page number
                     var html_to_insert = "<p> <strong>CLICK</strong> on the text if you want more information disclosed. </p>";
-                    document.getElementById('notation_sub').insertAdjacentHTML('beforeend', html_to_insert);
-
+                    if(step == 0)
+                        document.getElementById('notation_sub').insertAdjacentHTML('beforeend', html_to_insert);
                     setTimeout(function () {
                         d3.selectAll(".blocks").remove();
                         console.log(experimentr.data()["section2"][step-1]);
