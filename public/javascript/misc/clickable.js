@@ -1252,7 +1252,6 @@ function cell(t,g,j,k, mode){
                         cell(next_text_2, g, 24, k, "Full");
 
 
-
                     }
                     else {
                        // clickCount +=1;
@@ -1322,7 +1321,7 @@ function cell(t,g,j,k, mode){
                 }
                }
 
-                
+
             }
         });
 
@@ -1337,10 +1336,21 @@ function cell(t,g,j,k, mode){
                 if (cwidth[j%cwidth.length]==60) {
                     w = cwidth[j%cwidth.length] * 1.20;
                 }
+
+                var is_swapped = false;
+                if(cel.attr("swap_detect")== "true"){
+                    is_swapped = true;
+                }
+                // var cel_23 = g.append("g").attr("id","c23").attr("class","cell").attr("data-mode",mode)
+                //     .attr("transform","translate("+x+","+y+")");
+                //
+                // cel_23.attr("swap_detect",true);
+                // console.log(cel.attr("id") == "true");
                 // selection.classed("mute", (selection.classed("mute") ? false : true));
 
                 // console.log(x,rect.x);
                 //console.log(y, rect.y);
+
                 if(j>20){
                     var pathinfo_deep = [
                         {x: x - 5, y: y + 25},
@@ -1352,7 +1362,21 @@ function cell(t,g,j,k, mode){
                         {x: x - 5, y: y + 25 - 77},
                         {x: x - 5, y: y + 25}
                     ];
-                } else {
+                }
+                else if(cel.attr("swap_detect")== "true"){
+                    console.log("23 is true");
+                    var pathinfo_deep = [
+                        {x: x - 5 + 2.5*w, y: y - 5},
+                        {x: x - 5 + 2.5*w, y: y - 5 + 77},
+                        {x: x - 5, y: y - 5 + 77}
+                    ];
+                    var pathinfo_light = [
+                        {x: x - 5, y: y - 5 + 77},
+                        {x: x - 5, y: y - 5},
+                        {x: x - 5 + 2.5*w, y: y - 5}
+                    ];
+                }
+                else {
                     var pathinfo_deep = [
                         {x: x - 5 + w, y: y - 5},
                         {x: x - 5 + w, y: y - 5 + 77},
@@ -1385,6 +1409,16 @@ function cell(t,g,j,k, mode){
                     .style("stroke", "#d9534f")
                     .style("fill", "none")
                     .attr("class","highlight_rect");
+
+
+                //for swaped name
+                if(is_swapped == true) {
+                    is_swapped = false;
+                }
+
+
+
+
 
             d3.select(this).style("cursor", "pointer");
             });
@@ -1544,6 +1578,10 @@ function cell(t,g,j,k, mode){
                         .attr("x",cwidth[j%cwidth.length]-45).attr("y",cy/2-8).attr("width",60).attr("height",60);
                     if(mode != "Full"){
                         cel.attr("swap_detect",true);
+                        // cel.attr("id","c23");
+                        // cel.attr("swap_detect",true);
+                        // console.log(cel,"see 23");
+                        cel.attr("id","c13");
                     }
 
 
