@@ -104,17 +104,28 @@ function findInJason(json_cont){
 }
 
 //findInJason(json_content);
+var current_progress_1;
 function changeBar(total_char, char_disclosed) {
     var current_progress_1;
     current_progress_1 = char_disclosed/total_char*100;
-    $("#dynamic")
+    $("#preCal")
         .css("width", current_progress_1 + "%")
         .attr("aria-valuenow", current_progress_1).css("vertical-align","middle");
     $("#progress_value")
         .text(char_disclosed + "\n"+"("+current_progress_1.toFixed(1) + "%) ").css("font-size", "350%").css("color", "black").css("transform"," translateY(22%)") ;
     experimentr.data()["current_progress"] = current_progress_1;
+    return current_progress_1;
+};
 
+function preCalculatedPercentageBar(total_char, char_disclosed) {
+    var new_progress_1;
+    new_progress_1 =char_disclosed/total_char*100;
 
+    $("#dynamic")
+        .css("width", new_progress_1 + "%")
+        .attr("aria-valuenow", new_progress_1).css("vertical-align","middle");
+    $("#progress_value")
+        .text(char_disclosed + "\n"+"(" + new_progress_1.toFixed(1) + "%) ").css("font-size", "350%").css("color", "black").css("transform"," translateY(22%)") ;
 };
 
 
@@ -1324,10 +1335,14 @@ function cell(t,g,j,k, mode){
 
             }
         });
-
+    var randomNum;
     if(j > 10) {
         if((cel.attr("data-mode") == "Partial")||(cel.attr("data-mode") == "Partial_Cell")){
             cel.on("mouseover", function(d) {
+                console.log("haha");
+                randomNum = Math.floor((Math.random() * 10) + 40);
+                preCalculatedPercentageBar(total_char,randomNum);
+                console.log(randomNum);
                 var selection = d3.select(this.parentNode);
                 var rect = this.getBBox();
                 var x_offset = 2; // enlarge rect box 2 px on left & right side
@@ -1424,6 +1439,8 @@ function cell(t,g,j,k, mode){
             });
 
             cel.on("mouseout", function(d){
+                // console.log(-randomNum);
+                preCalculatedPercentageBar(total_char,0);
                 d3.select(this).style("cursor", "default");
                 d3.selectAll(".highlight_rect").remove();
             });
@@ -2249,12 +2266,6 @@ function choices(svg, lBound, scale, mode, yt) {
                 buttons.selectAll(".choice").attr("xlink:href","/resources/0.png");
                 d3.select(this).select("image").attr("xlink:href","/resources/1.png");
                 var t = Date.now();
-                experimentr.data()[clk].push([
-                    t,
-                    //svg.attr("id").slice(1),
-                    d3.select(this.parentNode.parentNode).select("#c10").text(),
-                    d3.select(this).select(".choice").attr("id")
-                ]);
                 // window.alert(d3.select(this).select(".choice").attr("id"));
                 var choice = parseInt(d3.select(this).select(".choice").attr("id"));
                 if(choice<3){
@@ -2351,6 +2362,45 @@ function alt_choices(svg,lBound,mode) {
                 buttons.select(".no").attr("opacity",0.2);
                 buttons.selectAll(".choice").attr("xlink:href","/resources/0.png");
                 d3.select(this).select("image").attr("xlink:href","/resources/1.png");
+                var t = Date.now();
+                experimentr.data()[clk].push([
+                    t,
+                    //svg.attr("id").slice(1),
+                    d3.select(this.parentNode.parentNode).select("#c10").text(),
+                    d3.select(this).select(".choice").attr("id")
+                ]);
+                // window.alert(d3.select(this).select(".choice").attr("id"));
+                var choice = parseInt(d3.select(this).select(".choice").attr("id"));
+                if(choice<3){
+                    console.log("here");
+                    buttons.select("#selection_rect").remove();
+                    buttons.append("rect")
+                        .attr("x",13)
+                        .attr("y",60)
+                        .attr("width",75)
+                        .attr("height",25)
+                        .style("fill","none")
+                        .style("stroke","#CC1100")
+                        .style("stroke-width","3")
+                        .attr("id","selection_rect");
+                    buttons.select("#lbl_same").style("font-weight","normal");
+                    buttons.select("#lbl_diff").style("font-weight","bold");
+
+                } else {
+                    buttons.select("#selection_rect").remove();
+                    buttons.append("rect")
+                        .attr("x",195)
+                        .attr("y",60)
+                        .attr("width",50)
+                        .attr("height",25)
+                        .style("fill","none")
+                        .style("stroke","#33CE45")
+                        .style("stroke-width","3")
+                        .attr("id","selection_rect");
+                    buttons.select("#lbl_same").style("font-weight","bold");
+                    buttons.select("#lbl_diff").style("font-weight","normal");
+
+                }
             });
     }
 }
