@@ -66,7 +66,7 @@ var total_char=0;
 //         }
 //     }
 // }
-total_char = 343;//the number is 377
+total_char = 403;
 console.log("total number of characters is : ",total_char);
 var char_disclosed = 0;
 
@@ -120,9 +120,13 @@ function changeBar(total_char, char_disclosed) {
 
 function changePrivacy(current_privacy,deltaK) {
     //console.log("current privacy is", current_privacy);
+    if(current_privacy <= 0){
+        current_privacy = 0;
+    }
     $("#dynamic_privacy")
         .css("width", current_privacy + "%")
         .attr("aria-valuenow", current_privacy).css("vertical-align","middle");
+
     $("#progress_value_privacy")
         .text("("+current_privacy.toFixed(1) + "%) ").css("font-size", "350%").css("color", "black").css("transform"," translateY(22%)") ;
     experimentr.data()["current_privacy"] = current_privacy;
@@ -222,7 +226,9 @@ function cell(t,g,j,k, mode){
                 }
                 //console.log("char_difference is ", char_difference);
                 //console.log("this &@ count is ", at_and_count);
-                //console.log("prev_text_sibling is",prev_text_sibling);
+                console.log("prev_text is",prev_text);
+                console.log("prev_text_sibling is",prev_text_sibling);
+
 
                // console.log("original_text_sibling",original_text_sibling);
 
@@ -260,6 +266,15 @@ function cell(t,g,j,k, mode){
                 if(d3.select(this).attr("id")=="c16" ||d3.select(this).attr("id")=="c26"){
                     if(prev_text == " "){
                     char_difference= 16;}
+                    else if(prev_text == "@@/@@/@@@@" || prev_text_sibling == "@@/@@/@@@@"){
+                        char_difference= 16;
+                    }
+                    else if(prev_text == "**/**/**@@" ||prev_text_sibling == "**/**/**@@"){
+                        char_difference = 2;
+                    }
+                    else if(prev_text == "**/**/**16" ||prev_text_sibling == "**/**/**16"){
+                        char_difference = 14;
+                    }
                     else if(prev_text == "**/**/****"){
                         char_difference = 8;
                     }
@@ -399,7 +414,7 @@ function cell(t,g,j,k, mode){
                         "I:5678412359#L:SWANSON#D:05/16/1961#R:B": 1,
                         "I:6456839076#F:ERNESTO#L:PEDROZA JR#D:07/23/1997#S:M#R:O": 1,
                         "I:4897541253#L:SWANSON#S:M#R:B": 1,
-                        "S:M#R:B": 2,
+                        "S:M#R:B": 4,
                         "F:EMMA#L:BRIGGS#D:12/29/1987#S:F": 1,
                         "D:07/23/1997#S:M": 1,
                         "F:RUFORD#D:05/16/1916#S:M": 1,
@@ -454,7 +469,7 @@ function cell(t,g,j,k, mode){
                         "F:ALEXANDRA#D:05/04/1994#S:F": 1,
                         "L:PEDROZA SR#S:M": 1,
                         "F:EMMA#R:W": 2,
-                        "S:M": 5,
+                        "S:M": 7,
                         "F:RUFORD#L:SWANSON": 2,
                         "S:F": 7,
                         "I:1299747019#F:ERNESTO#S:M": 1,
@@ -466,7 +481,7 @@ function cell(t,g,j,k, mode){
                         "I:1856554310#L:OMONDI#D:09/29/1978": 1,
                         "I:1742668281#F:SARA#L:STYLES-BOONE#R:W": 1,
                         "I:1777743279#L:BROST": 1,
-                        "R:B": 2,
+                        "R:B": 4,
                         "I:1777743279#D:05/04/1994#R:W": 1,
                         "R:O": 2,
                         "I:9320952205#F:EMMA#L:DEYTON#S:F": 1,
@@ -967,8 +982,120 @@ function cell(t,g,j,k, mode){
                         "F:ERNESTO#L:PEDROZA SR#D:04/19/1964#S:M": 1,
                         "I:6456839076#F:ERNESTO#R:O": 1,
                         "F:RUFORD#D:05/16/1961": 1,
-                        "F:ERNESTO#L:PEDROZA JR#D:07/23/1997#S:M": 1
+                        "F:ERNESTO#L:PEDROZA JR#D:07/23/1997#S:M": 1,
+                        //new row
+                        "I:1000172572":1,
+                        "I:1000173572":1,
+                        "I:1000172572#F:FURNESS":1,
+                        "I:1000172572#F:FURNESS#R:B":1,
+                        "I:1000172572#F:FURNESS#L:ARMSTEAD":1,
+                        "I:1000172572#F:FURNESS#L:ARMSTEAD#R:B":1,
+                        "I:1000172572#L:ARMSTEAD":1,
+                        "I:1000172572#L:ARMSTEAD#R:B":1,
+                        "I:1000172572#F:FURNESS#L:ARMSTEAD#D:09/25/1922":1,
+                        "I:1000172572#F:FURNESS#L:ARMSTEAD#D:09/25/1922#R:B":1,
+                        "I:1000172572#L:ARMSTEAD#D:09/25/1922":1,
+                        "I:1000172572#L:ARMSTEAD#D:09/25/1922#R:B":1,
+                        "I:1000172572#F:FURNESS#D:09/25/1922":1,
+                        "I:1000172572#F:FURNESS#D:09/25/1922#R:B":1,
+                        "I:1000172572#F:FURNESS#L:ARMSTEAD#D:09/25/1922#S:M":1,
+                        "I:1000172572#L:ARMSTEAD#D:09/25/1922#S:M":1,
+                        "I:1000172572#L:ARMSTEAD#D:09/25/1922#S:M#R:B":1,
+                        "I:1000172572#F:FURNESS#D:09/25/1922#S:M":1,
+                        "I:1000172572#F:FURNESS#D:09/25/1922#S:M#R:B":1,
+                        "I:1000172572#F:FURNESS#L:ARMSTEAD#S:M":1,
+                        "I:1000172572#F:FURNESS#L:ARMSTEAD#S:M#R:B":1,
+                        "I:1000172572#D:09/25/1922#S:M":1,
+                        "I:1000172572#D:09/25/1922#S:M#R:B":1,
+                        "I:1000172572#F:FURNESS#S:M":1,
+                        "I:1000172572#F:FURNESS#S:M#R:B":1,
+                        "I:1000172572#L:ARMSTEAD#S:M":1,
+                        "I:1000172572#L:ARMSTEAD#S:M#R:B":1,
+                        "I:1000172572#S:M":1,
+                        "I:1000172572#S:M#R:B":1,
+                        "I:1000172572#F:FURNESS#L:ARMSTEAD#D:09/25/1922#S:M#R:B":1,
+
+                        "I:1000173572#F:FURNESS":1,
+                        "I:1000173572#F:FURNESS#R:B":1,
+                        "I:1000173572#F:FURNESS#L:ARMSTEAD":1,
+                        "I:1000173572#F:FURNESS#L:ARMSTEAD#R:B":1,
+                        "I:1000173572#L:ARMSTEAD":1,
+                        "I:1000173572#L:ARMSTEAD#R:B":1,
+                        "I:1000173572#F:FURNESS#L:ARMSTEAD#D:09/25/1922":1,
+                        "I:1000173572#F:FURNESS#L:ARMSTEAD#D:09/25/1922#R:B":1,
+                        "I:1000173572#L:ARMSTEAD#D:09/25/1922":1,
+                        "I:1000173572#L:ARMSTEAD#D:09/25/1922#R:B":1,
+                        "I:1000173572#F:FURNESS#D:09/25/1922":1,
+                        "I:1000173572#F:FURNESS#D:09/25/1922#R:B":1,
+                        "I:1000173572#F:FURNESS#L:ARMSTEAD#D:09/25/1922#S:M":1,
+                        "I:1000173572#L:ARMSTEAD#D:09/25/1922#S:M":1,
+                        "I:1000173572#L:ARMSTEAD#D:09/25/1922#S:M#R:B":1,
+                        "I:1000173572#F:FURNESS#D:09/25/1922#S:M":1,
+                        "I:1000173572#F:FURNESS#D:09/25/1922#S:M#R:B":1,
+                        "I:1000173572#F:FURNESS#L:ARMSTEAD#S:M":1,
+                        "I:1000173572#F:FURNESS#L:ARMSTEAD#S:M#R:B":1,
+                        "I:1000173572#D:09/25/1922#S:M":1,
+                        "I:1000173572#D:09/25/1922#S:M#R:B":1,
+                        "I:1000173572#F:FURNESS#S:M":1,
+                        "I:1000173572#F:FURNESS#S:M#R:B":1,
+                        "I:1000173572#L:ARMSTEAD#S:M":1,
+                        "I:1000173572#L:ARMSTEAD#S:M#R:B":1,
+                        "I:1000173572#S:M":1,
+                        "I:1000173572#S:M#R:B":1,
+                        "I:1000173572#F:FURNESS#L:ARMSTEAD#D:09/25/1922#S:M#R:B":1,
+
+
+                        "F:FURNESS":2,
+                        "F:FURNESS#L:ARMSTEAD":2,
+                        "F:FURNESS#L:ARMSTEAD#D:09/25/1922":2,
+                        "F:FURNESS#D:09/25/1922":2,
+                        "F:FURNESS#L:ARMSTEAD#D:09/25/1922#S:M":2,
+                        "F:FURNESS#S:M":2,
+                        "F:FURNESS#L:ARMSTEAD#S:M":2,
+                        "F:FURNESS#D:09/25/1922#S:M":2,
+                        "F:FURNESS#L:ARMSTEAD#D:09/25/1922#S:M#R:B":2,
+                        "F:FURNESS#D:09/25/1922#S:M#R:B":2,
+                        "F:FURNESS#D:09/25/1922#R:B":2,
+                        "F:FURNESS#S:M#R:B":2,
+                        "F:FURNESS#R:B":2,
+
+
+                        "L:ARMSTEAD":2,
+                        "L:ARMSTEAD#D:09/25/1922":2,
+                        "L:ARMSTEAD#D:09/25/1922#S:M":2,
+                        "L:ARMSTEAD#S:M":2,
+                        "L:ARMSTEAD#D:09/25/1922#S:M#R:B":2,
+                        "L:ARMSTEAD#S:M#R:B":2,
+                        "L:ARMSTEAD#D:09/25/1922#R:B":2,
+                        "L:ARMSTEAD#R:B":2,
+
+                        "D:09/25/1922":2,
+                        "D:09/25/1922#S:M":2,
+                        "D:09/25/1922#S:M#R:B":2,
+                        "D:09/25/1922#R:B":2
+
+
+
+
+
+
+
+
+
+
                     };
+                    // "I:1299747019#L:PEDROZA SR#S:M": 1,
+                    //   ,
+
+
+
+
+
+
+
+
+
+
                     var array_elements = ["#c11", "#c21", "#c13","#c23", "#c14","#c24","#c16", "#c26","#c17","#c27","#c18","#c28"];
                     key_value = "";
                     key_value_prev = "";
@@ -1076,14 +1203,14 @@ function cell(t,g,j,k, mode){
                             //     original_text_sibling = original_text;
                             // }
 
-                            if( skipMissingValue == false){
+                            if( true){
                             original_text_sibling = original_text;}
                             else{
                                 original_text = "";
                                 skipMissingValue = false;
                             }
 
-                            if( skipMissingValue_sib == false){
+                            if(true){
                                 original_text_sibling = original_text;}
                             else{
                                 original_text_sibling = "";
@@ -1115,24 +1242,9 @@ function cell(t,g,j,k, mode){
                             //console.log(prev_text_sibling);
                             current_cell = current_cell.split('/').join("");
 
-                            if(current_cell != "" && current_cell.split('*').join("") == "" && prev_text_sibling == ""){//click on **, sibling missing
-                                key_value = key_value + original_text;
-                                key_value_sib = key_value_sib + "";
-                            }
-                            else if(current_cell == "" && prev_text_sibling.split('*').join("") == "" && prev_text_sibling != ""){
-                                original_text = "";
-                                key_value = key_value + "";
-                                key_value_sib = key_value_sib + original_text_sibling;
-                            }
-                            else if(current_cell == "" && prev_text_sibling.split('*').join("") != "" ){
-                                original_text ="";
-                                original_text_sibling ="";
-                                key_value = key_value + "";
-                                key_value_sib = key_value_sib + "";
-                            }
-                            else{
+
                         key_value = key_value + original_text;
-                        key_value_sib = key_value_sib + original_text_sibling;}
+                        key_value_sib = key_value_sib + original_text_sibling;
                         //console.log("current key_value is,", key_value);
                         //console.log("current key_value_sib is,", key_value_sib);
                             if(array_elements[i]!=onclick_id){//do not count the current cell

@@ -10,10 +10,10 @@
         </head>
         <style>
             #submitComments {
-                position: absolute;
-                top: 93%;
-                left: 52%;
-                transform: translate(-50%, 0%);
+                position: relative;
+                left: 47.5%;
+                top:10%;
+                text-align:center;
             }
             body{
                 color:#000;
@@ -66,9 +66,8 @@
                 left:0;
             }
             .instruction-text{
-                position:absolute;
-                top:83%;
-                left:17%;
+                position:relative;
+                text-align:center;
             }
 
 
@@ -87,9 +86,9 @@
         <div id="notation_sub" style="text-align:center; font-size:200%">
             <!--<label id="page"></label>-->
         </div>
-        <div class="instruction-text" style=" font-size:500px";>
-            <h2 id="instruction-text"> <strong>STOP</strong>. Please wait for the facilitator before you press the submit button</h2>
-        </div>
+        <!--<div class="instruction-text" style=" font-size:500px";>-->
+            <!--<h2 id="instruction-text"> <strong>STOP</strong>. Please wait for the facilitator before you press the submit button</h2>-->
+        <!--</div>-->
 
 
         <!--progressbar-->
@@ -128,11 +127,10 @@
 
         <div id="table"></div>
     </div>
-</div>
-<div id="space_2">
-
-</div>
     <button id="submitComments" class="next-button" type="button">Submit</button>
+</div>
+
+
     <button id="endStudy" class="next-button" type="button" style="position: absolute; left: 1600px; top: 25px;">End Study</button><br>
 </div>
 <br>
@@ -153,7 +151,7 @@
             .append("svg")
             .attr("class", "image")
             .attr("width", 1800)
-            .attr("height", 600);
+            .attr("height", 500);
         svg.append("svg:image")
             .attr("xlink:href","/resources/module_intros/"+img_address)
             .attr("x",x)
@@ -206,7 +204,7 @@
         var html_to_insert = "<p><strong>CLICK</strong> on the text if you want more information disclosed. </p>";
         document.getElementById('notation').insertAdjacentHTML('beforeend', html_to_insert);
         add_mod_intros("PPIRL_instruction.PNG");
-        d3.selectAll("#progress-bar").style("visibility","hidden");
+        d3.selectAll("#progress-bar").style("display","none");
 
        d3.select("#summonEnd").on('click', function(){
            console.log((Date.now()-experimentr.data()["time_of_website_start"])/(1000*60));
@@ -228,7 +226,7 @@
                 d3.select("#instruction-text").remove();
                 console.log(step);
                 d3.select('#submitComments').style("position","absolute").style("left","100px").style("top","1040px");
-                d3.select("#progress-bar").style("visibility","visible");
+                d3.select("#progress-bar").style("display","inline");
 
 
                 // console.log("length is ",experimentr.data()["section2"].length-1)
